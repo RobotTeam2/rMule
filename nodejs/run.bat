@@ -1,0 +1,2 @@
+node serial.js
+pause
