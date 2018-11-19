@@ -4,6 +4,12 @@
 const static char MOTER_PWM_WHEEL = 12;
 const static char MOTER_CCW_WHEEL = 27;
 const static char MOTER_FGS_WHEEL = 29;
+unsigned char speed_wheel = 0x0;
+
+static long wheelRunCounter = -1;
+static long const iRunTimeoutCounter = 30000L * 1L;
+
+
 
 #define FRONT() { \
   digitalWrite(MOTER_CCW_WHEEL, LOW);\
@@ -15,6 +21,7 @@ const static char MOTER_FGS_WHEEL = 29;
   }
 
 #define STOP() {\
+  speed_wheel =0x00;\
   analogWrite(MOTER_PWM_WHEEL, 0x0);\
 }
 
@@ -25,10 +32,11 @@ void setup()
   pinMode(MOTER_CCW_WHEEL, OUTPUT);
   pinMode(MOTER_FGS_WHEEL, INPUT);
   
+  
 
   TCCR1B = (TCCR1B & 0b11111000) | 0x01;
   
-  analogWrite(MOTER_PWM_WHEEL, 0x0);
+  STOP();
 
 //  Serial.begin(9600);
   Serial.begin(115200);
@@ -37,13 +45,9 @@ void setup()
 
 }
 
-unsigned char speed_wheel = 0xcf;
 String InputCommand ="";
 
 
-
-static long stopCounter = -1;
-static long const iStopTimeoutCounter = 300000L;
 
 #define DUMP_VAR(x)  { \
   Serial.print(__LINE__);\
@@ -56,7 +60,7 @@ static long const iStopTimeoutCounter = 300000L;
 void runWheel(int spd,int front) {
   speed_wheel = spd;
   analogWrite(MOTER_PWM_WHEEL, spd);
-  stopCounter = iStopTimeoutCounter;
+  wheelRunCounter = iRunTimeoutCounter;
   if(front) {
     digitalWrite(MOTER_CCW_WHEEL , HIGH);
     DUMP_VAR(front);
@@ -66,13 +70,16 @@ void runWheel(int spd,int front) {
   }
 }
 
-void tryConfirmJson() {  
+void tryConfirmJson() {
   StaticJsonDocument<256> jsonBuffer;
-  deserializeJson(jsonBuffer,InputCommand);
+  auto errorDS = deserializeJson(jsonBuffer,InputCommand);
+  if (errorDS) {
+    DUMP_VAR(errorDS.c_str());
+    return;
+  }
+  InputCommand = "";
   JsonObject root =  jsonBuffer.as<JsonObject>();
-  DUMP_VAR(InputCommand);
   for (auto kv : root) {
-    InputCommand = "";
     JsonObject params = kv.value();
     String motor = kv.key().c_str();
     int spd = params["s"];
@@ -100,11 +107,11 @@ void run_comand() {
   }
   if(InputCommand=="ff") {
     FRONT();
-    stopCounter = iStopTimeoutCounter;
+    wheelRunCounter = iRunTimeoutCounter;
   }
   if(InputCommand=="bb") {
     BACK();
-    stopCounter = iStopTimeoutCounter;
+    wheelRunCounter = iRunTimeoutCounter;
   }
   if(InputCommand=="ss") {
     speed_wheel =0xff;
@@ -116,20 +123,14 @@ void run_comand() {
   }
 }
 
-#define STOP_SPD() { \
-  speed_wheel =0x00;\
-}
-
 void loop() {
   // stop
-  if(stopCounter-- == 0) {
-    STOP_SPD();
+  if(wheelRunCounter-- <= 0) {
     STOP();
-    DUMP_VAR(stopCounter);
   }
   if (Serial.available() > 0) {
     char incomingByte = Serial.read();
-    Serial.print(incomingByte);
+    //Serial.print(incomingByte);
     if(incomingByte =='\n' || incomingByte =='\r') {
       run_comand();
       InputCommand = "";
