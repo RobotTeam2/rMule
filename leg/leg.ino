@@ -18,7 +18,7 @@ const static char MOTER_A2_LINEAR = 9;
 unsigned char speed_wheel = 0x0;
 
 static long wheelRunCounter = -1;
-static long const iRunTimeoutCounter = 30000L * 2L;
+static long const iRunTimeoutCounter = 10000L * 1L;
 
 
 
@@ -94,7 +94,12 @@ void runWheel(int spd,int front) {
 }
 
 void runLinear(int distance,int ground) {
-  if(ground) {
+ if(distance == 0) {
+    digitalWrite(MOTER_A1_LINEAR, HIGH);
+    digitalWrite(MOTER_A2_LINEAR, HIGH);
+    return;
+ }
+ if(ground) {
     digitalWrite(MOTER_A1_LINEAR, LOW);
     digitalWrite(MOTER_A2_LINEAR, HIGH);
     DUMP_VAR(distance);

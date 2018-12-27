@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.0/svg.js">
+</script>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+<body>
+
+<svg width="200mm" height="100mm"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" style="width: 100%;height=100%;">
+
+  <rect x="10mm" y="10mm" width="100mm" height="40mm" stroke="green" fill="white" stroke-width="0.2mm"/>
+  
+  <circle id="p1-c" class="p-c" />
+  <line id="p1-l1" class="p-l" />
+  <line id="p1-l2" class="p-l"/>
+
+  <circle id="p2-c" class="p-c" />
+  <line id="p2-l1" class="p-l"/>
+  <line id="p2-l2" class="p-l"/>
+  
+
+  <circle id="p3-c" class="p-c" />
+  <line id="p3-l1" class="p-l"/>
+  <line id="p3-l2" class="p-l"/>
+  
+  <circle id="p4-c" class="p-c-big"/>
+  <line id="p4-l1" class="p-l"/>
+  <line id="p4-l2" class="p-l"/>
+  
+  <circle id="p5-c" class="p-c"/>
+  <line id="p5-l1" class="p-l"/>
+  <line id="p5-l2" class="p-l"/>
+
+
+  
+</svg>
+
+
+<script>
+  $(document).ready(function(){
+    drawSHF10();
+  });
+  function drawSHF10() {
+    drawHole(1,20,21);
+    drawHole(2,20,39);
+    drawHole(3,44,30);
+    drawHole(4,60,30);
+    drawHole(5,76,30);
+  }
+  function drawHole(id,x,y) {
+    $('.p-c').attr('stroke','red');
+    $('.p-c').attr('fill','white');
+    $('.p-c').attr('stroke-width','0.05mm');
+    $('.p-c').attr('r','2.5mm');
+
+    $('.p-c-big').attr('stroke','red');
+    $('.p-c-big').attr('fill','white');
+    $('.p-c-big').attr('stroke-width','0.05mm');
+    $('.p-c-big').attr('r','5mm');
+
+    $('.p-l').attr('stroke','red');
+    $('.p-l').attr('fill','white');
+    $('.p-l').attr('stroke-width','0.05mm');
+    
+    let c1 = '#p' + id + '-c';
+    console.log('drawHole::c1=<',c1,'>');
+    let c1x = x;
+    let c1y = y;
+    console.log('drawHole::c1x=<',c1x,'>');
+    console.log('drawHole::c1y=<',c1y,'>');
+    $(c1).attr('cx',c1x+'mm');
+    $(c1).attr('cy',c1y+'mm');
+    console.log('drawHole::$(c1)=<',$(c1),'>');
+    drawLine(id,c1x,c1y);
+    drawLine(id,c1x,c1y);
+  }
+  
+  
+  const crossR = 6;
+  function drawLine(pid,cx,cy) {
+    let l1 = '#p' + pid + '-l1';
+    console.log('drawLine::l1=<',l1,'>');
+    console.log('drawLine::$(l1)=<',$(l1),'>');
+    let l1x1 = cx - crossR;
+    let l1y1 = cy;
+    $(l1).attr('x1',l1x1+'mm');
+    $(l1).attr('y1',l1y1+'mm');
+    let l1x2 = cx + crossR;
+    let l1y2 = cy;
+    $(l1).attr('x2',l1x2+'mm');
+    $(l1).attr('y2',l1y2+'mm');
+
+    let l2 = '#p' + pid + '-l2';
+    console.log('drawLine::l2=<',l2,'>');
+    console.log('drawLine::$(l2)=<',$(l2),'>');
+    let l2x1 = cx;
+    let l2y1 = cy - crossR;
+    $(l2).attr('x1',l2x1+'mm');
+    $(l2).attr('y1',l2y1+'mm');
+    let l2x2 = cx;
+    let l2y2 = cy + crossR;
+    $(l2).attr('x2',l2x2+'mm');
+    $(l2).attr('y2',l2y2+'mm');
+
+  }
+
+</script>
+</body>
+</html>

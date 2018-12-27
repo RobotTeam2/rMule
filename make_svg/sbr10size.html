@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.7.0/svg.js">
+</script>
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+<body>
+
+<svg width="100mm" height="100mm"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <rect x="10mm" y="6mm" width="72mm" height="40mm" stroke="green" fill="white" stroke-width="0.2mm"/>
+  
+  <rect id="rec1" x="0mm" y="0mm" width="36mm" height="32mm" stroke="blue" fill="white" stroke-width="0.1mm"/>
+  <circle id="rec1-p1-c" class="p-c" />
+  <line id="rec1-p1-l1" class="p-l" />
+  <line id="rec1-p1-l2" class="p-l"/>
+
+  <circle id="rec1-p2-c" class="p-c" />
+  <line id="rec1-p2-l1" class="p-l"/>
+  <line id="rec1-p2-l2" class="p-l"/>
+  
+
+  <circle id="rec1-p3-c" class="p-c" />
+  <line id="rec1-p3-l1" class="p-l"/>
+  <line id="rec1-p3-l2" class="p-l"/>
+  
+  <circle id="rec1-p4-c" class="p-c"/>
+  <line id="rec1-p4-l1" class="p-l"/>
+  <line id="rec1-p4-l2" class="p-l"/>
+  
+
+  <line x1="46mm" y1="0mm" x2="46mm" y2="50mm" stroke="green" stroke-width="0.2mm"/>
+  
+  <rect id="rec2" width="36mm" height="32mm" stroke="blue" fill="white" stroke-width="0.1mm"/>
+  <circle id="rec2-p1-c" class="p-c"/>
+  <line id="rec2-p1-l1" class="p-l"/>
+  <line id="rec2-p1-l2" class="p-l"/>
+
+  <circle id="rec2-p2-c" class="p-c" />
+  <line id="rec2-p2-l1" class="p-l"/>
+  <line id="rec2-p2-l2" class="p-l"/>
+  
+
+  <circle id="rec2-p3-c" class="p-c"/>
+  <line id="rec2-p3-l1" class="p-l"/>
+  <line id="rec2-p3-l2" class="p-l"/>
+  
+  <circle id="rec2-p4-c" class="p-c"/>
+  <line id="rec2-p4-l1" class="p-l"/>
+  <line id="rec2-p4-l2" class="p-l"/>
+
+  
+</svg>
+
+<!--
+<svg width="100mm" height="100mm"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <rect x="10mm" y="10mm" width="36mm" height="32mm" stroke="blue" fill="white" stroke-width="0.1mm" />
+  <circle cx="15mm" cy="15mm" r="2.5mm" stroke="red" fill="white" stroke-width="0.05mm"/>
+  <line x1="12.5mm" y1="15mm" x2="17.5mm" y2="15mm" stroke="red" stroke-width="0.05mm"/>
+  <line x1="15mm" y1="12.5mm" x2="15mm" y2="17.5mm" stroke="red" stroke-width="0.05mm"/>
+  
+  <circle cx="35mm" cy="15mm" r="2.5mm" stroke="red" fill="white" stroke-width="0.05mm"/>
+  <line x1="32.5mm" y1="15mm" x2="37.5mm" y2="15mm" stroke="red" stroke-width="0.05mm"/>
+  <line x1="35mm" y1="12.5mm" x2="35mm" y2="17.5mm" stroke="red" stroke-width="0.05mm"/>
+  
+  <circle cx="35mm" cy="40mm" r="2.5mm" stroke="red" fill="white" stroke-width="0.05mm"/>
+  <line x1="32.5mm" y1="40mm" x2="37.5mm" y2="40mm" stroke="red" stroke-width="0.05mm"/>
+  <line x1="35mm" y1="42.5mm" x2="35mm" y2="37.5mm" stroke="red" stroke-width="0.05mm"/>
+
+  <circle cx="15mm" cy="40mm" r="2.5mm" stroke="red" fill="white" stroke-width="0.05mm"/>
+  <line x1="12.5mm" y1="40mm" x2="17.5mm" y2="40mm" stroke="red" stroke-width="0.05mm"/>
+  <line x1="15mm" y1="42.5mm" x2="15mm" y2="37.5mm" stroke="red" stroke-width="0.05mm"/>
+
+</svg>
+
+-->
+
+
+<script>
+  $(document).ready(function(){
+    drawSBR10uu();
+  });
+  function drawSBR10uu() {
+    drawSBR(1,10,10);
+    drawSBR(2,46,10);
+  }
+  function drawSBR(id,x,y) {
+    $('.p-c').attr('stroke','red');
+    $('.p-c').attr('fill','white');
+    $('.p-c').attr('stroke-width','0.05mm');
+    $('.p-c').attr('r','2.5mm');
+
+    $('.p-l').attr('stroke','red');
+    $('.p-l').attr('fill','white');
+    $('.p-l').attr('stroke-width','0.05mm');
+    
+    
+    let rectid = '#rec' + id;
+    $(rectid).attr('x',x+'mm');
+    $(rectid).attr('y',y+'mm');
+    
+    
+    let c1 = '#rec' + id + '-p1-c';
+    let c1x = x + 5.5;
+    let c1y = y + 6;
+    $(c1).attr('cx',c1x+'mm');
+    $(c1).attr('cy',c1y+'mm');
+    drawLine(id,1,c1x,c1y);
+    drawLine(id,1,c1x,c1y);
+
+
+    let c2 = '#rec' + id + '-p2-c';
+    let c2x = x + 5.5;
+    let c2y = y + 6 + 20;
+    $(c2).attr('cx',c2x+'mm');
+    $(c2).attr('cy',c2y+'mm');
+    drawLine(id,2,c2x,c2y);
+    drawLine(id,2,c2x,c2y);
+
+    
+    let c3 = '#rec' + id + '-p3-c';
+    let c3x = x + 5.5 + 25;
+    let c3y = y + 6;
+    $(c3).attr('cx',c3x+'mm');
+    $(c3).attr('cy',c3y+'mm');
+    drawLine(id,3,c3x,c3y);
+    drawLine(id,3,c3x,c3y);
+
+    let c4 = '#rec' + id + '-p4-c';
+    let c4x = x + 5.5 + 25;
+    let c4y = y + 6 + 20;
+    $(c4).attr('cx',c4x+'mm');
+    $(c4).attr('cy',c4y+'mm');
+    drawLine(id,4,c4x,c4y);
+    drawLine(id,4,c4x,c4y);
+    
+    
+    
+  }
+  
+  
+  const crossR = 3.0;
+  function drawLine(recid,pid,cx,cy) {
+    let l1 = '#rec' + recid + '-p' + pid + '-l1';
+    console.log('drawLine::l1=<',l1,'>');
+    console.log('drawLine::$(l1)=<',$(l1),'>');
+    let l1x1 = cx - crossR;
+    let l1y1 = cy;
+    $(l1).attr('x1',l1x1+'mm');
+    $(l1).attr('y1',l1y1+'mm');
+    let l1x2 = cx + crossR;
+    let l1y2 = cy;
+    $(l1).attr('x2',l1x2+'mm');
+    $(l1).attr('y2',l1y2+'mm');
+
+    let l2 = '#rec' + recid + '-p' + pid + '-l2';
+    console.log('drawLine::l2=<',l2,'>');
+    console.log('drawLine::$(l2)=<',$(l2),'>');
+    let l2x1 = cx;
+    let l2y1 = cy - crossR;
+    $(l2).attr('x1',l2x1+'mm');
+    $(l2).attr('y1',l2y1+'mm');
+    let l2x2 = cx;
+    let l2y2 = cy + crossR;
+    $(l2).attr('x2',l2x2+'mm');
+    $(l2).attr('y2',l2y2+'mm');
+
+  }
+
+</script>
+</body>
+</html>
