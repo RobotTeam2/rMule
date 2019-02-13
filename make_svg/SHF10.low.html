@@ -17,23 +17,28 @@
   <rect x="10mm" y="10mm" width="100mm" height="40mm" stroke="green" fill="white" stroke-width="0.2mm"/>
   
   <circle id="p1-c" class="p-c" />
+  <circle id="p1-c2" class="p-c-small" />
   <line id="p1-l1" class="p-l" />
   <line id="p1-l2" class="p-l"/>
 
   <circle id="p2-c" class="p-c" />
+  <circle id="p2-c2" class="p-c-small" />
   <line id="p2-l1" class="p-l"/>
   <line id="p2-l2" class="p-l"/>
   
 
   <circle id="p3-c" class="p-c" />
+  <circle id="p3-c2" class="p-c-small" />
   <line id="p3-l1" class="p-l"/>
   <line id="p3-l2" class="p-l"/>
   
   <circle id="p4-c" class="p-c-big"/>
+  <circle id="p4-c2" class="p-c-small"/>
   <line id="p4-l1" class="p-l"/>
   <line id="p4-l2" class="p-l"/>
   
   <circle id="p5-c" class="p-c"/>
+  <circle id="p5-c2" class="p-c-small"/>
   <line id="p5-l1" class="p-l"/>
   <line id="p5-l2" class="p-l"/>
 
@@ -64,6 +69,11 @@
     $('.p-c-big').attr('stroke-width','0.05mm');
     $('.p-c-big').attr('r','5mm');
 
+    $('.p-c-small').attr('stroke','red');
+    $('.p-c-small').attr('fill','white');
+    $('.p-c-small').attr('stroke-width','0.05mm');
+    $('.p-c-small').attr('r','1mm');
+
     $('.p-l').attr('stroke','red');
     $('.p-l').attr('fill','white');
     $('.p-l').attr('stroke-width','0.05mm');
@@ -77,6 +87,12 @@
     $(c1).attr('cx',c1x+'mm');
     $(c1).attr('cy',c1y+'mm');
     console.log('drawHole::$(c1)=<',$(c1),'>');
+    
+    let c2 = '#p' + id + '-c2';
+    console.log('drawHole::c2=<',c2,'>');
+    $(c2).attr('cx',c1x+'mm');
+    $(c2).attr('cy',c1y+'mm');
+    
     drawLine(id,c1x,c1y);
     drawLine(id,c1x,c1y);
   }

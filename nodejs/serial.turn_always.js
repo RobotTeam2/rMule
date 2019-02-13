@@ -19,14 +19,14 @@ port.open(function (err) {
 
 
 port.on('data', function (response) {
-  console.log('response=<', response.toString('utf-8'),'>');
+  //console.log('response=<', response.toString('utf-8'),'>');
 });
 
 
 const wheel = {
   wheel:{
-    f:0,
-    s:140
+    f:1,
+    s:200
   },
   L:{
     g:1,
@@ -34,16 +34,6 @@ const wheel = {
   }
 };
 
-const wheelStop = {
-  wheel:{
-    f:1,
-    s:0
-  },
-  L:{
-    g:1,
-    d:0
-  }
-};
 
 
 onWriteTimer = () => {
@@ -51,17 +41,7 @@ onWriteTimer = () => {
     if (err) {
       return console.log('Error on write: ', err.message);
     }
-    //console.log('write wheel=<', wheel,'>');
-    setTimeout(onWriteTimerStop,300);
-  });  
-};
-
-onWriteTimerStop = () => {
-  port.write(JSON.stringify(wheelStop), function(err) {
-    if (err) {
-      console.log('Error on write: ', err.message);
-    }
-    console.log('write wheelStop=<', wheelStop,'>');
+    console.log('write wheel=<', wheel,'>');
   });
-}
-
+  setTimeout(onWriteTimer,200);
+};

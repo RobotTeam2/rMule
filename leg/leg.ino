@@ -1,4 +1,14 @@
 #include <ArduinoJson.h>
+#include <Wire.h>
+#include <VL53L0X.h>
+VL53L0X sensor;
+
+#define DUMP_VAR(x)  { \
+  Serial.print(__LINE__);\
+  Serial.print(":"#x"=<");\
+  Serial.print(x);\
+  Serial.print(">\n");\
+}
 
 
 const static char MOTER_PWM_WHEEL = 12;
@@ -18,7 +28,7 @@ const static char MOTER_A2_LINEAR = 9;
 unsigned char speed_wheel = 0x0;
 
 static long wheelRunCounter = -1;
-static long const iRunTimeoutCounter = 10000L * 1L;
+static long const iRunTimeoutCounter = 10000L * 3L;
 
 
 
@@ -28,12 +38,65 @@ static long const iRunTimeoutCounter = 10000L * 1L;
 
 
 #define BACK() { \
-  digitalWrite(MOTER_FGS_WHEEL, HIGH);\
+  digitalWrite(MOTER_CCW_WHEEL, HIGH);\
   }
 
 #define STOP() {\
   speed_wheel =0x00;\
   analogWrite(MOTER_PWM_WHEEL, 0x0);\
+}
+
+//#define HIGH_SPEED
+//#define HIGH_ACCURACY
+
+const int TOP_TIME_OUT = 1;
+
+void setupTof() {
+  Wire.begin();
+  sensor.init();
+  sensor.setTimeout(TOP_TIME_OUT);
+  sensor.setSignalRateLimit(0.5);
+  int limit_Mcps = sensor.getSignalRateLimit();
+  DUMP_VAR(limit_Mcps);
+/*
+#if defined LONG_RANGE
+  // lower the return signal rate limit (default is 0.25 MCPS)
+  sensor.setSignalRateLimit(0.1);
+  // increase laser pulse periods (defaults are 14 and 10 PCLKs)
+  sensor.setVcselPulsePeriod(VL53L0X::VcselPeriodPreRange, 18);
+  sensor.setVcselPulsePeriod(VL53L0X::VcselPeriodFinalRange, 14);
+#endif
+*/
+
+#if defined HIGH_SPEED
+  // reduce timing budget to 20 ms (default is about 33 ms)
+  sensor.setMeasurementTimingBudget(20000);
+#elif defined HIGH_ACCURACY
+  // increase timing budget to 200 ms
+  sensor.setMeasurementTimingBudget(200000);
+#endif
+}
+
+int prevDistance = 0;
+const int iDistanceDiffMax = 10;
+void readTof() {
+  //DUMP_VAR("");
+  int distance = sensor.readRangeSingleMillimeters();
+  //int distance = 0;
+  if(distance <= 0 || distance >= 8191) {
+    return ;
+  }
+  if(abs(distance - prevDistance) > iDistanceDiffMax) {
+    //DUMP_VAR(distance);
+    StaticJsonDocument<256> doc;
+    JsonObject root = doc.to<JsonObject>();
+    root["tofw"] = distance;
+    String output;
+    serializeJson(doc, output);
+    Serial.print(output);
+    Serial.print("\n");
+  }
+  prevDistance = distance;
 }
 
 
@@ -42,6 +105,8 @@ void setup()
   pinMode(MOTER_PWM_WHEEL, OUTPUT);
   pinMode(MOTER_CCW_WHEEL, OUTPUT);
   pinMode(MOTER_FGS_WHEEL, INPUT);
+  //pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
+  
   
 
   pinMode(MOTER_CURRENT_LINEAR, INPUT);
@@ -66,24 +131,23 @@ void setup()
 
   Serial.print("start rMule leg\n");\
 
+  setupTof();
 }
 
 String InputCommand ="";
 
 
 
-#define DUMP_VAR(x)  { \
-  Serial.print(__LINE__);\
-  Serial.print(":"#x"=<");\
-  Serial.print(x);\
-  Serial.print(">\n");\
-}
 
+int runMotorFGSignlCouter = 0;
+int runMotorFGSignlCouter_NOT = 0;
 
 void runWheel(int spd,int front) {
   speed_wheel = spd;
   analogWrite(MOTER_PWM_WHEEL, spd);
   wheelRunCounter = iRunTimeoutCounter;
+  runMotorFGSignlCouter = 0;
+  runMotorFGSignlCouter_NOT = 0;
   if(front) {
     digitalWrite(MOTER_CCW_WHEEL , HIGH);
     DUMP_VAR(front);
@@ -176,10 +240,28 @@ void run_comand() {
 void readStatus() {
   int current = analogRead(MOTER_CURRENT_LINEAR);
   if(abs(current - 506) > 10) {
-    Serial.print("current=<");
-    Serial.print(current);
-    Serial.println(">");
+    DUMP_VAR(current);
+  }  
+  bool turn = digitalRead(MOTER_FGS_WHEEL);
+  //DUMP_VAR(turn);
+  if(turn) {
+    runMotorFGSignlCouter_NOT++;
+  } else {
+    //DUMP_VAR(turn);
+    if(++runMotorFGSignlCouter > 9) {
+      DUMP_VAR(runMotorFGSignlCouter);
+      DUMP_VAR(runMotorFGSignlCouter_NOT);
+      DUMP_VAR(wheelRunCounter);
+      wheelRunCounter = 0;
+    }
   }
+/*  
+  int turnAnalog = analogRead(MOTER_FGS_WHEEL);
+  DUMP_VAR(turnAnalog);
+  if(turnAnalog > 512) {
+    DUMP_VAR(turnAnalog);
+  }
+*/
 }
 
 
@@ -205,5 +287,7 @@ void loop() {
     }
   }
   readStatus();
+  readTof();
 }
+
 
