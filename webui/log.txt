@@ -1,0 +1,825 @@
+
+C:\Users\yma.INTRA\Desktop\rMule\webui>node serial.js 
+resStr=< start rMule leg
+ >
+resStr=< 98:limit_Mcps=<0>
+ >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+onWSSMsg msg=< {"info":{}} >
+trans2serial msg=< { info: {} } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< {"tofw":8190}
+ >
+trans2ws msg=< { tofw: 8190 } >
+resStr=< 228:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 236:command=<info>
+{"leg":0,"iER >
+バッチ ジョブを終了しますか (Y/N)? 
+
+C:\Users\yma.INTRA\Desktop\rMule\webui>pause
+続行するには何かキーを押してください . . . 
+バッチ ジョブを終了しますか (Y/N)? バッチ ジョブを終了しますか (Y/N)? 

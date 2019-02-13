@@ -1,8 +1,9 @@
 #include <ArduinoJson.h>
 #include <Wire.h>
 #include <VL53L0X.h>
-VL53L0X sensor;
+#include <EEPROM.h>
 
+VL53L0X sensor;
 #define DUMP_VAR(x)  { \
   Serial.print(__LINE__);\
   Serial.print(":"#x"=<");\
@@ -13,7 +14,9 @@ VL53L0X sensor;
 
 const static char MOTER_PWM_WHEEL = 12;
 const static char MOTER_CCW_WHEEL = 27;
-const static char MOTER_FGS_WHEEL = 29;
+
+// Interrupt
+const static char MOTER_FGS_WHEEL = 2;
 
 
 
@@ -28,33 +31,71 @@ const static char MOTER_A2_LINEAR = 9;
 unsigned char speed_wheel = 0x0;
 
 static long wheelRunCounter = -1;
-static long const iRunTimeoutCounter = 10000L * 3L;
+static long const iRunTimeoutCounter = 10000L * 10L;
 
 
 
-#define FRONT() { \
+#define FRONT_WHEEL() { \
   digitalWrite(MOTER_CCW_WHEEL, LOW);\
   }
 
 
-#define BACK() { \
+#define BACK_WHEEL() { \
   digitalWrite(MOTER_CCW_WHEEL, HIGH);\
   }
 
-#define STOP() {\
+#define STOP_WHEEL() {\
   speed_wheel =0x00;\
   analogWrite(MOTER_PWM_WHEEL, 0x0);\
 }
 
-//#define HIGH_SPEED
-//#define HIGH_ACCURACY
 
-const int TOP_TIME_OUT = 1;
+
+const int  iEROMLegIdAddress = 0;
+const int  iEROMWheelLimitBackAddress = iEROMLegIdAddress + 2; 
+const int  iEROMWheelLimitFrontAddress = iEROMWheelLimitBackAddress + 4; 
+
+uint16_t  iEROMLegId = 0;
+uint16_t  iEROMWheelLimitBack = 120; 
+uint16_t  iEROMWheelLimitFront = 500; 
+
+void loadEROM() {
+  DUMP_VAR(EEPROM.length());
+  {
+    byte value1 = EEPROM.read(iEROMLegId);
+    byte value2 = EEPROM.read(iEROMLegId+1);
+    iEROMLegId = value1 | value2 << 8;
+    DUMP_VAR(iEROMLegId);
+  }
+  {
+    byte value1 = EEPROM.read(iEROMWheelLimitBackAddress);
+    byte value2 = EEPROM.read(iEROMWheelLimitBackAddress+1);
+    iEROMWheelLimitBack = value1 | value2 << 8;
+    DUMP_VAR(iEROMWheelLimitBack);
+  }
+  {
+    byte value1 = EEPROM.read(iEROMWheelLimitFrontAddress);
+    byte value2 = EEPROM.read(iEROMWheelLimitFrontAddress+1);
+    iEROMWheelLimitFront = value1 | value2 << 8;
+    DUMP_VAR(iEROMWheelLimitFront);
+  }
+}
+void saveEROM(int address,uint16_t value) {
+  byte value1 =  value & 0xff;
+  EEPROM.write(address,value1);
+  byte value2 = (value >> 8) & 0xff;
+  EEPROM.write(address+1,value2);
+}
+
+#define TOF_HIGH_SPEED
+//#define TOF_HIGH_ACCURACY
+
+const int TOF_TIME_OUT = 1;
 
 void setupTof() {
   Wire.begin();
   sensor.init();
-  sensor.setTimeout(TOP_TIME_OUT);
+  sensor.setTimeout(TOF_TIME_OUT);
   sensor.setSignalRateLimit(0.5);
   int limit_Mcps = sensor.getSignalRateLimit();
   DUMP_VAR(limit_Mcps);
@@ -68,44 +109,58 @@ void setupTof() {
 #endif
 */
 
-#if defined HIGH_SPEED
-  // reduce timing budget to 20 ms (default is about 33 ms)
-  sensor.setMeasurementTimingBudget(20000);
-#elif defined HIGH_ACCURACY
+#if defined TOF_HIGH_SPEED
+  // reduce timing budget to 1 ms (default is about 33 ms)
+  sensor.setMeasurementTimingBudget(1000);
+#elif defined TOF_HIGH_ACCURACY
   // increase timing budget to 200 ms
   sensor.setMeasurementTimingBudget(200000);
 #endif
 }
 
-int prevDistance = 0;
-const int iDistanceDiffMax = 10;
+void repsponseJson(const StaticJsonDocument<256> &doc) {
+  String output;
+  serializeJson(doc, output);
+  Serial.print(output);
+  Serial.print("\n");
+}
+
+int iDistanceWheelTof = 0;
+const int iDistanceDiffMaxWheel = 40;
+
+int iDistanceTofReportCounter = 1;
+const int iDistanceTofReportSkip = 50;
+
 void readTof() {
-  //DUMP_VAR("");
   int distance = sensor.readRangeSingleMillimeters();
-  //int distance = 0;
+  //DUMP_VAR(distance);
   if(distance <= 0 || distance >= 8191) {
     return ;
   }
-  if(abs(distance - prevDistance) > iDistanceDiffMax) {
-    //DUMP_VAR(distance);
+  bool isReport = (iDistanceTofReportCounter++%iDistanceTofReportSkip) == 0;
+  if(isReport) {
     StaticJsonDocument<256> doc;
     JsonObject root = doc.to<JsonObject>();
     root["tofw"] = distance;
-    String output;
-    serializeJson(doc, output);
-    Serial.print(output);
-    Serial.print("\n");
+    root["tofw_p"] = iDistanceWheelTof;
+    repsponseJson(doc);
   }
-  prevDistance = distance;
+  iDistanceWheelTof = distance;
 }
+
+
+
 
 
 void setup()
 {
   pinMode(MOTER_PWM_WHEEL, OUTPUT);
   pinMode(MOTER_CCW_WHEEL, OUTPUT);
-  pinMode(MOTER_FGS_WHEEL, INPUT);
+
+  //pinMode(MOTER_FGS_WHEEL, INPUT);
   //pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
+  pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL),CounterWheelFGSByInterrupt , FALLING);
   
   
 
@@ -124,7 +179,7 @@ void setup()
 
   TCCR1B = (TCCR1B & 0b11111000) | 0x01;
   
-  STOP();
+  STOP_WHEEL();
 
 //  Serial.begin(9600);
   Serial.begin(115200);
@@ -142,6 +197,10 @@ String InputCommand ="";
 int runMotorFGSignlCouter = 0;
 int runMotorFGSignlCouter_NOT = 0;
 
+void CounterWheelFGSByInterrupt(void) {
+  DUMP_VAR(++runMotorFGSignlCouter);
+}
+
 void runWheel(int spd,int front) {
   speed_wheel = spd;
   analogWrite(MOTER_PWM_WHEEL, spd);
@@ -150,11 +209,31 @@ void runWheel(int spd,int front) {
   runMotorFGSignlCouter_NOT = 0;
   if(front) {
     digitalWrite(MOTER_CCW_WHEEL , HIGH);
-    DUMP_VAR(front);
+    //DUMP_VAR(front);
   } else {
     digitalWrite(MOTER_CCW_WHEEL, LOW);
-    DUMP_VAR(front);
+    //DUMP_VAR(front);
   }
+}
+
+int iTargetDistanceWheel = 0;
+int iStartDistanceWheel = 0;
+int iTotalDistanceWheel = 0;
+bool bIsRunWheelByTof = false;
+void runWheelTof(int distPostion) {
+  if(distPostion < iEROMWheelLimitBack || distPostion > iEROMWheelLimitFront) {
+    DUMP_VAR(distPostion);
+    DUMP_VAR(iEROMWheelLimitBack);
+    DUMP_VAR(iEROMWheelLimitFront);
+    return;
+  }
+  iTargetDistanceWheel = distPostion;
+  iStartDistanceWheel = iDistanceWheelTof;
+  iTotalDistanceWheel = abs(iTargetDistanceWheel - iStartDistanceWheel);
+  DUMP_VAR(iTargetDistanceWheel);
+  DUMP_VAR(iStartDistanceWheel);
+  DUMP_VAR(iTotalDistanceWheel);
+  bIsRunWheelByTof = true;
 }
 
 void runLinear(int distance,int ground) {
@@ -173,7 +252,8 @@ void runLinear(int distance,int ground) {
     DUMP_VAR(distance);
   }
 }
-
+void runLinearTof(int distPostion) {
+}
 
 
 void tryConfirmJson() {
@@ -187,22 +267,68 @@ void tryConfirmJson() {
   JsonObject root =  jsonBuffer.as<JsonObject>();
   for (auto kv : root) {
     JsonObject params = kv.value();
-    String motor = kv.key().c_str();
-    DUMP_VAR(motor);
-    //CONFIRM_WHEEL();
-    if(motor == "wheel" || motor == "W") {
+    String command = kv.key().c_str();
+    DUMP_VAR(command);
+    if(command == "wheel" || command == "W") {
       int spd = params["s"];
       int front = params["f"];
       DUMP_VAR(spd);
       DUMP_VAR(front);
       runWheel(spd,front);
     }
-    if(motor == "linear" || motor == "L") {
+    if(command == "linear" || command == "L") {
       int distance = params["d"];
       int ground = params["g"];
       DUMP_VAR(distance);
       DUMP_VAR(ground);
       runLinear(distance,ground);
+    }
+    if(command == "tof" || command == "T") {
+      int tofWheelDistance = -1;
+      if(params.containsKey("wheel")) {
+        tofWheelDistance = params["wheel"];
+      }
+      if(params.containsKey("W")) {
+        tofWheelDistance = params["W"];
+      }
+      if(tofWheelDistance > 0) {
+        runWheelTof(tofWheelDistance);
+      }
+      
+      int tofLinearDistance = -1;
+      if(params.containsKey("linear")) {
+        tofLinearDistance = params["linear"];
+      }
+      if(params.containsKey("L")) {
+        tofLinearDistance = params["L"];
+      }
+      if(tofLinearDistance > 0) {
+        runLinearTof(tofLinearDistance);
+      }
+    }
+    
+    
+    if(command == "setting") {
+      if(params.containsKey("leg")) {
+        iEROMLegId = params["leg"];
+        saveEROM(iEROMLegIdAddress,iEROMLegId);
+      }
+      if(params.containsKey("WheelLimitBack")) {
+        iEROMWheelLimitBack = params["WheelLimitBack"];
+        saveEROM(iEROMWheelLimitBackAddress,iEROMWheelLimitBack);
+      }
+      if(params.containsKey("WheelLimitFront")) {
+        iEROMWheelLimitFront = params["WheelLimitFront"];
+        saveEROM(iEROMWheelLimitFrontAddress,iEROMWheelLimitFront);
+      }
+    }
+    if(command == "info") {
+      StaticJsonDocument<256> docRes;
+      JsonObject rootRes = docRes.to<JsonObject>();
+      rootRes["leg"] = iEROMLegId;
+      rootRes["iEROMWheelLimitBack"] = iEROMWheelLimitBack;
+      rootRes["iEROMWheelLimitFront"] = iEROMWheelLimitFront;
+      repsponseJson(docRes);
     }
   }
 }
@@ -219,11 +345,11 @@ void run_comand() {
     analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
   }
   if(InputCommand=="ff") {
-    FRONT();
+    FRONT_WHEEL();
     wheelRunCounter = iRunTimeoutCounter;
   }
   if(InputCommand=="bb") {
-    BACK();
+    BACK_WHEEL();
     wheelRunCounter = iRunTimeoutCounter;
   }
   if(InputCommand=="ss") {
@@ -241,7 +367,8 @@ void readStatus() {
   int current = analogRead(MOTER_CURRENT_LINEAR);
   if(abs(current - 506) > 10) {
     DUMP_VAR(current);
-  }  
+  }
+/*  
   bool turn = digitalRead(MOTER_FGS_WHEEL);
   //DUMP_VAR(turn);
   if(turn) {
@@ -249,12 +376,13 @@ void readStatus() {
   } else {
     //DUMP_VAR(turn);
     if(++runMotorFGSignlCouter > 9) {
-      DUMP_VAR(runMotorFGSignlCouter);
-      DUMP_VAR(runMotorFGSignlCouter_NOT);
-      DUMP_VAR(wheelRunCounter);
+      //DUMP_VAR(runMotorFGSignlCouter);
+      //DUMP_VAR(runMotorFGSignlCouter_NOT);
+      //DUMP_VAR(wheelRunCounter);
       wheelRunCounter = 0;
     }
   }
+*/
 /*  
   int turnAnalog = analogRead(MOTER_FGS_WHEEL);
   DUMP_VAR(turnAnalog);
@@ -264,12 +392,22 @@ void readStatus() {
 */
 }
 
-
-void loop() {
+void checkOverRunLimit(void) {
   // stop
-  if(wheelRunCounter-- <= 0) {
-    STOP();
+  if(wheelRunCounter-- <= 0 ) {
+    STOP_WHEEL();
   }
+  if(iDistanceWheelTof < iEROMWheelLimitBack) {
+    bIsRunWheelByTof = false;
+    STOP_WHEEL();
+  }
+  if(iDistanceWheelTof > iEROMWheelLimitFront) {
+    bIsRunWheelByTof = false;
+    STOP_WHEEL();
+  }  
+}
+
+void runSerialCommand(void) {
   if (Serial.available() > 0) {
     char incomingByte = Serial.read();
     //Serial.print(incomingByte);
@@ -286,8 +424,64 @@ void loop() {
       InputCommand = "";
     }
   }
-  readStatus();
-  readTof();
 }
 
+void loop() {
+  checkOverRunLimit();
+  runSerialCommand();
+  readStatus();
+  readTof();
+  calcWheel2TargetTof();
+}
+
+int const iTargetDistanceMaxDiff = 1;
+
+int const aTofSpeedTable[] = {
+  130,130,130,130,130,
+  130,  130,  130  ,125,  0,
+  0,  125,  130  ,130,  130,
+  130,130,130,130,130,
+};
+int const aTofSpeedTableLength = sizeof(aTofSpeedTable)/aTofSpeedTable[0];
+
+int const aTofSpeedTableHighResolution[] = {
+  125,125,125,125,125,
+  125,  125,  125  ,125,  0,
+  0,  125,  125  ,125,  125,
+  125,125,125,125,125,
+};
+int const aTofSpeedTableHighResolutionLength = sizeof(aTofSpeedTableHighResolution)/aTofSpeedTableHighResolution[0];
+
+
+void calcWheel2TargetTof() {
+  if(bIsRunWheelByTof == false) {
+    return;
+  }
+  int diff = iTargetDistanceWheel - iDistanceWheelTof;
+  if(abs(diff) < iTargetDistanceMaxDiff) {
+    bIsRunWheelByTof = false;
+    STOP_WHEEL();
+    return;
+  }
+  int toMove = abs(diff);
+  int moved = abs(iDistanceWheelTof - iStartDistanceWheel);
+  int movedP = moved * 10 / iTotalDistanceWheel;
+  DUMP_VAR(movedP);
+  movedP %= aTofSpeedTableLength;
+  DUMP_VAR(movedP);
+  int speed = aTofSpeedTable[movedP];
+  if(movedP > 8 && movedP < 12) {
+    int movedP2 = moved * 100 / iTotalDistanceWheel;
+    movedP2 -= 90;
+    movedP2  %= aTofSpeedTableHighResolutionLength;
+    DUMP_VAR(movedP2);
+    speed = aTofSpeedTableHighResolution[movedP2];
+  }
+  DUMP_VAR(speed);
+  if(diff > 0) {
+    runWheel(speed,0);
+  } else {
+    runWheel(speed,1);
+  }
+}
 
