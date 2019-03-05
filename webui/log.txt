@@ -2,824 +2,2641 @@
 C:\Users\yma.INTRA\Desktop\rMule\webui>node serial.js 
 resStr=< start rMule leg
  >
-resStr=< 98:limit_Mcps=<0>
+resStr=< 101:limit_Mcps=<0>
  >
-resStr=< {"tofw":8190}
+resStr=< {"tofw":197,"tofw_p":193}
  >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
+resStr=< {"tofw":192,"tofw_p":196}
  >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
+resStr=< {"tofw":195,"tofw_p":196}
  >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
 onWSSMsg msg=< {"info":{}} >
 trans2serial msg=< { info: {} } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< {"tofw":8190}
- >
-trans2ws msg=< { tofw: 8190 } >
-resStr=< 228:errorDS.c_str()=<IncompleteI >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
 resStr=< nput>
  >
-resStr=< 236:command=<info>
+resStr=< 272:command=<info>
 {"leg":0,"iER >
+resStr=< OMWheelLimitBack":120,"iEROMWhee >
+resStr=< lLimitFront":500}
+ >
+jsonLike=< {"leg":0,"iEROMWheelLimitBack":120,"iEROMWheelLimitFront":500} >
+resStr=< {"tofw":194,"tofw_p":193}
+ >
+resStr=< {"tofw":194,"tofw_p":196}
+ >
+resStr=< {"tofw":192,"tofw_p":189}
+ >
+resStr=< {"tofw":195,"tofw_p":190}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":289}} >
+trans2serial msg=< { fgs: { wheel: 289 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<9>
+539:iTargetDista >
+resStr=< nceWheelFGS=<9>
+545:iTargetDista >
+resStr=< nceWheelFGS=<9>
+547:bForwardRunW >
+resStr=< heelByFGS=<1>
+539:iTargetDistanc >
+resStr=< eWheelFGS=<9>
+545:iTargetDistanc >
+resStr=< eWheelFGS=<508:++runMotorFGSignl >
+resStr=< Couter=<1>
+9>
+547:bForwardRunWhe >
+resStr=< elByFGS=<1>
+539:iTargetDistanceW >
+resStr=< heelFGS=<8>
+545:iTargetDistanceW >
+resStr=< heelFGS=<8>
+547:b5orwardRunWheel >
+resStr=< ByFGS=<1>
+508:++runMotorFGSignlC >
+resStr=< outer=<1>
+539:iTargetDistanceWhe >
+resStr=< elFGS=<6>
+545:iTargetDistanceWhe >
+resStr=< elFGS=<6>
+547:bForwardRunWheelBy >
+resStr=< FGS=<1>
+539:iTargetDistanceWheel >
+resStr=< FGS=<6>
+545:iTargetDistanceWheel >
+resStr=< FGS=<6>
+547:bForwardRunWhe5lByFG >
+resStr=< S=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<5>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<5>
+ >
+resStr=< 547:bForwardRunWheelByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<4>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<4>
+54 >
+resStr=< 7:bForwardRunWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+539: >
+resStr=< iTargetDistanceWheelFGS=<3>
+545: >
+resStr=< iTargetDistanceWheelFGS=<3>
+547: >
+resStr=< bFo5wardRunWheelByFGS=<1>
+539:iT >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< argetDistanceWheelFGS=<1>
+545:iT >
+resStr=< argetDistanceWheelFGS=<1>
+547:bF >
+resStr=< orwardRunWheelByFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<1>
+539:iTar >
+resStr=< getDistanceWheelFGS=<0>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< {"tofw":179,"tofw_p":182}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":179}} >
+trans2serial msg=< { fgs: { wheel: 179 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<0>
+539:iTargetDista >
+resStr=< nceWheelFGS=<0>
+ >
+resStr=< {"tofw":180,"tofw_p":183}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":347}} >
+trans2serial msg=< { fgs: { wheel: 347 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<16>
+539:iTargetDist >
+resStr=< anceWheelFGS=<16>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<16>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+{"tofw":187,"to >
+resStr=< fw_p":182}
+539:iTargetDistanceWh >
+jsonLike=< {"tofw":187,"tofw_p":182} >
+resStr=< eelFGS=<16>
+545:iTargetDistanceW >
+resStr=< heelFGS=<16>
+547:bForwar5RunWhee >
+resStr=< lByFGS=<1>
+539:iTargetDistanceWh >
+resStr=< eelFGS=<15>
+545:iTargetDistanceW >
+resStr=< heelFGS=<15>
+547:bForwardRunWhee >
+resStr=< lBy5GS=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<14> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<14 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<13> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<13 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<12> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<12 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 539:iTargetDistanc5WheelFGS=<11> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<11 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<11> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+11 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<9>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<9>
+ >
+resStr=< 547:bForwardRunWh5elByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<7>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<7>
+54 >
+resStr=< 7:bForwardRunWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+539: >
+resStr=< iTargetDistanceWheelFGS=<6>
+508: >
+resStr=< ++runMotorFGSignlCouter=<2>
+545: >
+resStr=< iTargetDistanceWheelFGS=<5>
+547: >
+resStr=< bForwardRunWheelByFGS=<1>
+508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+539:iT >
+resStr=< argetDistanceWheelFGS=<4>
+545:iT >
+resStr=< argetDistanceWheelFGS=<508:++run >
+resStr=< MotorFGSignlCouter=<2>
+4>
+547:bF >
+resStr=< orwardRunWheelByFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<1>
+539:iTar >
+resStr=< getDistanceWheelFGS=<2>
+545:iTar >
+resStr=< getDistanceWheelF5S=<1>
+547:bFor >
+resStr=< wardRunWheelByFGS=<1>
+508:++runM >
+resStr=< otorFGSignlCouter=<1>
+539:iTarge >
+resStr=< tDistanceWheelFGS=<0>
+508:++runM >
+resStr=< otorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+resStr=< {"tofw":173,"tofw_p":173}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":427}} >
+trans2serial msg=< { fgs: { wheel: 427 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<25>
+539:iTargetDist >
+resStr=< anceWheelFGS=<25>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<25>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<25>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<25>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWhe5lFGS=<24>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<24>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<24>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<24>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<23>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<23>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<22>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<22>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<508:++runMotorFGSi >
+resStr=< gnlCouter=<1>
+22>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<21>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<20>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<20>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<19>
+545:iTargetDis >
+resStr=< tanceWheelFGS=518>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<17>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<17>
+547:bForwardR >
+resStr=< unWheelByFGS=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<15> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<15 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<14> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<14 >
+resStr=< >
+547:bFor5ardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<12> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<12 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<2>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<10> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<10 >
+resStr=< >
+547:bForwardRunWheel5yFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<8>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<8>
+ >
+resStr=< 547:bForwardRunWheelByFGS=<15
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<6>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<6>
+54 >
+resStr=< 7:bForwardRunWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<2>
+539: >
+resStr=< iTargetDistanceWheelFGS=<4>
+545: >
+resStr=< iTargetDistanceWheelFGS=<4>
+547: >
+resStr=< bForwardRunWheelByFGS=<1>5508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+539:iT >
+resStr=< argetDistanceWheelFGS=<2>
+545:iT >
+resStr=< argetDistanceWheelFGS=<2>
+547:bF >
+resStr=< orwardRunWheelByFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<1>
+539:iTar >
+resStr=< getDistanceWheelFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<2>
+545:iTar >
+resStr=< getDistanceWheelFGS=<0>
+547:bFor >
+resStr=< wardRunWheel5yFGS=<1>
+508:++runM >
+resStr=< otorFGSignlCouter=<1>
+539:iTarge >
+resStr=< tDistanceWheelFGS=<-2>
+508:++run >
+resStr=< MotorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+resStr=< {"tofw":153,"tofw_p":153}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":477}} >
+trans2serial msg=< { fgs: { wheel: 477 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<32>
+539:iTargetDist >
+resStr=< anceWheelFGS=<32>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<32>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<32>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<32>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<32>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<32>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<31>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<31>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<31>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<31>
+547:bForwardR >
+resStr=< unWhe508:++runMotorFGSignlCouter >
+resStr=< =<1>
+elByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<30>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<30>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<29>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<29>
+547:bForwardR >
+resStr=< unWheelByFGS5<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<28> >
+resStr=< 
+545508:++runMotorFGSignlCouter= >
+resStr=< <1>
+:iTargetDistanceWheelFGS=<27 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<26> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<26 >
+resStr=< >
+547:bForwardRunWhee5ByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<24> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<24 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<23> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<23 >
+resStr=< >
+547:5ForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<21> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<21 >
+resStr=< >
+547:bForwardRunWheelByFGS508:+ >
+resStr=< +runMotorFGSignlCouter=<2>
+=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<19> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<19 >
+resStr=< >
+547:bForwardRunW5eelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<17> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<17 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<2>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<15> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<15 >
+resStr=< >
+547:bForwardRunW5eelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<13> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<13 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<2>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<11> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<11 >
+resStr=< >
+547:bForwardR5nWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<9>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<9>
+ >
+resStr=< 547:bForwardRunWheelByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<2>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<7>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<7>
+54 >
+resStr=< 7:bForwardR5nWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+539: >
+resStr=< iTargetDistanceWheelFGS=<5>
+545: >
+resStr=< iTargetDistanceWheelFGS=<5>
+547: >
+resStr=< bForwardRunWheelByFGS=<5>
+508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+539:iT >
+resStr=< argetDistanceWheelFGS=<3>
+545:iT >
+resStr=< argetDistanceWheelFGS=<3>
+547:bF >
+resStr=< orwardRunWheelByFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<2>
+539:iTar >
+resStr=< getDistanceWheelFGS=<1>
+545:iTar >
+resStr=< getDistanceWheelFGS=<1>
+547:bFor >
+resStr=< wardRunWheelByF5S=<1>
+508:++runM >
+resStr=< otorFGSignlCouter=<1>
+539:iTarge >
+resStr=< tDistanceWheelFGS=<-1>
+508:++run >
+resStr=< MotorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< {"tofw":130,"tofw_p":130}
+ >
+resStr=< {"tofw":128,"tofw_p":125}
+ >
+resStr=< {"tofw":129,"tofw_p":130}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":153}} >
+trans2serial msg=< { fgs: { wheel: 153 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<2>
+539:iTargetDista >
+resStr=< nceWheelFGS=<2>
+545:iTargetDista >
+resStr=< nceWheelFGS=<2>
+547:bForwardRunW >
+resStr=< heelByFGS=<1>
+539:iTargetDistanc >
+resStr=< eWheelFGS=<2>
+545:iTargetDistanc >
+resStr=< eWheelFGS=<2>
+547:bForwardRunWhe >
+resStr=< elByFGS=<1>
+508:++runMotorFGSign >
+resStr=< lCouter=<1>
+539:iTargetDistanceW >
+resStr=< heelFGS=<1>
+545:iTargetDistanceW >
+resStr=< heelFGS=<1>
+547:bForwardRunWheel >
+resStr=< ByFGS=<1>
+508:++runMotorFGSignlC >
+resStr=< outer=<1>
+539:iTargetDistanceWhe >
+resStr=< elFGS=<0>
+508:++runMotorFGSignlC >
+resStr=< outer=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< {"tofw":128,"tofw_p":129}
+ >
+resStr=< {"tofw":128,"tofw_p":132}
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<9>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<10> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<11> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<12> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<13> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<14> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<15> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<16> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<17> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<18> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<19> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<20> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<21> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<22> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<23> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<24> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<25> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<26> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<27> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<28> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<29> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<30> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<31> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<32> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<33> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<34> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<35> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<36> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<37> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<38> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<39> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<40> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<41> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<42> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<43> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<44> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<45> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<46> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<47> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<48> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<49> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<50> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<51> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<52> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<53> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<54> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<55> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<56> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<57> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<58> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<59> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<60> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<61> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<62> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<63> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<64> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<65> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<66> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<67> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<68> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<69> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<70> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<71> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<72> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<73> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<74> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<75> >
+resStr=< 
+{"tofw":176,"tofw_p":178}
+ >
+resStr=< 508:++runMotorFGSignlCouter=<76> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<77> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<78> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<79> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<80> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<81> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<82> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<83> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<84> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<85> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<86> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<87> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<88> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<89> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<90> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<91> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<92> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<93> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<94> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<95> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<96> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<97> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<98> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<99> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<100 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<101 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<102 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<103 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<104 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<105 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<106 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<107 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<108 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<109 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<110 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<111 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<112 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<113 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<114 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<115 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<116 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<117 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<118 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<119 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<120 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<121 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<122 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<123 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<124 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<125 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<126 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<127 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<128 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<129 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<130 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<131 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<132 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<133 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<134 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<135 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<136 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<137 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<138 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<139 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<140 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<141 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<142 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<143 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<144 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<145 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<146 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<147 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<148 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<149 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<150 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<151 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<152 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<153 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<154 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<155 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<156 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<157 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<158 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<159 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<160 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<161 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<162 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<163 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<164 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<165 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<166 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<167 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<168 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<169 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<170 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<171 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<172 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<173 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<174 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<175 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<176 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<177 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<178 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<179 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<180 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<181 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<182 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<183 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<184 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<185 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<186 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<187 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<188 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<189 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<190 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<191 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<192 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<193 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<194 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<195 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<196 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<197 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<198 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<199 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<200 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<201 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<202 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<203 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<204 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<205 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<206 >
+resStr=< >
+ >
+resStr=< {"tofw":254,"tofw_p":257}
+508:++ >
+jsonLike=< {"tofw":254,"tofw_p":257} >
+resStr=< runMotorFGSignlCouter=<207>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<208 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<209 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<210 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<211 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<212 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<213 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<214 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<215 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<216 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<217 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<218 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<219 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<220 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<221 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<222 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<223 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<224 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<225 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<226 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<227 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<228 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<229 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<230 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<231 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<232 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<233 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<234 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<235 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<236 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<237 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<238 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<239 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<240 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<241 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<242 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<243 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<244 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<245 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<246 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<247 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<248 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<249 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<250 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<251 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<252 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<253 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<254 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<255 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<256 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<257 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<258 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<259 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<260 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<261 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<262 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<263 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<264 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<265 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<266 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<267 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<268 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<269 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<270 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<271 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<272 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<273 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<274 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<275 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<276 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<277 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<278 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<279 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<280 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<281 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<282 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<283 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<284 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<285 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<286 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<287 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<288 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<289 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<290 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<291 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<292 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<293 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<294 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<295 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<296 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<297 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<298 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<299 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<300 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<301 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<302 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<303 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<304 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<305 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<306 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<307 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<308 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<309 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<310 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<311 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<312 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<313 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<314 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<315 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<316 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<317 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<318 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<319 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<320 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<321 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<322 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<323 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<324 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<325 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<326 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<327 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<328 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<329 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<330 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<331 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<332 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<333 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<334 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<335 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<336 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<337 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<338 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<339 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<340 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<341 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<342 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<343 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<344 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<345 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<346 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<347 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<348 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<349 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<350 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<351 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<352 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<353 >
+resStr=< >
+{"tofw":345,"tofw_p":342}
+508: >
+jsonLike=< {"tofw":345,"tofw_p":342} >
+resStr=< ++runMotorFGSignlCouter=<354>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<355 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<356 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<357 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<358 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<359 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<360 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<361 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<362 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<363 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<364 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<365 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<366 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<367 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<368 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<369 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<370 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<371 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<372 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<373 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<374 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<375 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<376 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<377 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<378 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<379 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<380 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<381 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<382 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<383 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<384 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<385 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<386 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<387 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<388 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<389 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<390 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<391 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<392 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<393 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<394 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<395 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<396 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<397 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<398 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<399 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<400 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<401 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<402 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<403 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<404 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<405 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<406 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<407 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<408 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<409 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<410 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<411 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<412 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<413 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<414 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<415 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<416 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<417 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<418 >
+resStr=< >
+ >
+resStr=< 508:++runMotorFGSignlCouter=<419 >
+resStr=< >
+ >
+resStr=< {"tofw":380,"tofw_p":383}
+ >
+resStr=< {"tofw":379,"tofw_p":383}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":275}} >
+trans2serial msg=< { fgs: { wheel: 275 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<10>
+539:iTargetDist >
+resStr=< anceWheelFGS=<10>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<10>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<9>
+545:iTargetDist >
+resStr=< anceWheelFGS=<9>
+547:bForwardRun >
+resStr=< WheelByFGS=<1>
+539:iTargetDistan >
+resStr=< ceWheelFGS=<9>
+545:iTargetDistan >
+resStr=< ceWheelFGS=<9>
+547:bForwardRunWh >
+resStr=< eelByFGS=<1>
+539:iTargetDistance >
+resStr=< WheelFGS=<9>
+545:iTargetDi508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+stance >
+resStr=< WheelFGS=<8>
+547:bForwardRunWhee >
+resStr=< lByFGS=<1>
+539:iTargetDistanceWh >
+resStr=< eelFGS=<8>
+545:iTargetDistanceWh >
+resStr=< eelFGS=<8>
+547:bForwardRunWheel5 >
+resStr=< yFGS=<1>
+539:iTargetDistanceWhee >
+resStr=< lFGS=<7>
+545:iTargetDistanceWhee >
+resStr=< lFGS=<7>
+547:bForwardRunWheelByF >
+resStr=< GS=<1>
+508:++runMotorFGSignlCout >
+resStr=< er=<1>
+539:iTargetDistanceWheelF >
+resStr=< GS=<6>
+545:iTargetDistanceWheelF >
+resStr=< GS=<6>
+547:bForwardRunWheelByFGS >
+resStr=< =<1>
+508:++runMotorFGSignlCouter >
+resStr=< =<1>
+539:iTargetDistanceWheelFGS >
+resStr=< =<5508:++runMotorFGSignlCouter=< >
+resStr=< 2>
+>
+545:iTargetDistanceWheelFGS >
+resStr=< =<4>
+547:bForwardRunWheelByFGS=< >
+resStr=< 1>
+508:++runMotorFGSignlCouter=< >
+resStr=< 1>
+508:++runMotorFGSignlCouter=< >
+resStr=< 2>
+539:iTargetDistanceWheelFGS=< >
+resStr=< 2>
+545:iTargetDistanceWheelFGS=< >
+resStr=< 2>
+547:bForwardRunWheelByFGS=<1> >
+resStr=< 
+508:++runMotorFGSignlCouter=<1> >
+resStr=< 
+508:++runMotorFGSignlCouter=<2> >
+resStr=< 
+539:iTargetDistanceWheelFGS=<0> >
+resStr=< 
+508:++runMotorFGSignlCouter=<3> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<9>
+ >
+resStr=< {"tofw":377,"tofw_p":376}
+ >
+resStr=< {"tofw":371,"tofw_p":371}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":467}} >
+trans2serial msg=< { fgs: { wheel: 467 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<9>
+539:iTargetDista >
+resStr=< nceWheelFGS=<9>
+545:iTargetDista >
+resStr=< nceWheelFGS=<9>
+547:bForwardRunW >
+resStr=< heelByFGS=<1>
+539:iTargetDistanc >
+resStr=< eWheelFGS=<9>
+545:iTargetDistanc >
+resStr=< eWheelFGS=<9>
+547:bForwardRunWhe >
+resStr=< elByF5S=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<8>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<8>
+ >
+resStr=< 547:bForwardRunWheelByFGS=<1>5 >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<6>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<6>
+ >
+resStr=< 547:bForwardRunWheelByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<5>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<5>
+54 >
+resStr=< 7:bForwardRunWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+539: >
+resStr=< iTargetDistanceWheelFGS=<4>
+545: >
+resStr=< iTargetDistanceWheelFGS=<4>
+547: >
+resStr=< bForwardRunWheelByFGS=<1>
+508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+539:iT >
+resStr=< argetDistanceWheelFGS=<3>
+545:iT >
+resStr=< argetDistanceWheelFGS=<3>
+547:bF >
+resStr=< orwardRunWheelByFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<1>
+539:iTar >
+resStr=< getDistanceWheelFGS=<2>
+545:iTar >
+resStr=< getDistanceWheelFGS=<2>
+547:bFor >
+resStr=< wardRunWheelByFGS=<508:++runMoto >
+resStr=< rFGSignlCouter=<2>
+1>
+508:++runM >
+resStr=< otorFGSignlCouter=<1>
+539:iTarge >
+resStr=< tDistanceWheelFGS=<0>
+508:++runM >
+resStr=< otorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< {"tofw":366,"tofw_p":361}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":227}} >
+trans2serial msg=< { fgs: { wheel: 227 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<13>
+539:iTargetDist >
+resStr=< anceWheelFGS=<13>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<13>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<13>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<13>
+547:bForwardR >
+resStr=< unWheelByFGS5<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<12> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<12 >
+resStr=< >
+547:bForwardRunWhe5lByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<10> >
+resStr=< 
+545:iTargetDistanceWheelFGS=<10 >
+resStr=< >
+547:bForwardRunWheelByFGS=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<9>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<9>
+ >
+resStr=< 547:bForwardRunWheelByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+{" >
+resStr=< tofw":361,"tofw_p":361}
+539:iTar >
+jsonLike=< {"tofw":361,"tofw_p":361} >
+resStr=< getDistanceWheelFGS=<8>
+545:iTar >
+resStr=< getDistanceWheelFGS=<8>
+547:bFor >
+resStr=< wardRunWheelByFGS=<1>
+508:++runM >
+resStr=< otorFGSignlCouter=<1>
+539:iTarge >
+resStr=< tDistanceWheelFGS=<7>
+545:iTarge >
+resStr=< tDistanceWheelFGS=<7>
+547:bForwa >
+resStr=< rdRunWheelByFGS=51>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<6>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<6>
+ >
+resStr=< 547:bForwardRunWh5elByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<4>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<4>
+54 >
+resStr=< 7:bForwardRunWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<2>
+539: >
+resStr=< iTargetDistanceWheelFGS=<2>
+545: >
+resStr=< iTargetDistanceWheelFGS=<2>
+547: >
+resStr=< bForwardRun5heelByFGS=<1>
+508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+539:iT >
+resStr=< argetDistanceWheelFGS=<0>
+508:++ >
+resStr=< runMotorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<9>
+ >
+resStr=< {"tofw":352,"tofw_p":348}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":190}} >
+trans2serial msg=< { fgs: { wheel: 190 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<15>
+539:iTargetDist >
+resStr=< anceWheelFGS=<15>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<15>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<15>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<15>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<14>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<14>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<13>
+545:iTargetDis >
+resStr=< tanceWhee5FGS=<12>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<11>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<11>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<10>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<10>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<9>
+545:iTargetDist >
+resStr=< anceWheelFGS=<9>
+547:bForwardRun >
+resStr=< WheelByFGS=51>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<8>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<8>
+ >
+resStr=< 547:bForwardRu5WheelByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<6>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<6>
+54 >
+resStr=< 7:bForwardRunWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<2>
+539: >
+resStr=< iTargetDistanceWheelFGS=<4>
+545: >
+resStr=< iTargetDistanceWheelFGS=<4>
+547: >
+resStr=< bForwardRunWhe508:++runMotorFGSi >
+resStr=< gnlCouter=<3>
+elByFGS=<1>
+508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+539:iT >
+resStr=< argetDistanceWheelFGS=<2>
+545:iT >
+resStr=< argetDistanceWheelF508:++runMoto >
+resStr=< rFGSignlCouter=<2>
+GS=<1>
+547:bF >
+resStr=< orwardRunWheelByFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<2>
+539:iTar >
+resStr=< getDistanceWheelFGS=<-1>
+508:++r >
+resStr=< unMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<9>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<10> >
+resStr=< 
+ >
+resStr=< 508:++runMotorFGSignlCouter=<11> >
+resStr=< 
+ >
+resStr=< {"tofw":337,"tofw_p":335}
+ >
+onWSSMsg msg=< {"fgs":{"wheel":304}} >
+trans2serial msg=< { fgs: { wheel: 304 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<3>
+539:iTargetDista >
+resStr=< nceWheelFGS=<3>
+545:iTargetDista >
+resStr=< nceWheelFGS=<3>
+547:bForwardRunW >
+resStr=< heelByFGS=<1>
+539:iTargetDistanc >
+resStr=< eWheelFGS=<3>
+545:iTargetDistanc >
+resStr=< eWheelFGS=<3>
+547:bForwardRunWhe >
+resStr=< elByFGS=<1>
+508:++runMotorFGSign >
+resStr=< lCouter=<1>
+539:iTargetDistanceW >
+resStr=< heelFGS=<2>
+545:iTargetDistanceW >
+resStr=< heelFGS=<2>
+547:bForwardRunWheel >
+resStr=< 5yFGS=<1>
+508:++runMotorFGSignlC >
+resStr=< outer=<1>
+539:iTargetDistanceWhe >
+resStr=< elFGS=<0>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+onWSSMsg msg=< {"fgs":{"wheel":414}} >
+trans2serial msg=< { fgs: { wheel: 414 } } >
+resStr=< {"tofw":340,"tofw_p":335}
+ >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<8>
+539:iTargetDista >
+resStr=< nceWheelFGS=<8>
+545:iTargetDista >
+resStr=< nceWheelFGS=<8>
+547:bForwardRunW >
+resStr=< heelByFGS=<1>
+539:iTargetDistanc >
+resStr=< eWheelFGS=<8>
+545:iTargetDistanc >
+resStr=< eWheelFGS=<8>
+547:bForwardRunWhe >
+resStr=< elByFGS=<1>
+539:iTargetDistanceW >
+resStr=< heelFGS=<8>
+545:iTargetDistanceW >
+resStr=< heelFGS=<8>
+547:bForwardRu5Wheel >
+resStr=< ByFGS=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<7>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<7>
+ >
+resStr=< 547:bForwardRunW5eelByFGS=<1>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<6>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<6>
+54 >
+resStr=< 7:bForwardRunWheelByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+539: >
+resStr=< iTargetDistanceWheelFGS=<5>
+545: >
+resStr=< iTargetDistanceWheelFGS=<5>
+547: >
+resStr=< bForwardRunWheelByFGS=<1>
+508:++ >
+resStr=< runMotorFGSignlCouter=<1>
+539:iT >
+resStr=< argetDistanceWheelFGS=<4>
+545:iT >
+resStr=< argetDistanceWheelFGS=<4>
+547:bF >
+resStr=< orwardRunWheelByFGS=<1>
+508:++ru >
+resStr=< nMotorFGSignlCouter=<1>
+539:iTar >
+resStr=< getDistanceWheelFGS=<3>
+545:iTar >
+resStr=< getDistanceWheelFGS=<3>
+547:bFor >
+resStr=< wardRun508:++runMotorFGSignlCout >
+resStr=< er=<2>
+WheelByFGS=<1>
+508:++runM >
+resStr=< otorFGSignlCouter=<1>
+539:iTarge >
+resStr=< tDistanceWheelFGS=<1>
+545:iTarge >
+resStr=< tDistanceWheelFGS=<1>
+547:bForwa >
+resStr=< 5dRunWheelByFGS=<1>
+508:++runMot >
+resStr=< orFGSignlCouter=<1>
+539:iTargetD >
+resStr=< istanceWheelFGS=<-1>
+508:++runMo >
+resStr=< torFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+onWSSMsg msg=< {"fgs":{"wheel":457}} >
+trans2serial msg=< { fgs: { wheel: 457 } } >
+resStr=< 264:errorDS.c_str()=<IncompleteI >
+resStr=< nput>
+ >
+resStr=< 272:command=<fgs>
+527:bForwardRu >
+resStr=< nWheelByFGS=<1>
+530:iTargetDista >
+resStr=< nceWheelFGS=<12>
+539:iTargetDist >
+resStr=< anceWheelFGS=<12>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<12>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<12>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<12>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<11>
+545:iTargetDis >
+resStr=< tanceWheelFGS=<11>
+547:bForwardR >
+resStr=< unWheelByFGS=<1>
+508:++runMotorF >
+resStr=< GSignlCouter=<1>
+539:iTargetDist >
+resStr=< anceWheelFGS=<10>
+545:iTargetDis >
+resStr=< 5anceWheelFGS=<9>
+547:bForwardRu >
+resStr=< nWheelByFGS=<1>
+508:++runMotorFG >
+resStr=< SignlCouter=<1>
+539:iTargetDista >
+resStr=< nceWheelFGS=<8>
+545:iTargetDista >
+resStr=< nceWheelFGS=<8>
+547:bForwardRunW >
+resStr=< heelByFGS=<1>
+539508:++runMotorF >
+resStr=< GSignlCouter=<1>
+:iTargetDistanc >
+resStr=< eWheelFGS=<7>
+545:iTargetDistanc >
+resStr=< eWheelFGS=<7>
+547:bForwardRunWhe >
+resStr=< elByFGS=<1>
+508:++runMotorFGSign >
+resStr=< lCouter=<1>
+539:iTargetDistanceW >
+resStr=< heelFGS=<6>
+545:iTargetDistanceW >
+resStr=< heelFGS=<6>
+547:bForwardRunWheel >
+resStr=< ByFGS=<1>
+508:++runMotorFGSignlC >
+resStr=< outer=<1>
+539:iTargetDistanceWhe >
+resStr=< elFGS=<5>
+545:iTargetDistanceWhe >
+resStr=< elFGS=<5>
+547:bForwardRunWheelBy >
+resStr=< FG5=<1>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<1>
+ >
+resStr=< 539:iTargetDistanceWheelFGS=<3>
+ >
+resStr=< 545:iTargetDistanceWheelFGS=<3>
+ >
+resStr=< 547:bForwardRunWheelByFGS=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<1>
+50 >
+resStr=< 8:++runMotorFGSignlCouter=<2>
+53 >
+resStr=< 9:iTargetDistanceWheelFGS=<1>
+54 >
+resStr=< 5:iTargetDistanceWheelFGS=<1>
+54 >
+resStr=< 7:bForwardRunWhe5lByFGS=<1>
+508: >
+resStr=< ++runMotorFGSignlCouter=<1>
+539: >
+resStr=< iTargetDistanceWheelFGS=<-1>
+508 >
+resStr=< :++runMotorFGSignlCouter=<2>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<3>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<4>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<5>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<6>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<7>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<8>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<9>
+ >
+resStr=< 508:++runMotorFGSignlCouter=<10> >
+resStr=< 
+ >
+resStr=< {"tofw":314,"tofw_p":311}
+ >
+resStr=< {"tofw":312,"tofw_p":317}
+ >
+resStr=< {"tofw":313,"tofw_p":310}
+ >
+resStr=< {"tofw":312,"tofw_p":309}
+ >
 バッチ ジョブを終了しますか (Y/N)? 
 
 C:\Users\yma.INTRA\Desktop\rMule\webui>pause
 続行するには何かキーを押してください . . . 
-バッチ ジョブを終了しますか (Y/N)? バッチ ジョブを終了しますか (Y/N)? 
+バッチ ジョブを終了しますか (Y/N)? 

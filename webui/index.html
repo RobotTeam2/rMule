@@ -14,7 +14,7 @@
         <div class="col-6">
           <div class="form-group">
             <label>Wheel Curent Distance <span class="badge badge-primary " id="eMule-wheel-distance-text-show">1</span>mm</label>
-            <input type="range" class="form-control-range" value="200" min="120" max="500" id="eMule-wheel-distance-slide-show" >
+            <input type="range" class="form-control-range" value="350" min="300" max="400" id="eMule-wheel-distance-slide-show" >
           </div>
         </div>
       </div>
@@ -23,12 +23,44 @@
       <div class="row justify-content-center mt-5">
         <div class="col-6">
           <div class="form-group">
-            <label>Wheel Target Distance <span class="badge badge-primary " id="eMule-wheel-distance-text-set">300</span>mm</label>
-            <input type="range" class="form-control-range" value="200" min="120" max="500" id="eMule-wheel-distance-slide-set" >
+            <label>Wheel Target Distance <span class="badge badge-primary " id="eMule-wheel-distance-text-set">1</span>mm</label>
+            <input type="range" class="form-control-range" value="350" min="300" max="400" id="eMule-wheel-distance-slide-set" >
           </div>
         </div>
       </div>
     
+    </div>
+
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col">
+          <button type="button" class="btn btn-primary" onclick="onUILoop3()">繰り返し３回</button>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary" onclick="onUILinearUp()">直動シリンダー上</button>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary" onclick="onUILinearUp2s()">直動シリンダー上(2s)</button>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary" onclick="onUILinearDown()">直動シリンダー下</button>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary" onclick="onUILinearDown2s()">直動シリンダー下(2s)</button>
+        </div>
+      </div>
+      <hr/>
+
+      <h1>歩行アニメモーション</h1>
+      <div class="row justify-content-center mt-5">
+        <div class="col">
+          <button type="button" class="btn btn-primary" onclick="onUIActionGroud()">着地</button>
+        </div>
+        <div class="col">
+          <button type="button" class="btn btn-primary" onclick="onUIActionAir()">浮く</button>
+        </div>
+      </div>
+
     </div>
 
   </body>

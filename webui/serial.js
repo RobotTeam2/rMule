@@ -19,7 +19,7 @@ port.open(function (err) {
 let dataBuffer = '';
 port.on('data', function (response) {
   let resStr = response.toString('utf-8');
-  console.log('resStr=<',resStr ,'>');
+  //console.log('resStr=<',resStr ,'>');
   try {
     tryParseResponse(resStr)
   } catch(e) {

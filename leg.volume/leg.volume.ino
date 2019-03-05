@@ -1,9 +1,6 @@
 #include <ArduinoJson.h>
-#include <Wire.h>
-#include <VL53L0X.h>
 #include <EEPROM.h>
 
-VL53L0X sensor;
 #define DUMP_VAR(x)  { \
   Serial.print(__LINE__);\
   Serial.print(":"#x"=<");\
@@ -14,6 +11,7 @@ VL53L0X sensor;
 
 const static char MOTER_PWM_WHEEL = 12;
 const static char MOTER_CCW_WHEEL = 27;
+const static char MOTER_VOLUME_WHEEL = 4;
 
 // Interrupt
 const static char MOTER_FGS_WHEEL = 2;
@@ -56,8 +54,8 @@ const int  iEROMWheelLimitBackAddress = iEROMLegIdAddress + 2;
 const int  iEROMWheelLimitFrontAddress = iEROMWheelLimitBackAddress + 4; 
 
 uint16_t  iEROMLegId = 0;
-uint16_t  iEROMWheelLimitBack = 120; 
-uint16_t  iEROMWheelLimitFront = 500; 
+uint16_t  iEROMWheelLimitBack = 300; 
+uint16_t  iEROMWheelLimitFront = 400; 
 
 void loadEROM() {
   DUMP_VAR(EEPROM.length());
@@ -87,36 +85,6 @@ void saveEROM(int address,uint16_t value) {
   EEPROM.write(address+1,value2);
 }
 
-#define TOF_HIGH_SPEED
-//#define TOF_HIGH_ACCURACY
-
-const int TOF_TIME_OUT = 1;
-
-void setupTof() {
-  Wire.begin();
-  sensor.init();
-  sensor.setTimeout(TOF_TIME_OUT);
-  sensor.setSignalRateLimit(0.5);
-  int limit_Mcps = sensor.getSignalRateLimit();
-  DUMP_VAR(limit_Mcps);
-/*
-#if defined LONG_RANGE
-  // lower the return signal rate limit (default is 0.25 MCPS)
-  sensor.setSignalRateLimit(0.1);
-  // increase laser pulse periods (defaults are 14 and 10 PCLKs)
-  sensor.setVcselPulsePeriod(VL53L0X::VcselPeriodPreRange, 18);
-  sensor.setVcselPulsePeriod(VL53L0X::VcselPeriodFinalRange, 14);
-#endif
-*/
-
-#if defined TOF_HIGH_SPEED
-  // reduce timing budget to 1 ms (default is about 33 ms)
-  sensor.setMeasurementTimingBudget(20L*1000L);
-#elif defined TOF_HIGH_ACCURACY
-  // increase timing budget to 200 ms
-  sensor.setMeasurementTimingBudget(200L*1000L);
-#endif
-}
 
 void repsponseJson(const StaticJsonDocument<256> &doc) {
   String output;
@@ -125,38 +93,12 @@ void repsponseJson(const StaticJsonDocument<256> &doc) {
   Serial.print("\n");
 }
 
-int iDistanceWheelTof = 0;
-const int iDistanceDiffMaxWheel = 40;
-int iDistanceWheelTofStable = 0;
-
-int iDistanceTofReportCounter = 1;
-const int iDistanceTofReportSkip = 50;
-
-void readTof() {
-  int distance = sensor.readRangeSingleMillimeters();
-  //DUMP_VAR(distance);
-  if(distance <= 0 || distance >= 8191) {
-    return ;
-  }
-  bool isReport = (iDistanceTofReportCounter++%iDistanceTofReportSkip) == 0;
-  //DUMP_VAR(isReport);
-  if(isReport) {
-    StaticJsonDocument<256> doc;
-    JsonObject root = doc.to<JsonObject>();
-    root["tofw"] = distance;
-    root["tofw_p"] = iDistanceWheelTof;
-    repsponseJson(doc);
-    iDistanceWheelTofStable = iDistanceWheelTof;
-  }
-  iDistanceWheelTof = distance;
-}
-
-
 
 
 
 void setup()
 {
+  pinMode(MOTER_VOLUME_WHEEL, INPUT);
   pinMode(MOTER_PWM_WHEEL, OUTPUT);
   pinMode(MOTER_CCW_WHEEL, OUTPUT);
 
@@ -189,7 +131,6 @@ void setup()
 
   Serial.print("start rMule leg\n");\
 
-  setupTof();
 }
 
 String InputCommand ="";
@@ -216,25 +157,6 @@ void runWheel(int spd,int front) {
   }
 }
 
-int iTargetDistanceWheel = 0;
-int iStartDistanceWheel = 0;
-int iTotalDistanceWheel = 0;
-bool bIsRunWheelByTof = false;
-void runWheelTof(int distPostion) {
-  if(distPostion < iEROMWheelLimitBack || distPostion > iEROMWheelLimitFront) {
-    DUMP_VAR(distPostion);
-    DUMP_VAR(iEROMWheelLimitBack);
-    DUMP_VAR(iEROMWheelLimitFront);
-    return;
-  }
-  iTargetDistanceWheel = distPostion;
-  iStartDistanceWheel = iDistanceWheelTof;
-  iTotalDistanceWheel = abs(iTargetDistanceWheel - iStartDistanceWheel);
-  DUMP_VAR(iTargetDistanceWheel);
-  DUMP_VAR(iStartDistanceWheel);
-  DUMP_VAR(iTotalDistanceWheel);
-  bIsRunWheelByTof = true;
-}
 
 
 
@@ -254,8 +176,6 @@ void runLinear(int distance,int ground) {
     digitalWrite(MOTER_A2_LINEAR, LOW);
     DUMP_VAR(distance);
   }
-}
-void runLinearTof(int distPostion) {
 }
 
 
@@ -286,29 +206,6 @@ void tryConfirmJson() {
       DUMP_VAR(ground);
       runLinear(distance,ground);
     }
-    if(command == "tof" || command == "T") {
-      int tofWheelDistance = -1;
-      if(params.containsKey("wheel")) {
-        tofWheelDistance = params["wheel"];
-      }
-      if(params.containsKey("W")) {
-        tofWheelDistance = params["W"];
-      }
-      if(tofWheelDistance > 0) {
-        runWheelTof(tofWheelDistance);
-      }
-      
-      int tofLinearDistance = -1;
-      if(params.containsKey("linear")) {
-        tofLinearDistance = params["linear"];
-      }
-      if(params.containsKey("L")) {
-        tofLinearDistance = params["L"];
-      }
-      if(tofLinearDistance > 0) {
-        runLinearTof(tofLinearDistance);
-      }
-    }
 
     if(command == "fgs" || command == "F") {
       int fgsWheelDistance = -1;
@@ -323,6 +220,18 @@ void tryConfirmJson() {
       }
     }
 
+    if(command == "vol" || command == "V") {
+      int volumeWheelDistance = -1;
+      if(params.containsKey("wheel")) {
+        volumeWheelDistance = params["wheel"];
+      }
+      if(params.containsKey("W")) {
+        volumeWheelDistance = params["W"];
+      }
+      if(volumeWheelDistance > 0) {
+        runWheelVolume(volumeWheelDistance);
+      }
+    }
     
     
     if(command == "setting") {
@@ -383,43 +292,26 @@ void run_comand() {
 void readStatus() {
   int current = analogRead(MOTER_CURRENT_LINEAR);
   if(abs(current - 506) > 10) {
-    DUMP_VAR(current);
+    //DUMP_VAR(current);
   }
-/*  
-  bool turn = digitalRead(MOTER_FGS_WHEEL);
-  //DUMP_VAR(turn);
-  if(turn) {
-    runMotorFGSignlCouter_NOT++;
-  } else {
-    //DUMP_VAR(turn);
-    if(++runMotorFGSignlCouter > 9) {
-      //DUMP_VAR(runMotorFGSignlCouter);
-      //DUMP_VAR(runMotorFGSignlCouter_NOT);
-      //DUMP_VAR(wheelRunCounter);
-      wheelRunCounter = 0;
-    }
-  }
-*/
-/*  
-  int turnAnalog = analogRead(MOTER_FGS_WHEEL);
-  DUMP_VAR(turnAnalog);
-  if(turnAnalog > 512) {
-    DUMP_VAR(turnAnalog);
-  }
-*/
+  readWheelVolume();
 }
+
+int iVolumeDistanceWheel = 0;
+bool bIsRunWheelByVolume = false;
+
 
 void checkOverRunLimit(void) {
   // stop
   if(wheelRunCounter-- <= 0 ) {
     STOP_WHEEL();
   }
-  if(iDistanceWheelTof < iEROMWheelLimitBack) {
-    bIsRunWheelByTof = false;
+  if(iVolumeDistanceWheel < iEROMWheelLimitBack) {
+    bIsRunWheelByVolume = false;
     STOP_WHEEL();
   }
-  if(iDistanceWheelTof > iEROMWheelLimitFront) {
-    bIsRunWheelByTof = false;
+  if(iVolumeDistanceWheel > iEROMWheelLimitFront) {
+    bIsRunWheelByVolume = false;
     STOP_WHEEL();
   }  
 }
@@ -447,63 +339,12 @@ void loop() {
   checkOverRunLimit();
   runSerialCommand();
   readStatus();
-  readTof();
-  calcWheel2TargetTof();
-  calcWheel2TargetFGS();
+  //calcWheel2TargetFGS();
+  calcWheelTarget();
 }
 
 int const iTargetDistanceMaxDiff = 1;
 
-int const aTofSpeedTable[] = {
-  130,130,130,130,130,
-  130,  130,  130  ,125,  0,
-  0,  125,  130  ,130,  130,
-  130,130,130,130,130,
-};
-int const aTofSpeedTableLength = sizeof(aTofSpeedTable)/aTofSpeedTable[0];
-
-int const aTofSpeedTableHighResolution[] = {
-  125,125,125,125,125,
-  125,  125,  125  ,125,  0,
-  0,  125,  125  ,125,  125,
-  125,125,125,125,125,
-};
-int const aTofSpeedTableHighResolutionLength = sizeof(aTofSpeedTableHighResolution)/sizeof(aTofSpeedTableHighResolution[0]);
-
-
-
-
-void calcWheel2TargetTof() {
-  if(bIsRunWheelByTof == false) {
-    return;
-  }
-  int diff = iTargetDistanceWheel - iDistanceWheelTof;
-  if(abs(diff) < iTargetDistanceMaxDiff) {
-    bIsRunWheelByTof = false;
-    STOP_WHEEL();
-    return;
-  }
-  int toMove = abs(diff);
-  int moved = abs(iDistanceWheelTof - iStartDistanceWheel);
-  int movedP = moved * 10 / iTotalDistanceWheel;
-  DUMP_VAR(movedP);
-  movedP %= aTofSpeedTableLength;
-  DUMP_VAR(movedP);
-  int speed = aTofSpeedTable[movedP];
-  if(movedP > 8 && movedP < 12) {
-    int movedP2 = moved * 100 / iTotalDistanceWheel;
-    movedP2 -= 90;
-    movedP2  %= aTofSpeedTableHighResolutionLength;
-    DUMP_VAR(movedP2);
-    speed = aTofSpeedTableHighResolution[movedP2];
-  }
-  DUMP_VAR(speed);
-  if(diff > 0) {
-    runWheel(speed,0);
-  } else {
-    runWheel(speed,1);
-  }
-}
 
 int iTargetDistanceWheelFGS = 0;
 void CounterWheelFGSByInterrupt(void) {
@@ -511,6 +352,144 @@ void CounterWheelFGSByInterrupt(void) {
   iTargetDistanceWheelFGS--;
   calcWheel2TargetFGS();
 }
+
+
+const int iConstVolumeDistanceWheelReportDiff = 2;
+int iVolumeDistanceWheelReported = 0;
+
+void readWheelVolume() {
+  int volume = analogRead(MOTER_VOLUME_WHEEL);
+  bool iReport = abs(volume - iVolumeDistanceWheelReported) > iConstVolumeDistanceWheelReportDiff;
+  //DUMP_VAR(abs(volume - iVolumeDistanceWheelReported));
+  //bool iReport = true;
+  if(iReport) {
+    iVolumeDistanceWheelReported = volume;
+    StaticJsonDocument<256> doc;
+    JsonObject root = doc.to<JsonObject>();
+    root["volume"] = volume;
+    repsponseJson(doc);
+  }
+  iVolumeDistanceWheel = volume;
+}
+int iTargetVolumePostionWheel = 0;
+void runWheelVolume(int distPostion) {
+  if(distPostion < iEROMWheelLimitBack || distPostion > iEROMWheelLimitFront) {
+    //DUMP_VAR(distPostion);
+    //DUMP_VAR(iEROMWheelLimitBack);
+    //DUMP_VAR(iEROMWheelLimitFront);
+    return;
+  }
+  iTargetVolumePostionWheel = distPostion;
+  bIsRunWheelByVolume = true;
+  
+  int moveDiff = iTargetVolumePostionWheel - iVolumeDistanceWheel;
+  bool bForwardRunWheel = false;
+  if(moveDiff > 0) {
+    bForwardRunWheel = true;
+  }
+  //DUMP_VAR(bForwardRunWheel);
+  if(bForwardRunWheel) {
+    runWheel(254,1);
+  } else {
+    runWheel(254,0);
+  }
+
+  {
+    StaticJsonDocument<256> doc;
+    JsonObject root = doc.to<JsonObject>();
+    root["distPostion"] = distPostion;
+    root["iVolumeDistanceWheel"] = iVolumeDistanceWheel;
+    root["bForwardRunWheel"] = bForwardRunWheel;
+    root["iTargetVolumePostionWheel"] = iTargetVolumePostionWheel;
+    repsponseJson(doc);
+  }
+
+}
+
+
+int const aVolumeSpeedTable[] = {
+  0,  0,125,125,125,
+  125,125,125,125,125,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  130,130,130,130,130,
+  130,130,130,130,130,
+  254
+};
+long const aVolumeSpeedTableLength = sizeof(aVolumeSpeedTable)/sizeof(aVolumeSpeedTable[0]);
+
+int const iConstVolumeWheelNearTarget = 3;
+
+void calcWheelTarget() {
+  if(bIsRunWheelByVolume == false) {
+    return;
+  }
+  int moveDiff = iTargetVolumePostionWheel - iVolumeDistanceWheel;
+  int distanceToMove = abs(moveDiff);
+  if(distanceToMove < iConstVolumeWheelNearTarget) {
+    bIsRunWheelByVolume = false;
+    STOP_WHEEL();
+    {
+      StaticJsonDocument<256> doc;
+      JsonObject root = doc.to<JsonObject>();
+      root["moveDiff"] = moveDiff;
+      root["bIsRunWheelByVolume"] = bIsRunWheelByVolume;
+      repsponseJson(doc);
+    }
+    return;
+  } /*else {
+      StaticJsonDocument<256> doc;
+      JsonObject root = doc.to<JsonObject>();
+      root["moveDiff"] = moveDiff;
+      root["bIsRunWheelByVolume"] = bIsRunWheelByVolume;
+      repsponseJson(doc);
+  }*/
+  
+  bool bForwardRunWheel = false;
+  if(moveDiff > 0) {
+    bForwardRunWheel = true;
+  }
+  DUMP_VAR(bForwardRunWheel);
+  int speedIndex = distanceToMove;
+  if(distanceToMove >= aVolumeSpeedTableLength) {
+    speedIndex = aVolumeSpeedTableLength -1;
+  }
+  int speed = aVolumeSpeedTable[speedIndex];
+  if(bForwardRunWheel) {
+    runWheel(speed,1);
+  } else {
+    runWheel(speed,0);
+  }
+}
+
+
+
 
 
 bool bIsRunWheelByFGS = false;
@@ -524,7 +503,7 @@ void runWheelFgs(int distPostion) {
     DUMP_VAR(iEROMWheelLimitFront);
     return;
   }
-  int moveDiff = distPostion - iDistanceWheelTofStable;
+  int moveDiff = distPostion - iVolumeDistanceWheel;
   if(moveDiff > 0) {
     bForwardRunWheelByFGS = false;
   } else {
@@ -545,7 +524,7 @@ void runWheelFgs(int distPostion) {
     StaticJsonDocument<256> doc;
     JsonObject root = doc.to<JsonObject>();
     root["distPostion"] = distPostion;
-    root["iDistanceWheelTofStable"] = iDistanceWheelTofStable;
+    root["iVolumeDistanceWheel"] = iVolumeDistanceWheel;
     root["bIsRunWheelByFGS"] = bIsRunWheelByFGS;
     root["iTargetDistanceWheelFGS"] = iTargetDistanceWheelFGS;
     root["moveDiff"] = moveDiff;
