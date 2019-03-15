@@ -2,7 +2,7 @@
 
 #define DUMP_VAR(x)  { \
   Serial.print(__LINE__);\
-  Serial.print(":"#x"=<");\
+  Serial.print("@@"#x"=<");\
   Serial.print(x);\
   Serial.print(">\n");\
 }
@@ -253,9 +253,9 @@ void runSetting(void) {
   //DUMP_VAR(firstLF);
   if(firstLF > 0) {
     String lfStr = gSerialInputCommand.substring(firstLF+4);
-    DUMP_VAR(lfStr);
+    //DUMP_VAR(lfStr);
     int limitFront = lfStr.toInt();
-    DUMP_VAR(limitFront);
+    //DUMP_VAR(limitFront);
     saveEROM(iEROMWheelLimitFrontAddress,limitFront);
     iEROMWheelLimitFront = limitFront;
   }
@@ -263,9 +263,9 @@ void runSetting(void) {
   //DUMP_VAR(firstLB);
   if(firstLB > 0) {
     String lbStr = gSerialInputCommand.substring(firstLB+4);
-    DUMP_VAR(lbStr);
+    //DUMP_VAR(lbStr);
     int limitBack = lbStr.toInt();
-    DUMP_VAR(limitBack);
+    //DUMP_VAR(limitBack);
     saveEROM(iEROMWheelLimitBackAddress,limitBack);
     iEROMWheelLimitBack = limitBack;
   }

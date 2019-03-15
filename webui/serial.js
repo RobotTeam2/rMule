@@ -29,11 +29,11 @@ port.on('data', function (response) {
 
 
 tryParseResponse = (resText) => {
-  console.log('tryParseResponse resText=<',resText ,'>');
+  //console.log('tryParseResponse resText=<',resText ,'>');
   let param = resText.trim().split(':');
   //console.log('tryParseResponse param=<',param ,'>');
   let json = {};
-  if(param.length > 0) {
+  if(param.length > 1) {
     let top = param[0];
     json[top] = {};
     for(let i = 1;i < param.length;i++) {
@@ -48,7 +48,11 @@ tryParseResponse = (resText) => {
     console.log('tryParseResponse json=<',json ,'>');
     if(json) {
       trans2ws(json);
+    } else {
+      console.log('tryParseResponse resText=<',resText ,'>');
     }
+  } else {
+    console.log('tryParseResponse resText=<',resText ,'>');
   }
 }
 
