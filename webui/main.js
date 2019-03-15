@@ -161,25 +161,25 @@ function onUIActionGroud() {
 }
 
 function onUIActionAir() {
-  GotoLinearA();
+  GotoLinearB();
   setTimeout(()=>{
     GotoWheelA();
   },2000);
   setTimeout(()=>{
-    GotoLinearB();
+    GotoLinearA();
   },4000);
 }
 
 
 function GotoWheelA() {
-  let run1 = { vol: {wheel:380}};
+  let run1 = { vol: {wheel:385}};
   if(ws.readyState) {
     ws.send(JSON.stringify(run1));
   }  
 }
 
 function GotoWheelB() {
-  let run2 = { vol: {wheel:320}};
+  let run2 = { vol: {wheel:315}};
   if(ws.readyState) {
     ws.send(JSON.stringify(run2));
   }  
