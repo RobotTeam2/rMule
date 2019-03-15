@@ -13,7 +13,7 @@ port.open(function (err) {
     return console.log('Error opening port: ', err.message);
   }
   //port.pipe(parser);
-  setTimeout(onTestGPIO,5000);
+  setTimeout(onTestGPIO,1000);
 });
 
 let dataBuffer = '';
@@ -97,8 +97,8 @@ gpioObject.G[HEX2DEC('A6')] = 0;
 gpioObject.G[HEX2DEC('A6')] = 0;
 */
 
-const gpio1 = 'gpio:'+HEX2DEC('A1')+':0\n';
-const gpio2 = 'gpio:'+HEX2DEC('A6')+':0\n';
+const gpio1 = 'gpio:'+HEX2DEC('A1')+',0\n';
+const gpio2 = 'gpio:'+HEX2DEC('A6')+',0\n';
 
 onTestGPIO = () => {
   port.write(gpio1, function(err) {
@@ -118,4 +118,14 @@ onTestGPIO2 = () => {
     console.log('onTestGPIO2 gpio=<', gpio2,'>');
   });  
 };
+
+// s:pwm f:direction
+const wheelStop = 'wheel:s,0:f,0\n';
+const wheelA = 'wheel:s,254:f,0\n';
+const wheelB = 'wheel:s,254:f,1\n';
+
+// d ->1 milsec g:directorn(ground)
+const linearStop = 'linear:d,0:g,0\n';
+const linearA = 'linear:d,1:g,0\n';
+const linearB = 'linear:d,1:g,1\n';
 

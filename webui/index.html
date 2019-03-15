@@ -11,6 +11,22 @@
     <script src="./main.js"></script>
     <div class="container">
       <div class="row justify-content-center mt-5">
+        <div class="col-3">
+          Leg ID:<span class="badge badge-primary " id="eMule-info-leg-id">---</span>
+          <input type="text" id="eMule-info-leg-id-text" size="4" maxlength="4" onchange="onUIChangeLegID(this)">
+        </div>
+        <div class="col-3">
+          Wheel Limit Front:<span class="badge badge-primary " id="eMule-info-wheel-limit-front">---</span>
+          <input type="text" id="eMule-info-wheel-limit-front-text" size="4" maxlength="4" onchange="onUIChangeWheelLimitFront(this)">
+        </div>
+        <div class="col-3">
+          Wheel Limit Back:<span class="badge badge-primary " id="eMule-info-wheel-limit-back">---</span>
+          <input type="text" id="eMule-info-wheel-limit-back-text" size="4" maxlength="4" onchange="onUIChangeWheelLimitBack(this)">
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row justify-content-center mt-5">
         <div class="col-6">
           <div class="form-group">
             <label>Wheel Curent Distance <span class="badge badge-primary " id="eMule-wheel-distance-text-show">1</span>unit</label>

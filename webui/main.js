@@ -11,6 +11,9 @@ ws.onmessage = (evt) => {
     let jsonMsg = JSON.parse(received_msg);
     console.log('onmessage jsonMsg=<', jsonMsg,'>');
     if(jsonMsg) {
+      if(jsonMsg.info) {
+        onLegInfo(jsonMsg.info);
+      }
       if(jsonMsg.tofw) {
         onTofWheel(jsonMsg.tofw);
       }
@@ -34,10 +37,18 @@ ws.onmessage = (evt) => {
 };
 
 onWSReady = () => {
-  let infoRead = { info: {}};
+  let infoRead = 'info:r\n';
   console.log('onWSReady infoRead=<', infoRead,'>');
-  ws.send(JSON.stringify(infoRead));
+  ws.send(infoRead);
 }
+
+onLegInfo = (info) => {
+  console.log('onLegInfo info=<', info,'>');
+  $('#eMule-info-leg-id').text(info.id);
+  $('#eMule-info-wheel-limit-back').text(info.lb);
+  $('#eMule-info-wheel-limit-front').text(info.lf);
+}
+
 
 onTofWheel = (tofDistance) => {
   //console.log('onTofWheel tofDistance=<', tofDistance,'>');
@@ -209,5 +220,30 @@ function GotoLinearB() {
       ws.send(JSON.stringify(run2));
     }  
   },1000);
+}
+
+
+function onUIChangeLegID(elem) {
+  console.log('onUIChangeLegID elem=<', elem,'>');
+  console.log('onUIChangeLegID elem.value=<', elem.value,'>');
+  let legId = 'setting:id,' + elem.value.trim() + '\n';
+  console.log('onUIChangeLegID legId=<', legId,'>');
+  ws.send(legId);
+}
+
+function onUIChangeWheelLimitFront(elem) {
+  console.log('onUIChangeWheelLimitFront elem=<', elem,'>');
+  console.log('onUIChangeWheelLimitFront elem.value=<', elem.value,'>');
+  let lf = 'setting:lf,' + elem.value.trim() + '\n';
+  console.log('onUIChangeWheelLimitFront lf=<', lf,'>');
+  ws.send(lf);
+}
+
+function onUIChangeWheelLimitBack(elem) {
+  console.log('onUIChangeWheelLimitBack elem=<', elem,'>');
+  console.log('onUIChangeWheelLimitBack elem.value=<', elem.value,'>');
+  let lb = 'setting:lb,' + elem.value.trim() + '\n';
+  console.log('onUIChangeWheelLimitBack lb=<', lb,'>');
+  ws.send(lb);
 }
 

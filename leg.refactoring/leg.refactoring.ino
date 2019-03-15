@@ -1,7 +1,4 @@
-#include <ArduinoJson.h>
 #include <EEPROM.h>
-
-typedef StaticJsonDocument<128> MyJsonDoc;
 
 #define DUMP_VAR(x)  { \
   Serial.print(__LINE__);\
@@ -10,51 +7,71 @@ typedef StaticJsonDocument<128> MyJsonDoc;
   Serial.print(">\n");\
 }
 
-
 const static char MOTER_PWM_WHEEL = 5;
 const static char MOTER_CCW_WHEEL = 4;
 // Interrupt
 const static char MOTER_FGS_WHEEL = 2;
 const static char MOTER_VOLUME_WHEEL = A1;
 
-
-
-const static char MOTER_CURRENT_LINEAR = A6;
-
 const static char MOTER_PWM_LINEAR = 11;
 const static char MOTER_STANDBY_LINEAR = 9;
 const static char MOTER_A1_LINEAR = 10;
 const static char MOTER_A2_LINEAR = 12;
+const static char MOTER_CURRENT_LINEAR = A6;
 
 
 
-unsigned char speed_wheel = 0x0;
+void setup()
+{
+  pinMode(MOTER_PWM_WHEEL, OUTPUT);
+  pinMode(MOTER_CCW_WHEEL, OUTPUT);
+  pinMode(MOTER_VOLUME_WHEEL, INPUT_PULLUP);
+  pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL),CounterWheelFGSByInterrupt , FALLING);
 
-static long wheelRunCounter = -1;
-static long const iRunTimeoutCounter = 10000L * 10L;
+  //TCCR1B = (TCCR1B & 0b11111000) | 0x01;
+  //TCCR2B &= B11111000;
+  //TCCR2B |= B00000001;
+  // pwm 5pin
+  //TCCR0B = (TCCR0B & 0b11111000) | 0x01;
+  analogWrite(MOTER_PWM_WHEEL, 0x0);
+  
+  pinMode(MOTER_PWM_LINEAR, OUTPUT);
+  pinMode(MOTER_STANDBY_LINEAR, OUTPUT);
+  pinMode(MOTER_A1_LINEAR, OUTPUT);
+  pinMode(MOTER_A2_LINEAR, OUTPUT);
+  pinMode(MOTER_CURRENT_LINEAR, INPUT_PULLUP);
+  
+
+  digitalWrite(MOTER_PWM_LINEAR, HIGH);
+  digitalWrite(MOTER_STANDBY_LINEAR, HIGH);
+  digitalWrite(MOTER_A1_LINEAR, HIGH);
+  digitalWrite(MOTER_A2_LINEAR, HIGH);
 
 
 
-#define FRONT_WHEEL() { \
-  digitalWrite(MOTER_CCW_WHEEL, LOW);\
-  }
+  //Serial.begin(9600);
+  Serial.begin(115200);
 
+  Serial.print("start rMule leg\n");\
 
-#define BACK_WHEEL() { \
-  digitalWrite(MOTER_CCW_WHEEL, HIGH);\
-  }
+  loadEROM();
 
-#define STOP_WHEEL() {\
-  speed_wheel =0x00;\
-  analogWrite(MOTER_PWM_WHEEL, 0x0);\
 }
+
+void loop() {
+  checkOverRunLimit();
+  runSerialCommand();
+  readStatus();
+  calcWheelTarget();
+}
+
 
 
 
 const int  iEROMLegIdAddress = 0;
 const int  iEROMWheelLimitBackAddress = iEROMLegIdAddress + 2; 
 const int  iEROMWheelLimitFrontAddress = iEROMWheelLimitBackAddress + 4; 
-
 uint16_t  iEROMLegId = 0;
 uint16_t  iEROMWheelLimitBack = 280; 
 uint16_t  iEROMWheelLimitFront = 420; 
@@ -88,64 +105,20 @@ void saveEROM(int address,uint16_t value) {
 }
 
 
-void repsponseJson(const MyJsonDoc &doc) {
-  String output;
-  serializeJson(doc, output);
-  Serial.print(output);
-  Serial.print("\n");
+
+unsigned char speed_wheel = 0x0;
+static long wheelRunCounter = -1;
+static long const iRunTimeoutCounter = 10000L * 10L;
+#define FRONT_WHEEL() { \
+  digitalWrite(MOTER_CCW_WHEEL, LOW);\
 }
-
-
-
-
-void setup()
-{
-  pinMode(MOTER_VOLUME_WHEEL, INPUT_PULLUP);
-  
-  pinMode(MOTER_PWM_WHEEL, OUTPUT);
-  pinMode(MOTER_CCW_WHEEL, OUTPUT);
-
-  //pinMode(MOTER_FGS_WHEEL, INPUT);
-  //pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
-  pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL),CounterWheelFGSByInterrupt , FALLING);
-  
-  
-
-  pinMode(MOTER_CURRENT_LINEAR, INPUT_PULLUP);
-  
-  pinMode(MOTER_PWM_LINEAR, OUTPUT);
-  pinMode(MOTER_STANDBY_LINEAR, OUTPUT);
-  pinMode(MOTER_A1_LINEAR, OUTPUT);
-  pinMode(MOTER_A2_LINEAR, OUTPUT);
-  
-
-  digitalWrite(MOTER_PWM_LINEAR, HIGH);
-  digitalWrite(MOTER_STANDBY_LINEAR, HIGH);
-  digitalWrite(MOTER_A1_LINEAR, HIGH);
-  digitalWrite(MOTER_A2_LINEAR, HIGH);
-
-
-  //TCCR1B = (TCCR1B & 0b11111000) | 0x01;
-  //TCCR2B &= B11111000;
-  //TCCR2B |= B00000001;
-  // pwm 5pin
-  //TCCR0B = (TCCR0B & 0b11111000) | 0x01;
-
-  
-  STOP_WHEEL();
-
-  //Serial.begin(9600);
-  Serial.begin(115200);
-
-  Serial.print("start rMule leg\n");\
-
+#define BACK_WHEEL() { \
+  digitalWrite(MOTER_CCW_WHEEL, HIGH);\
 }
-
-String InputCommand ="";
-
-
-
+#define STOP_WHEEL() {\
+  speed_wheel = 0x0;\
+  analogWrite(MOTER_PWM_WHEEL, 0x0);\
+}
 
 int runMotorFGSignlCouter = 0;
 int runMotorFGSignlCouter_NOT = 0;
@@ -166,10 +139,6 @@ void runWheel(int spd,int front) {
   }
 }
 
-
-
-
-
 void runLinear(int distance,int ground) {
  if(distance == 0) {
     digitalWrite(MOTER_A1_LINEAR, HIGH);
@@ -187,177 +156,138 @@ void runLinear(int distance,int ground) {
   }
 }
 
-
-void tryConfirmJson() {
-  MyJsonDoc jsonBuffer;
-  //DUMP_VAR(InputCommand);
-  auto errorDS = deserializeJson(jsonBuffer,InputCommand);
-  if (errorDS) {
-    //DUMP_VAR(errorDS == DeserializationError::InvalidInput);
-    //DUMP_VAR(errorDS == DeserializationError::NoMemory);
-    DUMP_VAR(InputCommand);
-    return;
-  }
-  JsonObject root =  jsonBuffer.as<JsonObject>();
-  for (auto kv : root) {
-    JsonObject params = kv.value();
-    String command = kv.key().c_str();
-    DUMP_VAR(command);
-    if(command == "wheel" || command == "W") {
-      int spd = params["s"];
-      int front = params["f"];
-      DUMP_VAR(spd);
-      DUMP_VAR(front);
-      runWheel(spd,front);
+static String gSerialInputCommand = "";
+void runSerialCommand(void) {
+  if (Serial.available() > 0) {
+    char incomingByte = Serial.read();
+    //Serial.print(incomingByte);
+    if(incomingByte =='\n' || incomingByte =='\r') {
+      run_comand();
+      gSerialInputCommand = "";
+    } else {
+      gSerialInputCommand += incomingByte;
     }
-    if(command == "linear" || command == "L") {
-      int distance = params["d"];
-      int ground = params["g"];
-      DUMP_VAR(distance);
-      DUMP_VAR(ground);
-      runLinear(distance,ground);
-    }
-
-    if(command == "fgs" || command == "F") {
-      int fgsWheelDistance = -1;
-      if(params.containsKey("wheel")) {
-        fgsWheelDistance = params["wheel"];
-      }
-      if(params.containsKey("W")) {
-        fgsWheelDistance = params["W"];
-      }
-      if(fgsWheelDistance > 0) {
-        runWheelFgs(fgsWheelDistance);
-      }
-    }
-
-    if(command == "vol" || command == "V") {
-      int volumeWheelDistance = -1;
-      if(params.containsKey("wheel")) {
-        volumeWheelDistance = params["wheel"];
-      }
-      if(params.containsKey("W")) {
-        volumeWheelDistance = params["W"];
-      }
-      if(volumeWheelDistance > 0) {
-        runWheelVolume(volumeWheelDistance);
-      }
-    }
-
-    if(command == "gpio" || command == "G") {
-      DUMP_VAR(command);
-      for (auto kvG : params) {
-        JsonObject paramsG = kvG.value();
-        String portStr = kvG.key().c_str();
-        int port = portStr.toInt();
-        int value = kvG.value().as<int>();
-        DUMP_VAR(port);
-        DUMP_VAR(value);
-        if(port > 1 && port < 14) {
-          if(value == 0) {
-            digitalWrite(port,LOW);
-          }
-          if(value == 1) {
-            digitalWrite(port,HIGH);
-          }
-        }
-        if(port > 0xA0 && port < 0xA8) {
-          if(value == 0) {
-            int rValue = analogRead(port);
-            MyJsonDoc docRes;
-            JsonObject rootRes = docRes.to<JsonObject>();
-            rootRes[portStr] = rValue;
-            repsponseJson(docRes);
-          } else {
-            analogWrite(port,value);
-          }
-        }
-      }
-    }
-    
-    
-    if(command == "setting") {
-      if(params.containsKey("leg")) {
-        iEROMLegId = params["leg"];
-        saveEROM(iEROMLegIdAddress,iEROMLegId);
-      }
-      if(params.containsKey("WheelLimitBack")) {
-        iEROMWheelLimitBack = params["WheelLimitBack"];
-        saveEROM(iEROMWheelLimitBackAddress,iEROMWheelLimitBack);
-      }
-      if(params.containsKey("WheelLimitFront")) {
-        iEROMWheelLimitFront = params["WheelLimitFront"];
-        saveEROM(iEROMWheelLimitFrontAddress,iEROMWheelLimitFront);
-      }
-    }
-    if(command == "info") {
-      MyJsonDoc docRes;
-      JsonObject rootRes = docRes.to<JsonObject>();
-      rootRes["leg"] = iEROMLegId;
-      rootRes["lb"] = iEROMWheelLimitBack;
-      rootRes["lf"] = iEROMWheelLimitFront;
-      repsponseJson(docRes);
-    }
-  }
-  //DUMP_VAR(command);
-  
-  {
-    repsponseJson(jsonBuffer);
-  }
-  
-  //DUMP_VAR(InputCommand);
-  InputCommand = "";
-}
-
-void run_comand() {
-  //DUMP_VAR(InputCommand);
-  //DUMP_VAR(speed_wheel);
-  if(InputCommand=="uu") {
-    speed_wheel -= 5;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
-  }
-  if(InputCommand=="dd") {
-    speed_wheel += 5;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
-  }
-  if(InputCommand=="ff") {
-    FRONT_WHEEL();
-    wheelRunCounter = iRunTimeoutCounter;
-  }
-  if(InputCommand=="bb") {
-    BACK_WHEEL();
-    wheelRunCounter = iRunTimeoutCounter;
-  }
-  if(InputCommand=="ss") {
-    speed_wheel =0xff;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
-  }
-  if(InputCommand=="gg") {
-    speed_wheel =0;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
-  }
-  if(InputCommand.startsWith("gpio")) {
-    //DUMP_VAR(InputCommand);
-    int first = InputCommand.indexOf(":");
-    int last = InputCommand.lastIndexOf(":");
-    if(first > 0 && last < InputCommand.length()) {
-      String portStr = InputCommand.substring(first+1,last);
-      //DUMP_VAR(portStr);
-      int port  = portStr.toInt();
-      //DUMP_VAR(port);
-      String valStr = InputCommand.substring(last);
-      int val  = valStr.toInt();
-      //DUMP_VAR(val);
-      runGPIO(port,val);
+    if(gSerialInputCommand.length() > 128) {
+      gSerialInputCommand = "";
     }
   }
 }
+
 
 void responseTextTag(String &res) {
   Serial.print(res);
 }
+void run_simple_command(void) {
+  if(gSerialInputCommand=="uu") {
+    speed_wheel -= 5;
+    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+  }
+  if(gSerialInputCommand=="dd") {
+    speed_wheel += 5;
+    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+  }
+  if(gSerialInputCommand=="ff") {
+    FRONT_WHEEL();
+    wheelRunCounter = iRunTimeoutCounter;
+  }
+  if(gSerialInputCommand=="bb") {
+    BACK_WHEEL();
+    wheelRunCounter = iRunTimeoutCounter;
+  }
+  if(gSerialInputCommand=="ss") {
+    speed_wheel =0xff;
+    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+  }
+  if(gSerialInputCommand=="gg") {
+    speed_wheel =0;
+    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+  }
+}
 
-void runGPIO(int port,int val) {
+
+void run_comand(void) {
+  //DUMP_VAR(InputCommand);
+  //DUMP_VAR(speed_wheel);
+  run_simple_command();
+  
+  if(gSerialInputCommand.startsWith("info:") || gSerialInputCommand.startsWith("I:")) {
+    runInfo();
+  }
+  if(gSerialInputCommand.startsWith("setting:") || gSerialInputCommand.startsWith("S:")) {
+    runSetting();
+  }
+
+  if(gSerialInputCommand.startsWith("gpio:") || gSerialInputCommand.startsWith("G:")) {
+    runGPIO();
+  }
+  if(gSerialInputCommand.startsWith("wheel:") || gSerialInputCommand.startsWith("W:")) {
+    runWheel();
+  }
+
+
+}
+void runInfo(void) {
+  String resTex;
+  resTex += "info:id,";
+  resTex += String(iEROMLegId);      
+  resTex += ":lb,";
+  resTex += String(iEROMWheelLimitBack);      
+  resTex += ":lf,";
+  resTex += String(iEROMWheelLimitFront);
+  resTex += "\n";
+  responseTextTag(resTex);
+}
+
+void runSetting(void) {
+  int firstId = gSerialInputCommand.indexOf(":id,");
+  //DUMP_VAR(firstId);
+  if(firstId > 0) {
+    String legStr = gSerialInputCommand.substring(firstId+4);
+    //DUMP_VAR(legStr);
+    int legID = legStr.toInt();
+    //DUMP_VAR(legID);
+    saveEROM(iEROMLegIdAddress,legID);
+    iEROMLegId = legID;
+  }
+  int firstLF = gSerialInputCommand.indexOf(":lf,");
+  //DUMP_VAR(firstLF);
+  if(firstLF > 0) {
+    String lfStr = gSerialInputCommand.substring(firstLF+4);
+    DUMP_VAR(lfStr);
+    int limitFront = lfStr.toInt();
+    DUMP_VAR(limitFront);
+    saveEROM(iEROMWheelLimitFrontAddress,limitFront);
+    iEROMWheelLimitFront = limitFront;
+  }
+  int firstLB = gSerialInputCommand.indexOf(":lb,");
+  //DUMP_VAR(firstLB);
+  if(firstLB > 0) {
+    String lbStr = gSerialInputCommand.substring(firstLB+4);
+    DUMP_VAR(lbStr);
+    int limitBack = lbStr.toInt();
+    DUMP_VAR(limitBack);
+    saveEROM(iEROMWheelLimitBackAddress,limitBack);
+    iEROMWheelLimitBack = limitBack;
+  }
+
+}
+
+
+void runGPIO(void) {
+  //DUMP_VAR(gSerialInputCommand);
+  int first = gSerialInputCommand.indexOf(":");
+  int last = gSerialInputCommand.indexOf(",");
+  if(first < 0 && last > gSerialInputCommand.length() -1) {
+    return;
+  }
+  
+  String portStr = gSerialInputCommand.substring(first+1,last);
+  //DUMP_VAR(portStr);
+  int port  = portStr.toInt();
+  //DUMP_VAR(port);
+  String valStr = gSerialInputCommand.substring(last);
+  int val  = valStr.toInt();
+  //DUMP_VAR(val);
   if(port > 2 && port < 14) {
     if(val == 0) {
       digitalWrite(port,LOW);
@@ -381,7 +311,14 @@ void runGPIO(int port,int val) {
     }
   }
 }
-
+void runWheel(void) {
+  //DUMP_VAR(gSerialInputCommand);
+  int first = gSerialInputCommand.indexOf(":");
+  int last = gSerialInputCommand.lastIndexOf(":");
+  if(first < 0 && last > gSerialInputCommand.length() -1) {
+    return;
+  }
+}
 
 void readStatus() {
   int current = analogRead(MOTER_CURRENT_LINEAR);
@@ -410,32 +347,8 @@ void checkOverRunLimit(void) {
   }  
 }
 
-void runSerialCommand(void) {
-  if (Serial.available() > 0) {
-    char incomingByte = Serial.read();
-    //Serial.print(incomingByte);
-    if(incomingByte =='\n' || incomingByte =='\r') {
-      run_comand();
-      InputCommand = "";
-    } else if(incomingByte =='}') {
-      InputCommand += incomingByte;
-      tryConfirmJson();
-    } else {
-      InputCommand += incomingByte;
-    }
-    if(InputCommand.length() > 128) {
-      InputCommand = "";
-    }
-  }
-}
 
-void loop() {
-  checkOverRunLimit();
-  runSerialCommand();
-  readStatus();
-  //calcWheel2TargetFGS();
-  calcWheelTarget();
-}
+
 
 int const iTargetDistanceMaxDiff = 1;
 
@@ -460,13 +373,6 @@ void readWheelVolume() {
   //DUMP_VAR(volume);
   //DUMP_VAR(abs(volume - iVolumeDistanceWheelReported));
   //bool iReport = true;
-  if(iReport) {
-    iVolumeDistanceWheelReported = volume;
-    MyJsonDoc doc;
-    JsonObject root = doc.to<JsonObject>();
-    root["volume"] = volume;
-    repsponseJson(doc);
-  }
   iVolumeDistanceWheel = volume;
 }
 int iTargetVolumePostionWheel = 0;
@@ -491,17 +397,6 @@ void runWheelVolume(int distPostion) {
   } else {
     runWheel(254,0);
   }
-
-  {
-    MyJsonDoc doc;
-    JsonObject root = doc.to<JsonObject>();
-    root["distPostion"] = distPostion;
-    root["iVolumeDistanceWheel"] = iVolumeDistanceWheel;
-    root["bForwardRunWheel"] = bForwardRunWheel;
-    root["iTargetVolumePostionWheel"] = iTargetVolumePostionWheel;
-    repsponseJson(doc);
-  }
-
 }
 
 /*
@@ -574,13 +469,6 @@ void calcWheelTarget() {
   if(distanceToMove < iConstVolumeWheelNearTarget) {
     bIsRunWheelByVolume = false;
     STOP_WHEEL();
-    {
-      MyJsonDoc doc;
-      JsonObject root = doc.to<JsonObject>();
-      root["moveDiff"] = moveDiff;
-      root["bIsRunWheelByVolume"] = bIsRunWheelByVolume;
-      repsponseJson(doc);
-    }
     return;
   } /*else {
       MyJsonDoc doc;
@@ -638,19 +526,6 @@ void runWheelFgs(int distPostion) {
   } else {
     runWheel(254,0);
   }
-
-  {
-    MyJsonDoc doc;
-    JsonObject root = doc.to<JsonObject>();
-    root["distPostion"] = distPostion;
-    root["iVolumeDistanceWheel"] = iVolumeDistanceWheel;
-    root["bIsRunWheelByFGS"] = bIsRunWheelByFGS;
-    root["iTargetDistanceWheelFGS"] = iTargetDistanceWheelFGS;
-    root["moveDiff"] = moveDiff;
-    root["moveDistance"] = moveDistance;
-    repsponseJson(doc);
-  }
-
 }
 
 
@@ -699,23 +574,10 @@ void calcWheel2TargetFGS() {
   if(bIsRunWheelByFGS == false) {
     return;
   }
-  {
-    MyJsonDoc doc;
-    JsonObject root = doc.to<JsonObject>();
-    root["iTargetDistanceWheelFGS"] = iTargetDistanceWheelFGS;
-    repsponseJson(doc);
-  }
   //DUMP_VAR(iTargetDistanceWheelFGS);
   if(iTargetDistanceWheelFGS <= 0) {
     STOP_WHEEL();
     bIsRunWheelByFGS = false;
-    {
-      MyJsonDoc doc;
-      JsonObject root = doc.to<JsonObject>();
-      root["bForwardRunWheelByFGS"] = bForwardRunWheelByFGS;
-      root["iTargetDistanceWheelFGS"] = iTargetDistanceWheelFGS;
-      repsponseJson(doc);
-    }
     return;
   }
   /*
@@ -747,26 +609,10 @@ void calcWheel2TargetFGS() {
     runWheel(speed,0);
   }
 
-  {
-    MyJsonDoc doc;
-    JsonObject root = doc.to<JsonObject>();
-    root["moveIndex1"] = moveIndex1;
-    root["moveIndex2"] = moveIndex2;
-    root["aFGSSpeedTableLength"] = aFGSSpeedTableLength;
-    root["speed"] = speed;
-    repsponseJson(doc);
-  }
 
   if(iTargetDistanceWheelFGS < 0) {
     bIsRunWheelByFGS = not bIsRunWheelByFGS;
     iTargetDistanceWheelFGS = abs(iTargetDistanceWheelFGS);
-    {
-      MyJsonDoc doc;
-      JsonObject root = doc.to<JsonObject>();
-      root["moveIndex2"] = moveIndex2;
-      root["speed"] = speed;
-      repsponseJson(doc);
-    }
   }
   
   

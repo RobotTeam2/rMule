@@ -1,6 +1,6 @@
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
-//const parser = new Readline();
+const parser = new Readline();
 
 const port = new SerialPort('COM3', {
   baudRate: 115200,
@@ -12,7 +12,7 @@ port.open(function (err) {
   if (err) {
     return console.log('Error opening port: ', err.message);
   }
-  //port.pipe(parser);
+  port.pipe(parser);
   //setTimeout(onWriteTimerRight,1000);
 });
 
@@ -23,46 +23,33 @@ port.on('data', function (response) {
   try {
     tryParseResponse(resStr)
   } catch(e) {
-    dataBuffer += resStr;
-    tryParseMultiLine();
+    console.log('e=<',e ,'>');
   }
 });
 
 
-
-tryParseMultiLine = () => {
-  try {
-    //console.log('dataBuffer=<',dataBuffer ,'>');
-    let start = dataBuffer.indexOf('{');
-    //console.log('start=<',start ,'>');
-    let end = dataBuffer.indexOf('}') + 1;
-    if(start > 0 && end > start) {
-      let jsonLike = dataBuffer.substring(start,end);
-      console.log('jsonLike=<',jsonLike ,'>');
-      let good = tryParseResponse(jsonLike);
-      if(good) {
-        let remain = dataBuffer.substring(end);
-        dataBuffer = remain;
-        if(dataBuffer.length > 0) {
-          tryParseMultiLine();
-        }
+tryParseResponse = (resText) => {
+  console.log('tryParseResponse resText=<',resText ,'>');
+  let param = resText.trim().split(':');
+  //console.log('tryParseResponse param=<',param ,'>');
+  let json = {};
+  if(param.length > 0) {
+    let top = param[0];
+    json[top] = {};
+    for(let i = 1;i < param.length;i++) {
+      //console.log('tryParseResponse param[i]=<',param[i] ,'>');
+      let param2 = param[i].trim().split(',');
+      //console.log('tryParseResponse param2=<',param2 ,'>');
+      if(param2.length > 1) {
+        let key = param2[0];
+        json[top][key] = param2[1];
       }
-    }      
-  } catch(e2) {
-    console.log('e2=<',e2 ,'>');
-    console.log('dataBuffer=<',dataBuffer ,'>');
-  }  
-}
-
-tryParseResponse = (resStr) => {
-  let jsonResp = JSON.parse(resStr);
-  if(jsonResp) {
-    trans2ws(jsonResp);
-    return true;
-  } else {
-    console.log('tryParseResponse resStr=<',resStr ,'>');
+    }
+    console.log('tryParseResponse json=<',json ,'>');
+    if(json) {
+      trans2ws(json);
+    }
   }
-  return false;
 }
 
 
@@ -71,10 +58,7 @@ const wss = new WebSocket.Server({ host:'127.0.0.1',port: 18081 });
 
 onWSSMsg = (msg) => {
   console.log('onWSSMsg msg=<', msg,'>');
-  let jsonMsg = JSON.parse(msg);
-  if(jsonMsg) {
-    trans2serial(jsonMsg);
-  }
+  trans2serial(msg);
 };
 
 onWSSConnected = (ws) => {
@@ -95,7 +79,7 @@ trans2ws = (msg) => {
 
 trans2serial = (msg) => {
   //console.log('trans2ws msg=<', msg,'>');
-  port.write(JSON.stringify(msg), function(err) {
+  port.write(msg, function(err) {
     if (err) {
       return console.log('Error on write: ', err.message);
     }
