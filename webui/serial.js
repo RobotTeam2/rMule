@@ -1,32 +1,48 @@
 const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
-const parser = new Readline();
+//const parser = new Readline();
 
 const port = new SerialPort('COM3', {
   baudRate: 115200,
   autoOpen: false
 });
 
+const spacerCommand = '&$';
+const spacerLength = spacerCommand.length;
 
 port.open(function (err) {
   if (err) {
     return console.log('Error opening port: ', err.message);
   }
-  port.pipe(parser);
-  //setTimeout(onWriteTimerRight,1000);
+  //port.pipe(parser);
 });
 
 let dataBuffer = '';
 port.on('data', function (response) {
   let resStr = response.toString('utf-8');
   //console.log('resStr=<',resStr ,'>');
+  dataBuffer += resStr;
+  let cmds = trySpliteResponse();
+  //console.log('cmds=<',cmds ,'>');
   try {
-    tryParseResponse(resStr)
+    for(let i = 0;i < cmds.length;i++) {
+      tryParseResponse(cmds[i]);     
+    }
   } catch(e) {
     console.log('e=<',e ,'>');
   }
 });
 
+trySpliteResponse = () => {
+  let cmds = [];
+  let cmdRC = dataBuffer.split(spacerCommand);
+  //console.log('trySpliteResponse cmdRC=<',cmdRC ,'>');
+  dataBuffer = cmdRC[cmdRC.length -1];
+  if(cmdRC.length > 1) {
+    cmds = cmdRC.slice(0,cmdRC.length -1);
+  }
+  return cmds;
+}
 
 tryParseResponse = (resText) => {
   //console.log('tryParseResponse resText=<',resText ,'>');

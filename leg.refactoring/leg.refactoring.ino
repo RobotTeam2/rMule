@@ -4,43 +4,48 @@
   Serial.print(__LINE__);\
   Serial.print("@@"#x"=<");\
   Serial.print(x);\
-  Serial.print(">\n");\
+  Serial.print(">&$");\
 }
 
-const static char MOTER_PWM_WHEEL = 5;
-const static char MOTER_CCW_WHEEL = 4;
 // Interrupt
 const static char MOTER_FGS_WHEEL = 2;
-const static char MOTER_VOLUME_WHEEL = A1;
+const static char MOTER_PWM_WHEEL = 3;
+const static char MOTER_CCW_WHEEL = 4;
 
 const static char MOTER_PWM_LINEAR = 11;
 const static char MOTER_STANDBY_LINEAR = 9;
 const static char MOTER_A1_LINEAR = 10;
 const static char MOTER_A2_LINEAR = 12;
+
+
+const static char MOTER_VOLUME_WHEEL = A1;
 const static char MOTER_CURRENT_LINEAR = A6;
 
 
 
 void setup()
 {
-  pinMode(MOTER_PWM_WHEEL, OUTPUT);
   pinMode(MOTER_CCW_WHEEL, OUTPUT);
-  pinMode(MOTER_VOLUME_WHEEL, INPUT_PULLUP);
   pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL),CounterWheelFGSByInterrupt , FALLING);
 
-  //TCCR1B = (TCCR1B & 0b11111000) | 0x01;
-  //TCCR2B &= B11111000;
-  //TCCR2B |= B00000001;
-  // pwm 5pin
-  //TCCR0B = (TCCR0B & 0b11111000) | 0x01;
-  analogWrite(MOTER_PWM_WHEEL, 0x0);
-  
+  // pwm MOTER_PWM_WHEEL pin
+  pinMode(MOTER_PWM_WHEEL, OUTPUT);
+  TCCR2B &= B11111000;
+  TCCR2B |= B00000001;
+  analogWrite(MOTER_PWM_WHEEL, 0);
+
+/*
+  analogWrite(3, 250);
+  TCCR0B = (TCCR0B & 0b11111000) | 0x01;
+  analogWrite(5, 127);
+*/
+
   pinMode(MOTER_PWM_LINEAR, OUTPUT);
   pinMode(MOTER_STANDBY_LINEAR, OUTPUT);
   pinMode(MOTER_A1_LINEAR, OUTPUT);
   pinMode(MOTER_A2_LINEAR, OUTPUT);
-  pinMode(MOTER_CURRENT_LINEAR, INPUT_PULLUP);
+
   
 
   digitalWrite(MOTER_PWM_LINEAR, HIGH);
@@ -48,19 +53,21 @@ void setup()
   digitalWrite(MOTER_A1_LINEAR, HIGH);
   digitalWrite(MOTER_A2_LINEAR, HIGH);
 
+  pinMode(MOTER_CURRENT_LINEAR, INPUT_PULLUP);
+  pinMode(MOTER_VOLUME_WHEEL, INPUT_PULLUP);
 
 
   //Serial.begin(9600);
   Serial.begin(115200);
 
-  Serial.print("start rMule leg\n");\
+  Serial.print("start rMule leg&$");\
 
   loadEROM();
 
 }
 
 void loop() {
-  checkOverRunLimit();
+  checkOverRunMax();
   runSerialCommand();
   readStatus();
   calcWheelTarget();
@@ -70,11 +77,11 @@ void loop() {
 
 
 const int  iEROMLegIdAddress = 0;
-const int  iEROMWheelLimitBackAddress = iEROMLegIdAddress + 2; 
-const int  iEROMWheelLimitFrontAddress = iEROMWheelLimitBackAddress + 4; 
+const int  iEROMWheelMaxBackAddress = iEROMLegIdAddress + 2; 
+const int  iEROMWheelMaxFrontAddress = iEROMWheelMaxBackAddress + 4; 
 uint16_t  iEROMLegId = 0;
-uint16_t  iEROMWheelLimitBack = 280; 
-uint16_t  iEROMWheelLimitFront = 420; 
+uint16_t  iEROMWheelMaxBack = 280; 
+uint16_t  iEROMWheelMaxFront = 420; 
 
 void loadEROM() {
   DUMP_VAR(EEPROM.length());
@@ -85,16 +92,16 @@ void loadEROM() {
     DUMP_VAR(iEROMLegId);
   }
   {
-    byte value1 = EEPROM.read(iEROMWheelLimitBackAddress);
-    byte value2 = EEPROM.read(iEROMWheelLimitBackAddress+1);
-    iEROMWheelLimitBack = value1 | value2 << 8;
-    DUMP_VAR(iEROMWheelLimitBack);
+    byte value1 = EEPROM.read(iEROMWheelMaxBackAddress);
+    byte value2 = EEPROM.read(iEROMWheelMaxBackAddress+1);
+    iEROMWheelMaxBack = value1 | value2 << 8;
+    DUMP_VAR(iEROMWheelMaxBack);
   }
   {
-    byte value1 = EEPROM.read(iEROMWheelLimitFrontAddress);
-    byte value2 = EEPROM.read(iEROMWheelLimitFrontAddress+1);
-    iEROMWheelLimitFront = value1 | value2 << 8;
-    DUMP_VAR(iEROMWheelLimitFront);
+    byte value1 = EEPROM.read(iEROMWheelMaxFrontAddress);
+    byte value2 = EEPROM.read(iEROMWheelMaxFrontAddress+1);
+    iEROMWheelMaxFront = value1 | value2 << 8;
+    DUMP_VAR(iEROMWheelMaxFront);
   }
 }
 void saveEROM(int address,uint16_t value) {
@@ -120,9 +127,13 @@ static long const iRunTimeoutCounter = 10000L * 10L;
   analogWrite(MOTER_PWM_WHEEL, 0x0);\
 }
 
+int iCurrentLinear = 0;
+int iVolumeDistanceWheel = 0;
+
+
+
 int runMotorFGSignlCouter = 0;
 int runMotorFGSignlCouter_NOT = 0;
-
 
 void runWheel(int spd,int front) {
   speed_wheel = spd;
@@ -175,6 +186,8 @@ void runSerialCommand(void) {
 
 
 void responseTextTag(String &res) {
+  res = "&$" + res;
+  res += "&$";
   Serial.print(res);
 }
 void run_simple_command(void) {
@@ -223,125 +236,85 @@ void run_comand(void) {
   if(gSerialInputCommand.startsWith("wheel:") || gSerialInputCommand.startsWith("W:")) {
     runWheel();
   }
-
-
+  if(gSerialInputCommand.startsWith("linear:") || gSerialInputCommand.startsWith("L:")) {
+    runLinear();
+  }
 }
 void runInfo(void) {
   String resTex;
   resTex += "info:id,";
   resTex += String(iEROMLegId);      
-  resTex += ":lb,";
-  resTex += String(iEROMWheelLimitBack);      
-  resTex += ":lf,";
-  resTex += String(iEROMWheelLimitFront);
-  resTex += "\n";
+  resTex += ":mb,";
+  resTex += String(iEROMWheelMaxBack);      
+  resTex += ":mf,";
+  resTex += String(iEROMWheelMaxFront);
+  resTex += ":wp,";
+  resTex += String(iVolumeDistanceWheel);
+  resTex += ":lc,";
+  resTex += String(iCurrentLinear);
   responseTextTag(resTex);
 }
 
 void runSetting(void) {
-  int firstId = gSerialInputCommand.indexOf(":id,");
-  //DUMP_VAR(firstId);
-  if(firstId > 0) {
-    String legStr = gSerialInputCommand.substring(firstId+4);
-    //DUMP_VAR(legStr);
-    int legID = legStr.toInt();
+  int legID = 0;
+  if(readTagValue(":id,","",&legID)) {
     //DUMP_VAR(legID);
     saveEROM(iEROMLegIdAddress,legID);
     iEROMLegId = legID;
   }
-  int firstLF = gSerialInputCommand.indexOf(":lf,");
-  //DUMP_VAR(firstLF);
-  if(firstLF > 0) {
-    String lfStr = gSerialInputCommand.substring(firstLF+4);
-    //DUMP_VAR(lfStr);
-    int limitFront = lfStr.toInt();
-    //DUMP_VAR(limitFront);
-    saveEROM(iEROMWheelLimitFrontAddress,limitFront);
-    iEROMWheelLimitFront = limitFront;
+  int MaxFront = 0;
+  if(readTagValue(":mf,","",&MaxFront)) {
+    //DUMP_VAR(legID);
+    saveEROM(iEROMWheelMaxFrontAddress,MaxFront);
+    iEROMWheelMaxFront = MaxFront;
   }
-  int firstLB = gSerialInputCommand.indexOf(":lb,");
-  //DUMP_VAR(firstLB);
-  if(firstLB > 0) {
-    String lbStr = gSerialInputCommand.substring(firstLB+4);
-    //DUMP_VAR(lbStr);
-    int limitBack = lbStr.toInt();
-    //DUMP_VAR(limitBack);
-    saveEROM(iEROMWheelLimitBackAddress,limitBack);
-    iEROMWheelLimitBack = limitBack;
-  }
-
-}
-
-
-void runGPIO(void) {
-  //DUMP_VAR(gSerialInputCommand);
-  int first = gSerialInputCommand.indexOf(":");
-  int last = gSerialInputCommand.indexOf(",");
-  if(first < 0 && last > gSerialInputCommand.length() -1) {
-    return;
-  }
-  
-  String portStr = gSerialInputCommand.substring(first+1,last);
-  //DUMP_VAR(portStr);
-  int port  = portStr.toInt();
-  //DUMP_VAR(port);
-  String valStr = gSerialInputCommand.substring(last);
-  int val  = valStr.toInt();
-  //DUMP_VAR(val);
-  if(port > 2 && port < 14) {
-    if(val == 0) {
-      digitalWrite(port,LOW);
-    } else {
-      digitalWrite(port,HIGH);        
-    }
-  }
-  if(port > 0xA0 && port < 0xA7) {
-    if(val == 0) {
-      int valRes = analogRead(port);
-      //DUMP_VAR(valRes);
-      String resTex;
-      resTex += "gpio:";
-      resTex += String(port,HEX);      
-      resTex += ":";
-      resTex += String(valRes);      
-      resTex += "\n";
-      responseTextTag(resTex);
-    } else {
-      analogWrite(port,val);        
-    }
+  int MaxBack = 0;
+  if(readTagValue(":mb,","",&MaxBack)) {
+    //DUMP_VAR(legID);
+    saveEROM(iEROMWheelMaxBackAddress,MaxBack);
+    iEROMWheelMaxBack = MaxBack;
   }
 }
+
 void runWheel(void) {
-  //DUMP_VAR(gSerialInputCommand);
-  int first = gSerialInputCommand.indexOf(":");
-  int last = gSerialInputCommand.lastIndexOf(":");
-  if(first < 0 && last > gSerialInputCommand.length() -1) {
-    return;
+  int volDist = 0;
+  if(readTagValue(":v,",":vol,",&volDist)) {
+    DUMP_VAR(volDist);
+    runWheelVolume(volDist);
   }
 }
+
+void runLinear(void) {
+  int isGround = 0;
+  bool bGround = readTagValue(":g,",":ground,",&isGround);
+  int isDistance = 0;
+  bool bDistance = readTagValue(":d,",":distance,",&isDistance);
+  if(bGround && bDistance) {
+    DUMP_VAR(isGround);
+    DUMP_VAR(isDistance);
+    runLinear(isDistance,isGround);
+  }
+}
+
 
 void readStatus() {
-  int current = analogRead(MOTER_CURRENT_LINEAR);
-  if(abs(current - 506) > 10) {
-    //DUMP_VAR(current);
-  }
+  readLinearCurrent();
   readWheelVolume();
 }
 
-int iVolumeDistanceWheel = 0;
 bool bIsRunWheelByVolume = false;
 
 
-void checkOverRunLimit(void) {
+void checkOverRunMax(void) {
   // stop
   if(wheelRunCounter-- <= 0 ) {
     STOP_WHEEL();
   }
-  if(iVolumeDistanceWheel < iEROMWheelLimitBack) {
+  if(iVolumeDistanceWheel < iEROMWheelMaxBack) {
     bIsRunWheelByVolume = false;
     STOP_WHEEL();
   }
-  if(iVolumeDistanceWheel > iEROMWheelLimitFront) {
+  if(iVolumeDistanceWheel > iEROMWheelMaxFront) {
     bIsRunWheelByVolume = false;
     STOP_WHEEL();
   }  
@@ -366,21 +339,27 @@ int iVolumeDistanceWheelReported = 0;
 
 void readWheelVolume() {
   int volume = analogRead(MOTER_VOLUME_WHEEL);
-  if(volume > 900) {
-    return;
-  }
   bool iReport = abs(volume - iVolumeDistanceWheelReported) > iConstVolumeDistanceWheelReportDiff;
   //DUMP_VAR(volume);
   //DUMP_VAR(abs(volume - iVolumeDistanceWheelReported));
   //bool iReport = true;
   iVolumeDistanceWheel = volume;
 }
+
+void readLinearCurrent() {
+  int current = analogRead(MOTER_CURRENT_LINEAR);
+  if(abs(current - 506) > 10) {
+    //DUMP_VAR(current);
+  }
+  iCurrentLinear = current;
+}
+
 int iTargetVolumePostionWheel = 0;
 void runWheelVolume(int distPostion) {
-  if(distPostion < iEROMWheelLimitBack || distPostion > iEROMWheelLimitFront) {
+  if(distPostion < iEROMWheelMaxBack || distPostion > iEROMWheelMaxFront) {
     //DUMP_VAR(distPostion);
-    //DUMP_VAR(iEROMWheelLimitBack);
-    //DUMP_VAR(iEROMWheelLimitFront);
+    //DUMP_VAR(iEROMWheelMaxBack);
+    //DUMP_VAR(iEROMWheelMaxFront);
     return;
   }
   iTargetVolumePostionWheel = distPostion;
@@ -504,10 +483,10 @@ bool bForwardRunWheelByFGS = false;
 // 10mm per  signal 
 float iTargetDistanceWheelFactorFGS = 0.90f;
 void runWheelFgs(int distPostion) {
-  if(distPostion < iEROMWheelLimitBack || distPostion > iEROMWheelLimitFront) {
+  if(distPostion < iEROMWheelMaxBack || distPostion > iEROMWheelMaxFront) {
     DUMP_VAR(distPostion);
-    DUMP_VAR(iEROMWheelLimitBack);
-    DUMP_VAR(iEROMWheelLimitFront);
+    DUMP_VAR(iEROMWheelMaxBack);
+    DUMP_VAR(iEROMWheelMaxFront);
     return;
   }
   int moveDiff = distPostion - iVolumeDistanceWheel;
@@ -616,4 +595,66 @@ void calcWheel2TargetFGS() {
   }
   
   
+}
+
+
+
+bool readTagValue(String tag,String shortTag , int *val) {
+  int firstTag = gSerialInputCommand.indexOf(tag);
+  if(firstTag > 0) {
+    String tagStr = gSerialInputCommand.substring(firstTag+tag.length());
+    DUMP_VAR(tagStr);
+    int tagNum = tagStr.toInt();
+    DUMP_VAR(tagNum);
+    *val =tagNum;
+    return true;
+  }
+  int firstShortTag = gSerialInputCommand.indexOf(shortTag);
+  if(firstShortTag > 0) {
+    String tagStr = gSerialInputCommand.substring(firstShortTag+shortTag.length());
+    DUMP_VAR(tagStr);
+    int tagNum = tagStr.toInt();
+    DUMP_VAR(tagNum);
+    *val =tagNum;
+    return true;
+  }
+  return false;
+}
+
+void runGPIO(void) {
+  //DUMP_VAR(gSerialInputCommand);
+  int first = gSerialInputCommand.indexOf(":");
+  int last = gSerialInputCommand.indexOf(",");
+  if(first < 0 && last > gSerialInputCommand.length() -1) {
+    return;
+  }
+  
+  String portStr = gSerialInputCommand.substring(first+1,last);
+  //DUMP_VAR(portStr);
+  int port  = portStr.toInt();
+  //DUMP_VAR(port);
+  String valStr = gSerialInputCommand.substring(last);
+  int val  = valStr.toInt();
+  //DUMP_VAR(val);
+  if(port > 2 && port < 14) {
+    if(val == 0) {
+      digitalWrite(port,LOW);
+    } else {
+      digitalWrite(port,HIGH);        
+    }
+  }
+  if(port > 0xA0 && port < 0xA7) {
+    if(val == 0) {
+      int valRes = analogRead(port);
+      //DUMP_VAR(valRes);
+      String resTex;
+      resTex += "gpio:";
+      resTex += String(port,HEX);      
+      resTex += ",";
+      resTex += String(valRes);      
+      responseTextTag(resTex);
+    } else {
+      analogWrite(port,val);        
+    }
+  }
 }

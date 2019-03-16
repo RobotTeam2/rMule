@@ -181,6 +181,7 @@ void setup()
 
 
   TCCR1B = (TCCR1B & 0b11111000) | 0x01;
+  analogWrite(9, 211);
   
   STOP_WHEEL();
 

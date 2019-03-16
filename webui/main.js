@@ -14,11 +14,8 @@ ws.onmessage = (evt) => {
       if(jsonMsg.info) {
         onLegInfo(jsonMsg.info);
       }
-      if(jsonMsg.tofw) {
-        onTofWheel(jsonMsg.tofw);
-      }
-      if(jsonMsg.volume) {
-        onTofWheel(jsonMsg.volume);
+      if(jsonMsg.vol) {
+        onVolumeWheel(jsonMsg.vol);
       }
       //console.log('onmessage typeof jsonMsg.leg=<', typeof jsonMsg.leg,'>');
       if(typeof jsonMsg.leg === 'number') {
@@ -32,6 +29,7 @@ ws.onmessage = (evt) => {
       }
     }
   } catch (e) {
+    console.error('onmessage e=<', e,'>');
     console.error('onmessage received_msg=<', received_msg,'>');
   }
 };
@@ -45,28 +43,29 @@ onWSReady = () => {
 onLegInfo = (info) => {
   console.log('onLegInfo info=<', info,'>');
   $('#eMule-info-leg-id').text(info.id);
-  $('#eMule-info-wheel-limit-back').text(info.lb);
-  $('#eMule-info-wheel-limit-front').text(info.lf);
+  $('#eMule-info-wheel-max-back').text(info.mb);
+  $('#eMule-info-wheel-max-front').text(info.mf);
+  
+  $('#eMule-wheel-distance-text-show').text(info.wp);
+  
+  $('#eMule-wheel-distance-slide-show').attr('value',info.wp);
+  $('#eMule-wheel-distance-slide-show').attr('min',info.mb);
+  $('#eMule-wheel-distance-slide-show').attr('max',info.mf);
+
+  $('#eMule-wheel-distance-slide-set').attr('min',info.mb);
+  $('#eMule-wheel-distance-slide-set').attr('max',info.mf);
+  
+  console.log('onLegInfo eMule-wheel-distance-slide-show=<', $('#eMule-wheel-distance-slide-show'),'>');
+  
 }
 
 
-onTofWheel = (tofDistance) => {
-  //console.log('onTofWheel tofDistance=<', tofDistance,'>');
+onVolumeWheel = (tofDistance) => {
+  //console.log('onVolumeWheel tofDistance=<', tofDistance,'>');
   $('#eMule-wheel-distance-text-show').text(tofDistance);
   $('#eMule-wheel-distance-slide-show').val(tofDistance);
 }
 
-onInfoLeg = (leg) => {
-  console.log('onInfoLeg leg=<', leg,'>');
-}
-
-onInfoEROMWheelLimitBack = (limit) => {
-  console.log('onInfoEROMWheelLimitBack limit=<', limit,'>');
-}
-
-onInfoEROMWheelLimitFront = (limit) => {
-  console.log('onInfoEROMWheelLimitFront limit=<', limit,'>');
-}
 
 
 $(document).ready(function(){
@@ -75,23 +74,12 @@ $(document).ready(function(){
   });
 });
 
-/* 
 doSetWheelDistance = (value) => {
   console.log('doSetWheelDistance value=<', value,'>');
   $('#eMule-wheel-distance-text-set').text(value);
-  let run = { tof: {wheel:value}};
+  let run = 'wheel:vol,'+ value + '\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run));
-  }
-}
-*/
-
-doSetWheelDistance = (value) => {
-  console.log('doSetWheelDistance value=<', value,'>');
-  $('#eMule-wheel-distance-text-set').text(value);
-  let run = { vol: {wheel:value}};
-  if(ws.readyState) {
-    ws.send(JSON.stringify(run));
+    ws.send(run);
   }
 }
 
@@ -120,49 +108,49 @@ function onUILoop3() {
 }
 
 function loopA() {
-  let run1 = { vol: {wheel:380}};
+  let run1 = 'wheel:vol,380\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run1));
+    ws.send(run1);
   }  
 }
 
 function loopB() {
-  let run2 = { vol: {wheel:320}};
+  let run2 = 'wheel:vol,320\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run2));
+    ws.send(run2);
   }  
 }
 
 function onUILinearUp() {
-  let run2 = { linear: {g:1,d:1}};
+  let run2 = 'linear:ground,1:distance,1\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run2));
+    ws.send(run2);
   }  
 }
 
 function onUILinearUp2s() {
   onUILinearUp()
   setTimeout(()=> {
-    let run2 = { linear: {g:1,d:0}};
+    let run2 = 'linear:ground,1:distance,0\n';
     if(ws.readyState) {
-      ws.send(JSON.stringify(run2));
+      ws.send(run2);
     }      
   },2000);
 }
 
 function onUILinearDown() {
-  let run2 = { linear: {g:0,d:1}};
+  let run2 = 'linear:ground,0:distance,1\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run2));
+    ws.send(run2);
   }  
 }
 
 function onUILinearDown2s() {
   onUILinearDown();
   setTimeout(()=> {
-    let run2 = { linear: {g:0,d:0}};
+    let run2 = 'linear:ground,0:distance,0\n';
     if(ws.readyState) {
-      ws.send(JSON.stringify(run2));
+      ws.send(run2);
     }  
   },2000);
 }
@@ -183,42 +171,42 @@ function onUIActionAir() {
 
 
 function GotoWheelA() {
-  let run1 = { vol: {wheel:385}};
+  let run1 = 'wheel:vol,385\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run1));
-  }  
+    ws.send(run1);
+  }
 }
 
 function GotoWheelB() {
-  let run2 = { vol: {wheel:315}};
+  let run2 = 'wheel:vol,315\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run2));
-  }  
+    ws.send(run2);
+  }
 }
 
 function GotoLinearA() {
-  let run2 = { linear: {g:0,d:1}};
+  let run2 = 'linear:ground,0:distance,1\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run2));
-  }  
+    ws.send(run2);
+  }
   setTimeout(()=> {
-    let run2 = { linear: {g:0,d:0}};
+    let run2 = 'linear:ground,0:distance,0\n';
     if(ws.readyState) {
-      ws.send(JSON.stringify(run2));
-    }  
+      ws.send(run2);
+    }
   },1000);
 }
 
 function GotoLinearB() {
-  let run2 = { linear: {g:1,d:1}};
+  let run2 = 'linear:ground,1:distance,1\n';
   if(ws.readyState) {
-    ws.send(JSON.stringify(run2));
-  }  
+    ws.send(run2);
+  }
   setTimeout(()=> {
-    let run2 = { linear: {g:1,d:0}};
+    let run2 = 'linear:ground,1:distance,0\n';
     if(ws.readyState) {
-      ws.send(JSON.stringify(run2));
-    }  
+      ws.send(run2);
+    }
   },1000);
 }
 
@@ -231,19 +219,19 @@ function onUIChangeLegID(elem) {
   ws.send(legId);
 }
 
-function onUIChangeWheelLimitFront(elem) {
-  console.log('onUIChangeWheelLimitFront elem=<', elem,'>');
-  console.log('onUIChangeWheelLimitFront elem.value=<', elem.value,'>');
-  let lf = 'setting:lf,' + elem.value.trim() + '\n';
-  console.log('onUIChangeWheelLimitFront lf=<', lf,'>');
-  ws.send(lf);
+function onUIChangeWheelMaxFront(elem) {
+  console.log('onUIChangeWheelMaxFront elem=<', elem,'>');
+  console.log('onUIChangeWheelMaxFront elem.value=<', elem.value,'>');
+  let mf = 'setting:mf,' + elem.value.trim() + '\n';
+  console.log('onUIChangeWheelMaxFront mf=<', mf,'>');
+  ws.send(mf);
 }
 
-function onUIChangeWheelLimitBack(elem) {
-  console.log('onUIChangeWheelLimitBack elem=<', elem,'>');
-  console.log('onUIChangeWheelLimitBack elem.value=<', elem.value,'>');
-  let lb = 'setting:lb,' + elem.value.trim() + '\n';
-  console.log('onUIChangeWheelLimitBack lb=<', lb,'>');
-  ws.send(lb);
+function onUIChangeWheelMaxBack(elem) {
+  console.log('onUIChangeWheelMaxBack elem=<', elem,'>');
+  console.log('onUIChangeWheelMaxBack elem.value=<', elem.value,'>');
+  let mb = 'setting:mb,' + elem.value.trim() + '\n';
+  console.log('onUIChangeWheelMaxBack mb=<', mb,'>');
+  ws.send(mb);
 }
 
