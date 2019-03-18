@@ -354,6 +354,8 @@ void readLinearCurrent() {
   iCurrentLinear = current;
 }
 
+const int iConstStarSpeed = 240;
+
 int iTargetVolumePostionWheel = 0;
 void runWheelVolume(int distPostion) {
   if(distPostion < iEROMWheelMaxBack || distPostion > iEROMWheelMaxFront) {
@@ -372,9 +374,9 @@ void runWheelVolume(int distPostion) {
   }
   //DUMP_VAR(bForwardRunWheel);
   if(bForwardRunWheel) {
-    runWheel(254,1);
+    runWheel(iConstStarSpeed,1);
   } else {
-    runWheel(254,0);
+    runWheel(iConstStarSpeed,0);
   }
 }
 
@@ -431,7 +433,7 @@ int const aVolumeSpeedTable[] = {
   130,130,130,130,130,
   130,130,130,130,130,
 */
-  254
+  iConstStarSpeed
 };
 
 
@@ -501,9 +503,9 @@ void runWheelFgs(int distPostion) {
   DUMP_VAR(iTargetDistanceWheelFGS);
   bIsRunWheelByFGS = true;
   if(bForwardRunWheelByFGS) {
-    runWheel(254,1);
+    runWheel(iConstStarSpeed,1);
   } else {
-    runWheel(254,0);
+    runWheel(iConstStarSpeed,0);
   }
 }
 
@@ -543,7 +545,7 @@ int const aFGSSpeedTable[] = {
   130,130,130,130,130,
   130,130,130,130,130,
 */
-  254
+  iConstStarSpeed
 };
 long const aFGSSpeedTableLength = sizeof(aFGSSpeedTable)/sizeof(aFGSSpeedTable[0]);
 
