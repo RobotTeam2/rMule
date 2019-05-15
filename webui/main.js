@@ -14,6 +14,9 @@ ws.onmessage = (evt) => {
       if(jsonMsg.info) {
         onLegInfo(jsonMsg.info);
       }
+      if(jsonMsg.wheel && jsonMsg.wheel.vol) {
+        onVolumeWheel(jsonMsg.wheel.vol);
+      }
       if(jsonMsg.vol) {
         onVolumeWheel(jsonMsg.vol);
       }
@@ -108,14 +111,14 @@ function onUILoop3() {
 }
 
 function loopA() {
-  let run1 = 'wheel:vol,380\n';
+  let run1 = 'wheel:vol,560\n';
   if(ws.readyState) {
     ws.send(run1);
   }  
 }
 
 function loopB() {
-  let run2 = 'wheel:vol,320\n';
+  let run2 = 'wheel:vol,640\n';
   if(ws.readyState) {
     ws.send(run2);
   }  
@@ -171,14 +174,14 @@ function onUIActionAir() {
 
 
 function GotoWheelA() {
-  let run1 = 'wheel:vol,385\n';
+  let run1 = 'wheel:vol,560\n';
   if(ws.readyState) {
     ws.send(run1);
   }
 }
 
 function GotoWheelB() {
-  let run2 = 'wheel:vol,315\n';
+  let run2 = 'wheel:vol,640\n';
   if(ws.readyState) {
     ws.send(run2);
   }

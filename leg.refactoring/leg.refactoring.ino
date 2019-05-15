@@ -334,7 +334,7 @@ void CounterWheelFGSByInterrupt(void) {
 }
 
 
-const int iConstVolumeDistanceWheelReportDiff = 2;
+const int iConstVolumeDistanceWheelReportDiff = 1;
 int iVolumeDistanceWheelReported = 0;
 
 void readWheelVolume() {
@@ -343,6 +343,13 @@ void readWheelVolume() {
   //DUMP_VAR(volume);
   //DUMP_VAR(abs(volume - iVolumeDistanceWheelReported));
   //bool iReport = true;
+  if(iReport) {
+    iVolumeDistanceWheelReported = volume;
+    String resTex;
+    resTex += "wheel:vol,";
+    resTex += String(volume);
+    responseTextTag(resTex);
+  }
   iVolumeDistanceWheel = volume;
 }
 
@@ -354,7 +361,7 @@ void readLinearCurrent() {
   iCurrentLinear = current;
 }
 
-const int iConstStarSpeed = 240;
+const int iConstStarSpeed = 254;
 
 int iTargetVolumePostionWheel = 0;
 void runWheelVolume(int distPostion) {
@@ -368,9 +375,9 @@ void runWheelVolume(int distPostion) {
   bIsRunWheelByVolume = true;
   
   int moveDiff = iTargetVolumePostionWheel - iVolumeDistanceWheel;
-  bool bForwardRunWheel = false;
+  bool bForwardRunWheel = true;
   if(moveDiff > 0) {
-    bForwardRunWheel = true;
+    bForwardRunWheel = false;
   }
   //DUMP_VAR(bForwardRunWheel);
   if(bForwardRunWheel) {
@@ -421,7 +428,7 @@ int const aVolumeSpeedTable[] = {
 int const aVolumeSpeedTable[] = {
   0,  0,125,125,125,
   125,125,125,125,125,
-/*
+  127,127,127,127,127,
   127,127,127,127,127,
   127,127,127,127,127,
   127,127,127,127,127,
@@ -432,7 +439,11 @@ int const aVolumeSpeedTable[] = {
   127,127,127,127,127,
   130,130,130,130,130,
   130,130,130,130,130,
-*/
+  130,130,130,130,130,
+  130,130,130,130,130,
+  130,130,130,130,130,
+  130,130,130,130,130,
+  130,130,130,130,130,
   iConstStarSpeed
 };
 
