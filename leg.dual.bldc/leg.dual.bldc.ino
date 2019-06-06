@@ -8,54 +8,39 @@
 }
 
 // Interrupt
-const static char MOTER_FGS_WHEEL = 2;
-const static char MOTER_PWM_WHEEL = 3;
-const static char MOTER_CCW_WHEEL = 4;
+const static char A_MOTER_FGS_WHEEL = 2;
+const static char A_MOTER_PWM_WHEEL = 9;
+const static char A_MOTER_CCW_WHEEL = 4;
+const static char A_MOTER_VOLUME_WHEEL = A1;
 
-const static char MOTER_PWM_LINEAR = 11;
-const static char MOTER_STANDBY_LINEAR = 9;
-const static char MOTER_A1_LINEAR = 10;
-const static char MOTER_A2_LINEAR = 12;
-
-
-const static char MOTER_VOLUME_WHEEL = A1;
-const static char MOTER_CURRENT_LINEAR = A6;
+const static char B_MOTER_FGS_WHEEL = 3;
+const static char B_MOTER_PWM_WHEEL = 10;
+const static char B_MOTER_CCW_WHEEL = 8;
+const static char B_MOTER_VOLUME_WHEEL = A2;
 
 
 
 void setup()
 {
-  pinMode(MOTER_CCW_WHEEL, OUTPUT);
-  pinMode(MOTER_FGS_WHEEL, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL),CounterWheelFGSByInterrupt , FALLING);
+  // set pwm 9,10
+  TCCR1B &= B11111000;
+  TCCR1B |= B00000001;
 
-  // pwm MOTER_PWM_WHEEL pin
-  pinMode(MOTER_PWM_WHEEL, OUTPUT);
-  TCCR2B &= B11111000;
-  TCCR2B |= B00000001;
-  analogWrite(MOTER_PWM_WHEEL, 0);
+  pinMode(A_MOTER_CCW_WHEEL, OUTPUT);
+  pinMode(A_MOTER_FGS_WHEEL, INPUT_PULLUP);
+  pinMode(A_MOTER_PWM_WHEEL, OUTPUT);
+  pinMode(A_MOTER_VOLUME_WHEEL, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(A_MOTER_FGS_WHEEL),A_Motor_FGS_By_Interrupt , FALLING);
+  analogWrite(A_MOTER_PWM_WHEEL, 0);
 
-/*
-  analogWrite(3, 250);
-  TCCR0B = (TCCR0B & 0b11111000) | 0x01;
-  analogWrite(5, 127);
-*/
 
-  pinMode(MOTER_PWM_LINEAR, OUTPUT);
-  pinMode(MOTER_STANDBY_LINEAR, OUTPUT);
-  pinMode(MOTER_A1_LINEAR, OUTPUT);
-  pinMode(MOTER_A2_LINEAR, OUTPUT);
+  pinMode(B_MOTER_CCW_WHEEL, OUTPUT);
+  pinMode(B_MOTER_FGS_WHEEL, INPUT_PULLUP);
+  pinMode(B_MOTER_PWM_WHEEL, OUTPUT);
+  pinMode(B_MOTER_VOLUME_WHEEL, INPUT_PULLUP);
 
-  
-
-  digitalWrite(MOTER_PWM_LINEAR, HIGH);
-  digitalWrite(MOTER_STANDBY_LINEAR, HIGH);
-  digitalWrite(MOTER_A1_LINEAR, HIGH);
-  digitalWrite(MOTER_A2_LINEAR, HIGH);
-
-  pinMode(MOTER_CURRENT_LINEAR, INPUT_PULLUP);
-  pinMode(MOTER_VOLUME_WHEEL, INPUT_PULLUP);
-
+  attachInterrupt(digitalPinToInterrupt(B_MOTER_FGS_WHEEL),B_Motor_FGS_By_Interrupt , FALLING);
+  analogWrite(B_MOTER_PWM_WHEEL, 0);
 
   //Serial.begin(9600);
   Serial.begin(115200);
@@ -70,7 +55,7 @@ void loop() {
   checkOverRunMax();
   runSerialCommand();
   readStatus();
-  calcWheelTarget();
+  calcWheelTargetA();
 }
 
 
@@ -112,19 +97,24 @@ void saveEROM(int address,uint16_t value) {
 }
 
 
+void A_Motor_FGS_By_Interrupt(void) {
+}
+void B_Motor_FGS_By_Interrupt(void) {
+}
+
 
 unsigned char speed_wheel = 0x0;
 static long wheelRunCounter = -1;
 static long const iRunTimeoutCounter = 10000L * 10L;
-#define FRONT_WHEEL() { \
-  digitalWrite(MOTER_CCW_WHEEL, LOW);\
+#define FRONT_A_WHEEL() { \
+  digitalWrite(A_MOTER_CCW_WHEEL, LOW);\
 }
-#define BACK_WHEEL() { \
-  digitalWrite(MOTER_CCW_WHEEL, HIGH);\
+#define BACK_A_WHEEL() { \
+  digitalWrite(A_MOTER_CCW_WHEEL, HIGH);\
 }
-#define STOP_WHEEL() {\
+#define STOP_A_WHEEL() {\
   speed_wheel = 0x0;\
-  analogWrite(MOTER_PWM_WHEEL, 0x0);\
+  analogWrite(A_MOTER_PWM_WHEEL, 0x0);\
 }
 
 int iCurrentLinear = 0;
@@ -135,37 +125,33 @@ int iVolumeDistanceWheel = 0;
 int runMotorFGSignlCouter = 0;
 int runMotorFGSignlCouter_NOT = 0;
 
-void runWheel(int spd,int front) {
+void runWheel(int spd,int front,bool a) {
   speed_wheel = spd;
-  analogWrite(MOTER_PWM_WHEEL, spd);
+  if(a) {
+    analogWrite(A_MOTER_PWM_WHEEL, spd);
+  } else {
+    analogWrite(B_MOTER_PWM_WHEEL, spd);
+  }
   wheelRunCounter = iRunTimeoutCounter;
   runMotorFGSignlCouter = 0;
   runMotorFGSignlCouter_NOT = 0;
   if(front) {
-    digitalWrite(MOTER_CCW_WHEEL , HIGH);
+    if(a) {
+      digitalWrite(A_MOTER_CCW_WHEEL , HIGH);
+    } else {
+      digitalWrite(B_MOTER_CCW_WHEEL , HIGH);
+    }
     //DUMP_VAR(front);
   } else {
-    digitalWrite(MOTER_CCW_WHEEL, LOW);
+    if(a) {
+      digitalWrite(A_MOTER_CCW_WHEEL, LOW);
+    } else {
+      digitalWrite(B_MOTER_CCW_WHEEL , LOW);
+    }
     //DUMP_VAR(front);
   }
 }
 
-void runLinear(int distance,int ground) {
- if(distance == 0) {
-    digitalWrite(MOTER_A1_LINEAR, HIGH);
-    digitalWrite(MOTER_A2_LINEAR, HIGH);
-    return;
- }
- if(ground) {
-    digitalWrite(MOTER_A1_LINEAR, LOW);
-    digitalWrite(MOTER_A2_LINEAR, HIGH);
-    DUMP_VAR(distance);
-  } else {
-    digitalWrite(MOTER_A1_LINEAR, HIGH);
-    digitalWrite(MOTER_A2_LINEAR, LOW);
-    DUMP_VAR(distance);
-  }
-}
 
 static String gSerialInputCommand = "";
 void runSerialCommand(void) {
@@ -193,27 +179,27 @@ void responseTextTag(String &res) {
 void run_simple_command(void) {
   if(gSerialInputCommand=="uu") {
     speed_wheel -= 5;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
   }
   if(gSerialInputCommand=="dd") {
     speed_wheel += 5;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
   }
   if(gSerialInputCommand=="ff") {
-    FRONT_WHEEL();
+    FRONT_A_WHEEL();
     wheelRunCounter = iRunTimeoutCounter;
   }
   if(gSerialInputCommand=="bb") {
-    BACK_WHEEL();
+    BACK_A_WHEEL();
     wheelRunCounter = iRunTimeoutCounter;
   }
   if(gSerialInputCommand=="ss") {
     speed_wheel =0xff;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
   }
   if(gSerialInputCommand=="gg") {
     speed_wheel =0;
-    analogWrite(MOTER_CCW_WHEEL, speed_wheel);  
+    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
   }
 }
 
@@ -235,9 +221,6 @@ void run_comand(void) {
   }
   if(gSerialInputCommand.startsWith("wheel:") || gSerialInputCommand.startsWith("W:")) {
     runWheel();
-  }
-  if(gSerialInputCommand.startsWith("linear:") || gSerialInputCommand.startsWith("L:")) {
-    runLinear();
   }
 }
 void runInfo(void) {
@@ -284,17 +267,7 @@ void runWheel(void) {
   }
 }
 
-void runLinear(void) {
-  int isGround = 0;
-  bool bGround = readTagValue(":g,",":ground,",&isGround);
-  int isDistance = 0;
-  bool bDistance = readTagValue(":d,",":distance,",&isDistance);
-  if(bGround && bDistance) {
-    DUMP_VAR(isGround);
-    DUMP_VAR(isDistance);
-    runLinear(isDistance,isGround);
-  }
-}
+
 
 
 void readStatus() {
@@ -326,12 +299,6 @@ void checkOverRunMax(void) {
 int const iTargetDistanceMaxDiff = 1;
 
 
-int iTargetDistanceWheelFGS = 0;
-void CounterWheelFGSByInterrupt(void) {
-  //DUMP_VAR(++runMotorFGSignlCouter);
-  iTargetDistanceWheelFGS--;
-  calcWheel2TargetFGS();
-}
 
 
 const int iConstVolumeDistanceWheelReportDiff = 1;
@@ -465,7 +432,7 @@ long const aVolumeSpeedTableLength = sizeof(aVolumeSpeedTable)/sizeof(aVolumeSpe
 
 int const iConstVolumeWheelNearTarget = 3;
 
-void calcWheelTarget() {
+void calcWheelTargetA() {
   if(bIsRunWheelByVolume == false) {
     return;
   }
@@ -473,7 +440,7 @@ void calcWheelTarget() {
   int distanceToMove = abs(moveDiff);
   if(distanceToMove < iConstVolumeWheelNearTarget) {
     bIsRunWheelByVolume = false;
-    STOP_WHEEL();
+    STOP_A_WHEEL();
     return;
   } /*else {
       MyJsonDoc doc;
@@ -573,55 +540,6 @@ int const aFGSSpeedTable[] = {
 };
 long const aFGSSpeedTableLength = sizeof(aFGSSpeedTable)/sizeof(aFGSSpeedTable[0]);
 
-
-
-void calcWheel2TargetFGS() {
-  if(bIsRunWheelByFGS == false) {
-    return;
-  }
-  //DUMP_VAR(iTargetDistanceWheelFGS);
-  if(iTargetDistanceWheelFGS <= 0) {
-    STOP_WHEEL();
-    bIsRunWheelByFGS = false;
-    return;
-  }
-  /*
-  if(iTargetDistanceWheelFGS < 0) {
-    bIsRunWheelByFGS = not bIsRunWheelByFGS;
-    iTargetDistanceWheelFGS = abs(iTargetDistanceWheelFGS);
-    {
-      MyJsonDoc doc;
-      JsonObject root = doc.to<JsonObject>();
-      root["bForwardRunWheelByFGS"] = bForwardRunWheelByFGS;
-      root["iTargetDistanceWheelFGS"] = iTargetDistanceWheelFGS;
-      repsponseJson(doc);
-    }
-  }
-  */
-  
-  long moveIndex1 = iTargetDistanceWheelFGS;
-  long moveIndex2 = moveIndex1;
-  if(moveIndex1 >= aFGSSpeedTableLength) {
-    moveIndex2 = aFGSSpeedTableLength -1;
-  }
-  
-  //DUMP_VAR(iTargetDistanceWheelFGS);
-  int speed = aFGSSpeedTable[moveIndex2];
-  //DUMP_VAR(bForwardRunWheelByFGS);
-  if(bForwardRunWheelByFGS) {
-    runWheel(speed,1);
-  } else {
-    runWheel(speed,0);
-  }
-
-
-  if(iTargetDistanceWheelFGS < 0) {
-    bIsRunWheelByFGS = not bIsRunWheelByFGS;
-    iTargetDistanceWheelFGS = abs(iTargetDistanceWheelFGS);
-  }
-  
-  
-}
 
 
 
