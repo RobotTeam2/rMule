@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js" integrity="sha256-Mc6q7xXvKBXW87eVjSASXbPqfuc9tHqbn6AHp1R97J4=" crossorigin="anonymous"></script>
+  <script src="./six_leg_robot.js"></script>
+  <script src="./GLTFLoader.js"></script>
+  <script>
+    // ページの読み込みを待つ
+    window.addEventListener('load', init);
+
+    function init() {      
+      const loader = new THREE.GLTFLoader();
+      loader.crossOrigin = 'anonymous'; 
+      loader.load('./model/sixleg_model.gltf',onGLTFModel,onError);
+      
+    }
+    function onGLTFModel(gltf) {
+      console.log('onGLTFModel gltf=<',gltf,'>');
+      const obj = gltf.scene;
+      console.log('onGLTFModel obj=<',obj,'>');
+      for(let i = 0; i < obj.children.length; i++){
+        const mesh = obj.children[i];
+        //console.log('onGLTFModel mesh=<',mesh,'>');
+      }
+      //scene.add(obj);
+      onShowModel(gltf.scene);
+    }
+    function onError(error ) {
+      console.error('onError error=<',error,'>');
+    }
+    
+    function onShowModel(model) {
+      console.log('onShowModel model=<',model,'>');
+
+      // サイズを指定
+      const width = 640;
+      const height = 480;
+
+      // レンダラーを作成
+      const canvas = document.querySelector('#myCanvas');
+      const context = canvas.getContext( 'webgl2' );
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvas, context: context
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
+      // カメラを作成
+      const camera = new THREE.PerspectiveCamera(45, width / height);
+      camera.position.set(0, 0, +1000);
+
+      const scene = new THREE.Scene();
+      scene.add(model);
+      renderer.render(scene, camera);
+      
+    }
+  </script>
+</head>
+<body>
+  <canvas id="myCanvas"></canvas>
+</body>
+</html>
