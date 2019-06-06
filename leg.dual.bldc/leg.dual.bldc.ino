@@ -7,18 +7,17 @@
   Serial.print(">&$");\
 }
 
+#define MAX_MOTOR_CH (2)
+
 // Interrupt
-const static char A_MOTER_FGS_WHEEL = 2;
-const static char A_MOTER_PWM_WHEEL = 9;
-const static char A_MOTER_CCW_WHEEL = 4;
-const static char A_MOTER_VOLUME_WHEEL = A1;
+const static char MOTER_FGS_WHEEL[MAX_MOTOR_CH] = {2,3};
+const static char MOTER_PWM_WHEEL[MAX_MOTOR_CH] = {9,10};
+const static char MOTER_CCW_WHEEL[MAX_MOTOR_CH] = {4,8};
+const static char MOTER_VOLUME_WHEEL[MAX_MOTOR_CH] = {A1,A2};
 
-const static char B_MOTER_FGS_WHEEL = 3;
-const static char B_MOTER_PWM_WHEEL = 10;
-const static char B_MOTER_CCW_WHEEL = 8;
-const static char B_MOTER_VOLUME_WHEEL = A2;
-
-
+void A_Motor_FGS_By_Interrupt(void);
+void B_Motor_FGS_By_Interrupt(void);
+void loadEROM(void);
 
 void setup()
 {
@@ -26,21 +25,11 @@ void setup()
   TCCR1B &= B11111000;
   TCCR1B |= B00000001;
 
-  pinMode(A_MOTER_CCW_WHEEL, OUTPUT);
-  pinMode(A_MOTER_FGS_WHEEL, INPUT_PULLUP);
-  pinMode(A_MOTER_PWM_WHEEL, OUTPUT);
-  pinMode(A_MOTER_VOLUME_WHEEL, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(A_MOTER_FGS_WHEEL),A_Motor_FGS_By_Interrupt , FALLING);
-  analogWrite(A_MOTER_PWM_WHEEL, 0);
+  pin_motor_setup(0);
+  attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL[0]),A_Motor_FGS_By_Interrupt , FALLING);
 
-
-  pinMode(B_MOTER_CCW_WHEEL, OUTPUT);
-  pinMode(B_MOTER_FGS_WHEEL, INPUT_PULLUP);
-  pinMode(B_MOTER_PWM_WHEEL, OUTPUT);
-  pinMode(B_MOTER_VOLUME_WHEEL, INPUT_PULLUP);
-
-  attachInterrupt(digitalPinToInterrupt(B_MOTER_FGS_WHEEL),B_Motor_FGS_By_Interrupt , FALLING);
-  analogWrite(B_MOTER_PWM_WHEEL, 0);
+  pin_motor_setup(1);
+  attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL[1]),B_Motor_FGS_By_Interrupt , FALLING);
 
   //Serial.begin(9600);
   Serial.begin(115200);
@@ -48,46 +37,67 @@ void setup()
   Serial.print("start rMule leg&$");\
 
   loadEROM();
-
 }
 
+void pin_motor_setup(int index) {
+  pinMode(MOTER_CCW_WHEEL[index], OUTPUT);
+  pinMode(MOTER_FGS_WHEEL[index], INPUT_PULLUP);
+  pinMode(MOTER_PWM_WHEEL[index], OUTPUT);
+  pinMode(MOTER_VOLUME_WHEEL[index], INPUT_PULLUP);
+  analogWrite(MOTER_PWM_WHEEL[index], 0);
+}
+
+
+void checkOverRunMax(void);
+void runSerialCommand(void);
+void readStatus(void);
+void calcWheelTarget(int index);
 void loop() {
   checkOverRunMax();
   runSerialCommand();
   readStatus();
-  calcWheelTargetA();
+  calcWheelTarget(0);
+  calcWheelTarget(1);
 }
 
 
 
 
 const int  iEROMLegIdAddress = 0;
-const int  iEROMWheelMaxBackAddress = iEROMLegIdAddress + 2; 
-const int  iEROMWheelMaxFrontAddress = iEROMWheelMaxBackAddress + 4; 
-uint16_t  iEROMLegId = 0;
-uint16_t  iEROMWheelMaxBack = 280; 
-uint16_t  iEROMWheelMaxFront = 420; 
+const int  iEROMWheelMaxBackAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress + 2,iEROMLegIdAddress + 6}; 
+const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress + 4,iEROMLegIdAddress + 8}; 
 
-void loadEROM() {
+uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
+uint16_t  iEROMWheelMaxBack[MAX_MOTOR_CH] = {280,280}; 
+uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420}; 
+
+
+void loadEROMLimitSetting(int index) {
+  {
+    byte value1 = EEPROM.read(iEROMWheelMaxBackAddress[index]);
+    byte value2 = EEPROM.read(iEROMWheelMaxBackAddress[index]+1);
+    iEROMWheelMaxBack[index] = value1 | value2 << 8;
+    DUMP_VAR(iEROMWheelMaxBack[index]);
+  }
+  {
+    byte value1 = EEPROM.read(iEROMWheelMaxFrontAddress[index]);
+    byte value2 = EEPROM.read(iEROMWheelMaxFrontAddress[index]+1);
+    iEROMWheelMaxFront[index] = value1 | value2 << 8;
+    DUMP_VAR(iEROMWheelMaxFront[index]);
+  }
+}
+
+void loadEROM(void) {
   DUMP_VAR(EEPROM.length());
   {
-    byte value1 = EEPROM.read(iEROMLegId);
-    byte value2 = EEPROM.read(iEROMLegId+1);
-    iEROMLegId = value1 | value2 << 8;
-    DUMP_VAR(iEROMLegId);
+    byte value1 = EEPROM.read(iEROMLegIdAddress);
+    byte value2 = EEPROM.read(iEROMLegIdAddress+1);
+    iEROMLegId[0] = value1;
+    iEROMLegId[1] = value2;
+    DUMP_VAR(iEROMLegId[0]);
   }
-  {
-    byte value1 = EEPROM.read(iEROMWheelMaxBackAddress);
-    byte value2 = EEPROM.read(iEROMWheelMaxBackAddress+1);
-    iEROMWheelMaxBack = value1 | value2 << 8;
-    DUMP_VAR(iEROMWheelMaxBack);
-  }
-  {
-    byte value1 = EEPROM.read(iEROMWheelMaxFrontAddress);
-    byte value2 = EEPROM.read(iEROMWheelMaxFrontAddress+1);
-    iEROMWheelMaxFront = value1 | value2 << 8;
-    DUMP_VAR(iEROMWheelMaxFront);
-  }
+  loadEROMLimitSetting(0);
+  loadEROMLimitSetting(1);
 }
 void saveEROM(int address,uint16_t value) {
   byte value1 =  value & 0xff;
@@ -103,51 +113,41 @@ void B_Motor_FGS_By_Interrupt(void) {
 }
 
 
-unsigned char speed_wheel = 0x0;
+unsigned char speed_wheel[MAX_MOTOR_CH] = {0,0};
 static long wheelRunCounter = -1;
 static long const iRunTimeoutCounter = 10000L * 10L;
-#define FRONT_A_WHEEL() { \
-  digitalWrite(A_MOTER_CCW_WHEEL, LOW);\
+
+#define FRONT_WHEEL(index) { \
+  digitalWrite(MOTER_CCW_WHEEL[index], LOW);\
 }
-#define BACK_A_WHEEL() { \
-  digitalWrite(A_MOTER_CCW_WHEEL, HIGH);\
+#define BACK_WHEEL(index) { \
+  digitalWrite(MOTER_CCW_WHEEL[index], HIGH);\
 }
-#define STOP_A_WHEEL() {\
-  speed_wheel = 0x0;\
-  analogWrite(A_MOTER_PWM_WHEEL, 0x0);\
+#define STOP_WHEEL(index) {\
+  speed_wheel[index] = 0x0;\
+  analogWrite(MOTER_PWM_WHEEL[index], 0x0);\
 }
 
-int iCurrentLinear = 0;
-int iVolumeDistanceWheel = 0;
+
+
+int iVolumeDistanceWheel[2] = {};
 
 
 
 int runMotorFGSignlCouter = 0;
 int runMotorFGSignlCouter_NOT = 0;
 
-void runWheel(int spd,int front,bool a) {
-  speed_wheel = spd;
-  if(a) {
-    analogWrite(A_MOTER_PWM_WHEEL, spd);
-  } else {
-    analogWrite(B_MOTER_PWM_WHEEL, spd);
-  }
+void runWheel(int spd,int front,int index) {
+  speed_wheel[index] = spd;
+  analogWrite(MOTER_PWM_WHEEL[index], spd);
   wheelRunCounter = iRunTimeoutCounter;
   runMotorFGSignlCouter = 0;
   runMotorFGSignlCouter_NOT = 0;
   if(front) {
-    if(a) {
-      digitalWrite(A_MOTER_CCW_WHEEL , HIGH);
-    } else {
-      digitalWrite(B_MOTER_CCW_WHEEL , HIGH);
-    }
+    digitalWrite(MOTER_CCW_WHEEL[index] , HIGH);
     //DUMP_VAR(front);
   } else {
-    if(a) {
-      digitalWrite(A_MOTER_CCW_WHEEL, LOW);
-    } else {
-      digitalWrite(B_MOTER_CCW_WHEEL , LOW);
-    }
+    digitalWrite(MOTER_CCW_WHEEL[index], LOW);
     //DUMP_VAR(front);
   }
 }
@@ -178,28 +178,28 @@ void responseTextTag(String &res) {
 }
 void run_simple_command(void) {
   if(gSerialInputCommand=="uu") {
-    speed_wheel -= 5;
-    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
+    speed_wheel[0] -= 5;
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
   }
   if(gSerialInputCommand=="dd") {
-    speed_wheel += 5;
-    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
+    speed_wheel[0] += 5;
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
   }
   if(gSerialInputCommand=="ff") {
-    FRONT_A_WHEEL();
+    FRONT_WHEEL(0);
     wheelRunCounter = iRunTimeoutCounter;
   }
   if(gSerialInputCommand=="bb") {
-    BACK_A_WHEEL();
+    BACK_WHEEL(0);
     wheelRunCounter = iRunTimeoutCounter;
   }
   if(gSerialInputCommand=="ss") {
-    speed_wheel =0xff;
-    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
+    speed_wheel[0] =0xff;
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
   }
   if(gSerialInputCommand=="gg") {
-    speed_wheel =0;
-    analogWrite(A_MOTER_CCW_WHEEL, speed_wheel);  
+    speed_wheel[0] =0;
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
   }
 }
 
@@ -225,45 +225,69 @@ void run_comand(void) {
 }
 void runInfo(void) {
   String resTex;
-  resTex += "info:id,";
-  resTex += String(iEROMLegId);      
-  resTex += ":mb,";
-  resTex += String(iEROMWheelMaxBack);      
-  resTex += ":mf,";
-  resTex += String(iEROMWheelMaxFront);
-  resTex += ":wp,";
-  resTex += String(iVolumeDistanceWheel);
-  resTex += ":lc,";
-  resTex += String(iCurrentLinear);
+  resTex += "info:idA,";
+  resTex += String(iEROMLegId[0]);      
+  resTex += ":idB,";
+  resTex += String(iEROMLegId[1]);      
+  resTex += ":mbA,";
+  resTex += String(iEROMWheelMaxBack[0]);      
+  resTex += ":mfA,";
+  resTex += String(iEROMWheelMaxFront[0]);
+  resTex += ":wpA,";
+  resTex += String(iVolumeDistanceWheel[0]);
+  resTex += ":mbB,";
+  resTex += String(iEROMWheelMaxBack[1]);      
+  resTex += ":mfB,";
+  resTex += String(iEROMWheelMaxFront[1]);
+  resTex += ":wpB,";
+  resTex += String(iVolumeDistanceWheel[1]);
   responseTextTag(resTex);
 }
 
+void runLimmitSetting(int index) {
+  int MaxFront = 0;
+  String tagmf = ":mfA,";
+  if(index > 0) {
+    tagmf = ":mfB,";
+  }
+  if(readTagValue(tagmf,"",&MaxFront)) {
+    //DUMP_VAR(MaxFront);
+    saveEROM(iEROMWheelMaxFrontAddress[index],MaxFront);
+    iEROMWheelMaxFront[index] = MaxFront;
+  }
+  int MaxBack = 0;
+  String tagmb = ":mbA,";
+  if(index > 0) {
+    tagmb = ":mbB,";
+  }
+  if(readTagValue(tagmb,"",&MaxBack)) {
+    //DUMP_VAR(MaxBackA);
+    saveEROM(iEROMWheelMaxBackAddress[index],MaxBack);
+    iEROMWheelMaxBack[index] = MaxBack;
+  }
+}
 void runSetting(void) {
   int legID = 0;
   if(readTagValue(":id,","",&legID)) {
     //DUMP_VAR(legID);
     saveEROM(iEROMLegIdAddress,legID);
-    iEROMLegId = legID;
+    iEROMLegId[0] =  legID & 0xff;
+    iEROMLegId[1] = (legID >> 8) & 0xff;    
   }
-  int MaxFront = 0;
-  if(readTagValue(":mf,","",&MaxFront)) {
-    //DUMP_VAR(legID);
-    saveEROM(iEROMWheelMaxFrontAddress,MaxFront);
-    iEROMWheelMaxFront = MaxFront;
-  }
-  int MaxBack = 0;
-  if(readTagValue(":mb,","",&MaxBack)) {
-    //DUMP_VAR(legID);
-    saveEROM(iEROMWheelMaxBackAddress,MaxBack);
-    iEROMWheelMaxBack = MaxBack;
-  }
+  runLimmitSetting(0);
+  runLimmitSetting(1);
 }
 
 void runWheel(void) {
-  int volDist = 0;
-  if(readTagValue(":v,",":vol,",&volDist)) {
-    DUMP_VAR(volDist);
-    runWheelVolume(volDist);
+  int volDistA = 0;
+  if(readTagValue(":vA,",":volA,",&volDistA)) {
+    DUMP_VAR(volDistA);
+    runWheelVolume(volDistA,0);
+  }
+  int volDistB = 0;
+  if(readTagValue(":vB,",":volB,",&volDistB)) {
+    DUMP_VAR(volDistB);
+    runWheelVolume(volDistB,1);
   }
 }
 
@@ -271,26 +295,30 @@ void runWheel(void) {
 
 
 void readStatus() {
-  readLinearCurrent();
-  readWheelVolume();
+  readWheelVolume(0);
+  readWheelVolume(1);
 }
 
-bool bIsRunWheelByVolume = false;
+bool bIsRunWheelByVolume[MAX_MOTOR_CH] = {false,false};
 
-
+void checkOverRunMaxWheel(int index) {
+  if(iVolumeDistanceWheel[index] < iEROMWheelMaxBack[index]) {
+    bIsRunWheelByVolume[index] = false;
+    STOP_WHEEL(index);
+  }
+  if(iVolumeDistanceWheel[index] > iEROMWheelMaxFront[index]) {
+    bIsRunWheelByVolume[index] = false;
+    STOP_WHEEL(index);
+  }  
+}
 void checkOverRunMax(void) {
   // stop
   if(wheelRunCounter-- <= 0 ) {
-    STOP_WHEEL();
+    STOP_WHEEL(0);
+    STOP_WHEEL(1);
   }
-  if(iVolumeDistanceWheel < iEROMWheelMaxBack) {
-    bIsRunWheelByVolume = false;
-    STOP_WHEEL();
-  }
-  if(iVolumeDistanceWheel > iEROMWheelMaxFront) {
-    bIsRunWheelByVolume = false;
-    STOP_WHEEL();
-  }  
+  checkOverRunMaxWheel(0);
+  checkOverRunMaxWheel(1);
 }
 
 
@@ -302,113 +330,55 @@ int const iTargetDistanceMaxDiff = 1;
 
 
 const int iConstVolumeDistanceWheelReportDiff = 1;
-int iVolumeDistanceWheelReported = 0;
 
-void readWheelVolume() {
-  int volume = analogRead(MOTER_VOLUME_WHEEL);
-  bool iReport = abs(volume - iVolumeDistanceWheelReported) > iConstVolumeDistanceWheelReportDiff;
+int iVolumeDistanceWheelReported[MAX_MOTOR_CH] = {0,0};
+
+const String strConstWheelReportTag[MAX_MOTOR_CH] = {"wheel:volA,","wheel:volB,"};
+
+void readWheelVolume(int index) {
+  int volume = analogRead(MOTER_VOLUME_WHEEL[index]);  
+  bool iReport = abs(volume - iVolumeDistanceWheelReported[index]) > iConstVolumeDistanceWheelReportDiff;
+  //DUMP_VAR(abs(volume - iVolumeDistanceWheelReported[index]));
   //DUMP_VAR(volume);
-  //DUMP_VAR(abs(volume - iVolumeDistanceWheelReported));
   //bool iReport = true;
   if(iReport) {
-    iVolumeDistanceWheelReported = volume;
+    iVolumeDistanceWheelReported[index] = volume;
     String resTex;
-    resTex += "wheel:vol,";
+    resTex += strConstWheelReportTag[index];
     resTex += String(volume);
     responseTextTag(resTex);
   }
-  iVolumeDistanceWheel = volume;
+  iVolumeDistanceWheel[index] = volume;
 }
 
-void readLinearCurrent() {
-  int current = analogRead(MOTER_CURRENT_LINEAR);
-  if(abs(current - 506) > 10) {
-    //DUMP_VAR(current);
-  }
-  iCurrentLinear = current;
-}
 
 const int iConstStarSpeed = 254;
 
-int iTargetVolumePostionWheel = 0;
-void runWheelVolume(int distPostion) {
-  if(distPostion < iEROMWheelMaxBack || distPostion > iEROMWheelMaxFront) {
+int iTargetVolumePostionWheel[MAX_MOTOR_CH] = {0,0};
+void runWheelVolume(int distPostion,int index) {
+  if(distPostion < iEROMWheelMaxBack[index] || distPostion > iEROMWheelMaxFront[index]) {
     //DUMP_VAR(distPostion);
-    //DUMP_VAR(iEROMWheelMaxBack);
-    //DUMP_VAR(iEROMWheelMaxFront);
+    //DUMP_VAR(iEROMWheelMaxBack[index]);
+    //DUMP_VAR(iEROMWheelMaxFront[index]);
     return;
   }
-  iTargetVolumePostionWheel = distPostion;
-  bIsRunWheelByVolume = true;
+  iTargetVolumePostionWheel[index] = distPostion;
+  bIsRunWheelByVolume[index] = true;
   
-  int moveDiff = iTargetVolumePostionWheel - iVolumeDistanceWheel;
+  int moveDiff = iTargetVolumePostionWheel[index] - iVolumeDistanceWheel[index];
   bool bForwardRunWheel = true;
   if(moveDiff > 0) {
     bForwardRunWheel = false;
   }
   //DUMP_VAR(bForwardRunWheel);
   if(bForwardRunWheel) {
-    runWheel(iConstStarSpeed,1);
+    runWheel(iConstStarSpeed,1,index);
   } else {
-    runWheel(iConstStarSpeed,0);
+    runWheel(iConstStarSpeed,0,index);
   }
 }
 
-/*
-int const aVolumeSpeedTable[] = {
-  0,  0,125,125,125,
-  125,125,125,125,125,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  254
-};
-*/
-/*
-int const aVolumeSpeedTable[] = {
-  0,  0,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  iConstStarSpeed
-};
-*/
+
 
 int const aVolumeSpeedTable[] = {
   0,  0,130,130,130,
@@ -432,15 +402,15 @@ long const aVolumeSpeedTableLength = sizeof(aVolumeSpeedTable)/sizeof(aVolumeSpe
 
 int const iConstVolumeWheelNearTarget = 3;
 
-void calcWheelTargetA() {
-  if(bIsRunWheelByVolume == false) {
+void calcWheelTarget(int index) {
+  if(bIsRunWheelByVolume[index] == false) {
     return;
   }
-  int moveDiff = iTargetVolumePostionWheel - iVolumeDistanceWheel;
+  int moveDiff = iTargetVolumePostionWheel[index] - iVolumeDistanceWheel[index];
   int distanceToMove = abs(moveDiff);
   if(distanceToMove < iConstVolumeWheelNearTarget) {
-    bIsRunWheelByVolume = false;
-    STOP_A_WHEEL();
+    bIsRunWheelByVolume[index] = false;
+    STOP_WHEEL(index);
     return;
   } /*else {
       MyJsonDoc doc;
@@ -461,85 +431,11 @@ void calcWheelTargetA() {
   }
   int speed = aVolumeSpeedTable[speedIndex];
   if(bForwardRunWheel) {
-    runWheel(speed,1);
+    runWheel(speed,1,index);
   } else {
-    runWheel(speed,0);
+    runWheel(speed,0,index);
   }
 }
-
-
-
-
-
-bool bIsRunWheelByFGS = false;
-bool bForwardRunWheelByFGS = false;
-// 10mm per  signal 
-float iTargetDistanceWheelFactorFGS = 0.90f;
-void runWheelFgs(int distPostion) {
-  if(distPostion < iEROMWheelMaxBack || distPostion > iEROMWheelMaxFront) {
-    DUMP_VAR(distPostion);
-    DUMP_VAR(iEROMWheelMaxBack);
-    DUMP_VAR(iEROMWheelMaxFront);
-    return;
-  }
-  int moveDiff = distPostion - iVolumeDistanceWheel;
-  if(moveDiff > 0) {
-    bForwardRunWheelByFGS = false;
-  } else {
-    bForwardRunWheelByFGS = true;
-  }
-  DUMP_VAR(bForwardRunWheelByFGS);
-  float moveDistance = abs(moveDiff);
-  iTargetDistanceWheelFGS = int (((float)moveDistance)/iTargetDistanceWheelFactorFGS);
-  DUMP_VAR(iTargetDistanceWheelFGS);
-  bIsRunWheelByFGS = true;
-  if(bForwardRunWheelByFGS) {
-    runWheel(iConstStarSpeed,1);
-  } else {
-    runWheel(iConstStarSpeed,0);
-  }
-}
-
-
-int const aFGSSpeedTable[] = {
-  0,  125,125,125,125,
-/*
-  125,125,125,125,125,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  130,130,130,130,130,
-  130,130,130,130,130,
-*/
-  iConstStarSpeed
-};
-long const aFGSSpeedTableLength = sizeof(aFGSSpeedTable)/sizeof(aFGSSpeedTable[0]);
-
 
 
 
@@ -598,7 +494,7 @@ void runGPIO(void) {
       resTex += String(valRes);      
       responseTextTag(resTex);
     } else {
-      analogWrite(port,val);        
+      analogWrite(port,val);
     }
   }
 }
