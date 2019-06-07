@@ -2,7 +2,9 @@ const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
 //const parser = new Readline();
 
-const port = new SerialPort('COM7', {
+
+
+const port = new SerialPort('COM8', {
   baudRate: 115200,
   autoOpen: false
 });
@@ -78,7 +80,21 @@ const wss = new WebSocket.Server({ host:'127.0.0.1',port: 18081 });
 
 onWSSMsg = (msg) => {
   console.log('onWSSMsg msg=<', msg,'>');
-  trans2serial(msg);
+  if(msg.startsWith('list_serial:')) {
+    SerialPort.list((err, ports) => {
+      //console.log('ports=<',ports ,'>');
+      const serial = {serial:{ports}};
+      trans2ws(serial);
+      /*
+      for(let port of ports) {
+        console.log('port=<',port ,'>');
+        trans2ws(ports)
+      }
+      */
+    });    
+  } else {
+    trans2serial(msg);
+  }
 };
 
 onWSSConnected = (ws) => {

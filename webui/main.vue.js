@@ -37,11 +37,19 @@ ws.onmessage = (evt) => {
   }
 };
 
+
 onWSReady = () => {
+  let infoRead = 'list_serial:r\n';
+  console.log('onWSReady infoRead=<', infoRead,'>');
+  ws.send(infoRead);
+}
+
+readLegInfo = () => {
   let infoRead = 'info:r\n';
   console.log('onWSReady infoRead=<', infoRead,'>');
   ws.send(infoRead);
 }
+
 
 onLegInfo = (info) => {
   console.log('onLegInfo info=<', info,'>');
