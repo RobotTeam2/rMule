@@ -63,9 +63,9 @@ void loop() {
 
 
 
-const int  iEROMLegIdAddress = 0;
-const int  iEROMWheelMaxBackAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress + 2,iEROMLegIdAddress + 6}; 
-const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress + 4,iEROMLegIdAddress + 8}; 
+const int  iEROMLegIdAddress[MAX_MOTOR_CH] = {0,2};
+const int  iEROMWheelMaxBackAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 2,iEROMLegIdAddress[1] + 4}; 
+const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 6,iEROMLegIdAddress[1] + 8}; 
 
 uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMWheelMaxBack[MAX_MOTOR_CH] = {280,280}; 
@@ -225,7 +225,10 @@ void run_comand(void) {
 }
 void runInfo(void) {
   String resTex;
-  resTex += "info:idA,";
+  resTex += "info";
+  resTex += ":ch,";
+  resTex += String(MAX_MOTOR_CH);      
+  resTex += ":idA,";
   resTex += String(iEROMLegId[0]);      
   resTex += ":idB,";
   resTex += String(iEROMLegId[1]);      
@@ -267,13 +270,19 @@ void runLimmitSetting(int index) {
   }
 }
 void runSetting(void) {
-  int legID = 0;
-  if(readTagValue(":id,","",&legID)) {
-    //DUMP_VAR(legID);
-    saveEROM(iEROMLegIdAddress,legID);
-    iEROMLegId[0] =  legID & 0xff;
-    iEROMLegId[1] = (legID >> 8) & 0xff;    
+  int legIDA = 0;
+  if(readTagValue(":idA,","",&legIDA)) {
+    //DUMP_VAR(legIDA);
+    saveEROM(iEROMLegIdAddress[0],legIDA);
+    iEROMLegId[0] =  legIDA;
   }
+  int legIDB = 0;
+  if(readTagValue(":idB,","",&legIDB)) {
+    //DUMP_VAR(legIDB);
+    saveEROM(iEROMLegIdAddress[1],legIDB);
+    iEROMLegId[1] =  legIDB;
+  }
+
   runLimmitSetting(0);
   runLimmitSetting(1);
 }
@@ -329,7 +338,8 @@ int const iTargetDistanceMaxDiff = 1;
 
 
 
-const int iConstVolumeDistanceWheelReportDiff = 1;
+const int iConstVolumeDistanceWheelReportDiff = 5;
+const int iConstVolumeDistanceWheelReportDiffBigRange = 10;
 
 int iVolumeDistanceWheelReported[MAX_MOTOR_CH] = {0,0};
 
@@ -338,6 +348,9 @@ const String strConstWheelReportTag[MAX_MOTOR_CH] = {"wheel:volA,","wheel:volB,"
 void readWheelVolume(int index) {
   int volume = analogRead(MOTER_VOLUME_WHEEL[index]);  
   bool iReport = abs(volume - iVolumeDistanceWheelReported[index]) > iConstVolumeDistanceWheelReportDiff;
+  if(volume > 1000) {
+    iReport = abs(volume - iVolumeDistanceWheelReported[index]) > iConstVolumeDistanceWheelReportDiffBigRange;
+  }
   //DUMP_VAR(abs(volume - iVolumeDistanceWheelReported[index]));
   //DUMP_VAR(volume);
   //bool iReport = true;
