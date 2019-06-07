@@ -11,6 +11,13 @@ ws.onmessage = (evt) => {
     let jsonMsg = JSON.parse(received_msg);
     console.log('onmessage jsonMsg=<', jsonMsg,'>');
     if(jsonMsg) {
+      if(jsonMsg.serial) {
+        if(jsonMsg.open) {
+          readLegInfo();
+        } else {
+          onSerialPort(jsonMsg.serial);
+        }
+      }
       if(jsonMsg.info) {
         onLegInfo(jsonMsg.info);
       }
@@ -39,7 +46,7 @@ ws.onmessage = (evt) => {
 
 
 onWSReady = () => {
-  let infoRead = 'list_serial:r\n';
+  let infoRead = 'serial:list,r\n';
   console.log('onWSReady infoRead=<', infoRead,'>');
   ws.send(infoRead);
 }
@@ -56,10 +63,10 @@ onLegInfo = (info) => {
   if(info.ch >0) {
     let channelInfo = {};
     channelInfo.index = 0;
-    channelInfo.id = info.idA;
-    channelInfo.mb = info.mbA;
-    channelInfo.mf = info.mfA;
-    channelInfo.wp = info.wpA;
+    channelInfo.id = info.id0;
+    channelInfo.mb = info.mb0;
+    channelInfo.mf = info.mf0;
+    channelInfo.wp = info.wp0;
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
@@ -68,14 +75,21 @@ onLegInfo = (info) => {
   if(info.ch >1) {
     let channelInfo = {};
     channelInfo.index = 1;
-    channelInfo.id = info.idB;
-    channelInfo.mb = info.mbB;
-    channelInfo.mf = info.mfB;
-    channelInfo.wp = info.wpB;
+    channelInfo.id = info.id1;
+    channelInfo.mb = info.mb1;
+    channelInfo.mf = info.mf1;
+    channelInfo.wp = info.wp1;
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
     }
+  }
+}
+
+onSerialPort = (ports) => {
+  console.log('onSerialPort ports=<', ports,'>');
+  if(typeof onVueUILegInfo === 'function') {
+    onVueUISerialPort(ports);
   }
 }
 
@@ -231,12 +245,29 @@ function GotoLinearB() {
 }
 
 
+function getInputUITool(elem) {
+  let legIDElem = elem.parentElement.parentElement.getElementsByTagName('input')[0];
+  console.log('getInputUITool legIDElem=<', legIDElem,'>');
+  return parseInt(legIDElem.value.trim());
+}
+
+function getChannelUITool(elem) {
+  let channelElem = elem.parentElement.parentElement.parentElement.parentElement.parentElement.getElementsByTagName('h5')[0];
+  console.log('getChannelUITool channelElem=<', channelElem,'>');
+  return parseInt(channelElem.textContent.replace('Channel of ','').trim());
+}
+
 function onUIChangeLegID(elem) {
   console.log('onUIChangeLegID elem=<', elem,'>');
-  console.log('onUIChangeLegID elem.value=<', elem.value,'>');
-  let legId = 'setting:id,' + elem.value.trim() + '\n';
+  let legId = getInputUITool(elem);
   console.log('onUIChangeLegID legId=<', legId,'>');
-  ws.send(legId);
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangeLegID channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(legId)) {
+    let legIdMsg = 'setting:id' + channel + ',' + legId + '\n';
+    console.log('onUIChangeLegID legIdMsg=<', legIdMsg,'>');
+    ws.send(legIdMsg);
+  }
 }
 
 function onUIChangeWheelMaxFront(elem) {
@@ -255,3 +286,9 @@ function onUIChangeWheelMaxBack(elem) {
   ws.send(mb);
 }
 
+function onUIClickSerialConnect(elem) {
+  //console.log('onUIClickSerialConnect elem=<', elem,'>');
+  const portName = elem.textContent.replace('Connect To ','').trim();
+  console.log('onUIClickSerialConnect portName=<', portName,'>');
+  ws.send('serial:open,' + portName);
+}

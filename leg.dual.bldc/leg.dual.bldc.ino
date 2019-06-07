@@ -228,30 +228,30 @@ void runInfo(void) {
   resTex += "info";
   resTex += ":ch,";
   resTex += String(MAX_MOTOR_CH);      
-  resTex += ":idA,";
+  resTex += ":id0,";
   resTex += String(iEROMLegId[0]);      
-  resTex += ":idB,";
+  resTex += ":id1,";
   resTex += String(iEROMLegId[1]);      
-  resTex += ":mbA,";
+  resTex += ":mb0,";
   resTex += String(iEROMWheelMaxBack[0]);      
-  resTex += ":mfA,";
+  resTex += ":mf0,";
   resTex += String(iEROMWheelMaxFront[0]);
-  resTex += ":wpA,";
+  resTex += ":wp0,";
   resTex += String(iVolumeDistanceWheel[0]);
-  resTex += ":mbB,";
+  resTex += ":mb1,";
   resTex += String(iEROMWheelMaxBack[1]);      
-  resTex += ":mfB,";
+  resTex += ":mf1,";
   resTex += String(iEROMWheelMaxFront[1]);
-  resTex += ":wpB,";
+  resTex += ":wp1,";
   resTex += String(iVolumeDistanceWheel[1]);
   responseTextTag(resTex);
 }
 
 void runLimmitSetting(int index) {
   int MaxFront = 0;
-  String tagmf = ":mfA,";
+  String tagmf = ":mf0,";
   if(index > 0) {
-    tagmf = ":mfB,";
+    tagmf = ":mf1,";
   }
   if(readTagValue(tagmf,"",&MaxFront)) {
     //DUMP_VAR(MaxFront);
@@ -259,9 +259,9 @@ void runLimmitSetting(int index) {
     iEROMWheelMaxFront[index] = MaxFront;
   }
   int MaxBack = 0;
-  String tagmb = ":mbA,";
+  String tagmb = ":mb0,";
   if(index > 0) {
-    tagmb = ":mbB,";
+    tagmb = ":mb1,";
   }
   if(readTagValue(tagmb,"",&MaxBack)) {
     //DUMP_VAR(MaxBackA);
@@ -271,13 +271,13 @@ void runLimmitSetting(int index) {
 }
 void runSetting(void) {
   int legIDA = 0;
-  if(readTagValue(":idA,","",&legIDA)) {
+  if(readTagValue(":id0,","",&legIDA)) {
     //DUMP_VAR(legIDA);
     saveEROM(iEROMLegIdAddress[0],legIDA);
     iEROMLegId[0] =  legIDA;
   }
   int legIDB = 0;
-  if(readTagValue(":idB,","",&legIDB)) {
+  if(readTagValue(":id1,","",&legIDB)) {
     //DUMP_VAR(legIDB);
     saveEROM(iEROMLegIdAddress[1],legIDB);
     iEROMLegId[1] =  legIDB;
@@ -289,12 +289,12 @@ void runSetting(void) {
 
 void runWheel(void) {
   int volDistA = 0;
-  if(readTagValue(":vA,",":volA,",&volDistA)) {
+  if(readTagValue(":v0,",":vol0,",&volDistA)) {
     DUMP_VAR(volDistA);
     runWheelVolume(volDistA,0);
   }
   int volDistB = 0;
-  if(readTagValue(":vB,",":volB,",&volDistB)) {
+  if(readTagValue(":v1,",":vol1,",&volDistB)) {
     DUMP_VAR(volDistB);
     runWheelVolume(volDistB,1);
   }

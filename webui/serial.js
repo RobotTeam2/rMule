@@ -2,38 +2,51 @@ const SerialPort = require('serialport');
 const Readline = SerialPort.parsers.Readline;
 //const parser = new Readline();
 
-
-
-const port = new SerialPort('COM8', {
+const serialOption = 
+{
   baudRate: 115200,
   autoOpen: false
-});
+};
+
+let dataBuffer = '';
+let port = false;
+openSerial = (portName) => {
+  if(port) {
+    //console.log('port=<',port ,'> is opened');
+    return;
+  }
+  port = new SerialPort(portName, serialOption);
+  port.open(function (err) {
+    if (err) {
+      return console.log('Error opening port: ', err.message);
+    }
+    //port.pipe(parser);
+    console.log('portName=<',portName ,'> is opened');
+    setTimeout(()=> {
+      trans2serial('info:r\n');
+    },5000);
+  });
+
+  port.on('data', function (response) {
+    let resStr = response.toString('utf-8');
+    //console.log('resStr=<',resStr ,'>');
+    dataBuffer += resStr;
+    let cmds = trySpliteResponse();
+    //console.log('cmds=<',cmds ,'>');
+    try {
+      for(let i = 0;i < cmds.length;i++) {
+        tryParseResponse(cmds[i]);     
+      }
+    } catch(e) {
+      console.log('e=<',e ,'>');
+    }
+  });
+}
+
 
 const spacerCommand = '&$';
 const spacerLength = spacerCommand.length;
 
-port.open(function (err) {
-  if (err) {
-    return console.log('Error opening port: ', err.message);
-  }
-  //port.pipe(parser);
-});
-
-let dataBuffer = '';
-port.on('data', function (response) {
-  let resStr = response.toString('utf-8');
-  //console.log('resStr=<',resStr ,'>');
-  dataBuffer += resStr;
-  let cmds = trySpliteResponse();
-  //console.log('cmds=<',cmds ,'>');
-  try {
-    for(let i = 0;i < cmds.length;i++) {
-      tryParseResponse(cmds[i]);     
-    }
-  } catch(e) {
-    console.log('e=<',e ,'>');
-  }
-});
 
 trySpliteResponse = () => {
   let cmds = [];
@@ -80,22 +93,35 @@ const wss = new WebSocket.Server({ host:'127.0.0.1',port: 18081 });
 
 onWSSMsg = (msg) => {
   console.log('onWSSMsg msg=<', msg,'>');
-  if(msg.startsWith('list_serial:')) {
-    SerialPort.list((err, ports) => {
-      //console.log('ports=<',ports ,'>');
-      const serial = {serial:{ports}};
-      trans2ws(serial);
-      /*
-      for(let port of ports) {
-        console.log('port=<',port ,'>');
-        trans2ws(ports)
-      }
-      */
-    });    
+  if(msg.startsWith('serial:list,')) {
+    onListSerial();
+  } else if(msg.startsWith('serial:open,')) {
+    onOpenSerial(msg);
   } else {
     trans2serial(msg);
   }
 };
+
+onListSerial = () => {
+  SerialPort.list((err, ports) => {
+    //console.log('ports=<',ports ,'>');
+    const serial = {serial:ports};
+    if(port) {
+      serial.open = true;
+    } else {
+      serial.open = false;
+    }
+    trans2ws(serial);
+  });  
+}
+
+onOpenSerial = (msg) => {
+  console.log('onOpenSerial msg=<',msg ,'>');
+  const portName = msg.replace('serial:open,','').trim();
+  console.log('onOpenSerial portName=<',portName ,'>');
+  openSerial(portName);
+}
+
 
 onWSSConnected = (ws) => {
   //console.log('onWSSConnected ws=<', ws,'>');
