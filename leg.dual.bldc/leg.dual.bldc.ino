@@ -87,15 +87,16 @@ void loadEROMLimitSetting(int index) {
   }
 }
 
+void loadEROMLegID(int index) {
+  byte value1 = EEPROM.read(iEROMLegIdAddress[index]);
+  byte value2 = EEPROM.read(iEROMLegIdAddress[index]+1);
+  iEROMLegId[index] = value1 | value2 << 8;
+  DUMP_VAR(iEROMLegId[index]);
+}
+
 void loadEROM(void) {
-  DUMP_VAR(EEPROM.length());
-  {
-    byte value1 = EEPROM.read(iEROMLegIdAddress);
-    byte value2 = EEPROM.read(iEROMLegIdAddress+1);
-    iEROMLegId[0] = value1;
-    iEROMLegId[1] = value2;
-    DUMP_VAR(iEROMLegId[0]);
-  }
+  loadEROMLegID(0);
+  loadEROMLegID(1);
   loadEROMLimitSetting(0);
   loadEROMLimitSetting(1);
 }
@@ -338,12 +339,12 @@ int const iTargetDistanceMaxDiff = 1;
 
 
 
-const int iConstVolumeDistanceWheelReportDiff = 5;
+const int iConstVolumeDistanceWheelReportDiff = 3;
 const int iConstVolumeDistanceWheelReportDiffBigRange = 10;
 
 int iVolumeDistanceWheelReported[MAX_MOTOR_CH] = {0,0};
 
-const String strConstWheelReportTag[MAX_MOTOR_CH] = {"wheel:volA,","wheel:volB,"};
+const String strConstWheelReportTag[MAX_MOTOR_CH] = {"wheel:vol0,","wheel:vol1,"};
 
 void readWheelVolume(int index) {
   int volume = analogRead(MOTER_VOLUME_WHEEL[index]);  

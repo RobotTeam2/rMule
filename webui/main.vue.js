@@ -21,11 +21,13 @@ ws.onmessage = (evt) => {
       if(jsonMsg.info) {
         onLegInfo(jsonMsg.info);
       }
-      if(jsonMsg.wheel && jsonMsg.wheel.vol) {
-        onVolumeWheel(jsonMsg.wheel.vol);
-      }
-      if(jsonMsg.vol) {
-        onVolumeWheel(jsonMsg.vol);
+      if(jsonMsg.wheel) {
+        if(jsonMsg.wheel.vol0) {
+          onVolumeWheelVol(jsonMsg.wheel.vol0,0);
+        }
+        if(jsonMsg.wheel.vol1) {
+          onVolumeWheelVol(jsonMsg.wheel.vol1,1);
+        }
       }
       //console.log('onmessage typeof jsonMsg.leg=<', typeof jsonMsg.leg,'>');
       if(typeof jsonMsg.leg === 'number') {
@@ -94,10 +96,10 @@ onSerialPort = (ports) => {
 }
 
 
-onVolumeWheel = (tofDistance) => {
-  //console.log('onVolumeWheel tofDistance=<', tofDistance,'>');
-  $('#eMule-wheel-distance-text-show').text(tofDistance);
-  $('#eMule-wheel-distance-slide-show').val(tofDistance);
+onVolumeWheelVol = (vol,index) => {
+  //console.log('onVolumeWheelVol vol=<', vol,'>');
+  $('#vue-ui-current-position-label-' + index).text(vol);
+  $('#vue-ui-current-position-range-' + index).val(vol);
 }
 
 
@@ -245,10 +247,18 @@ function GotoLinearB() {
 }
 
 
+function onUIClickSerialConnect(elem) {
+  //console.log('onUIClickSerialConnect elem=<', elem,'>');
+  const portName = elem.textContent.replace('Connect To ','').trim();
+  console.log('onUIClickSerialConnect portName=<', portName,'>');
+  ws.send('serial:open,' + portName);
+}
+
+
 function getInputUITool(elem) {
-  let legIDElem = elem.parentElement.parentElement.getElementsByTagName('input')[0];
-  console.log('getInputUITool legIDElem=<', legIDElem,'>');
-  return parseInt(legIDElem.value.trim());
+  let inputElem = elem.parentElement.parentElement.getElementsByTagName('input')[0];
+  console.log('getInputUITool inputElem=<', inputElem,'>');
+  return parseInt(inputElem.value.trim());
 }
 
 function getChannelUITool(elem) {
@@ -270,25 +280,43 @@ function onUIChangeLegID(elem) {
   }
 }
 
-function onUIChangeWheelMaxFront(elem) {
-  console.log('onUIChangeWheelMaxFront elem=<', elem,'>');
-  console.log('onUIChangeWheelMaxFront elem.value=<', elem.value,'>');
-  let mf = 'setting:mf,' + elem.value.trim() + '\n';
-  console.log('onUIChangeWheelMaxFront mf=<', mf,'>');
-  ws.send(mf);
+function onUIChangeMaxFront(elem) {
+  console.log('onUIChangeMaxFront elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangeMaxFront limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangeMaxFront channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let mf = 'setting:mf' + channel + ',' + limit + '\n';
+    console.log('onUIChangeMaxFront mf=<', mf,'>');
+    ws.send(mf);
+  }
 }
 
-function onUIChangeWheelMaxBack(elem) {
-  console.log('onUIChangeWheelMaxBack elem=<', elem,'>');
-  console.log('onUIChangeWheelMaxBack elem.value=<', elem.value,'>');
-  let mb = 'setting:mb,' + elem.value.trim() + '\n';
-  console.log('onUIChangeWheelMaxBack mb=<', mb,'>');
-  ws.send(mb);
+function onUIChangeMaxBack(elem) {
+  console.log('onUIChangeMaxBack elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangeMaxBack limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangeMaxBack channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let mb = 'setting:mb' + channel + ',' + limit + '\n';
+    console.log('onUIChangeMaxBack mb=<', mb,'>');
+    ws.send(mb);
+  }
 }
 
-function onUIClickSerialConnect(elem) {
-  //console.log('onUIClickSerialConnect elem=<', elem,'>');
-  const portName = elem.textContent.replace('Connect To ','').trim();
-  console.log('onUIClickSerialConnect portName=<', portName,'>');
-  ws.send('serial:open,' + portName);
+function onUIChangeTargetPosition(elem) {
+  console.log('onUIChangeTargetPosition elem=<', elem,'>');
+  let targetPostion = parseInt(elem.value);
+  console.log('onUIChangeTargetPosition targetPostion=<', targetPostion,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangeTargetPosition channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(targetPostion)) {
+    $('#vue-ui-target-position-label-' + channel).text(targetPostion);
+    let target = 'wheel:vol' + channel + ',' + targetPostion + '\n';
+    console.log('onUIChangeTargetPosition target=<', target,'>');
+    ws.send(target);
+  }
 }
+

@@ -8,9 +8,10 @@ Vue.component('ui-motor-channel', {
     }
   },
   template: `
-          <div class="card">
+          <div class="card text-white bg-dark">
             <div class="card-body">
               <h5 class="card-title">Channel of {{ channel.index }} </h5>
+              
               <div class="row justify-content-center">
                 <div class="col">
                   <div class="input-group mb-3">
@@ -51,6 +52,31 @@ Vue.component('ui-motor-channel', {
                   </div>
                 </div>
               </div>
+              
+              <div class="row justify-content-center">
+                <div class="col">
+                  <div class="form-group text-center">
+                    <label>Curent Distance <span class="badge badge-primary" v-bind:id="channel.elemIDCurrentPositionLabel">{{ channel.wp }}</span>unit</label>
+                    <input type="range" disabled class="form-control-range" v-bind:id="channel.elemIDCurrentPositionRange" v-bind:value="channel.wp" min="0" max="1024">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row justify-content-center">
+                <div class="col text-center">
+                    <label>Target Distance <span class="badge badge-primary" v-bind:id="channel.elemIDTargetPositionLabel">{{ channel.mAva }}</span>unit</label>
+                  <div class="input-group ">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">{{ channel.mf }}</span>
+                    </div>
+                    <input type="range" class="form-control form-control-range" v-bind:id="channel.elemIDTargetPositionRange" v-bind:value="channel.mAva" v-bind:min="channel.mf" v-bind:max="channel.mb" onchange="onUIChangeTargetPosition(this)">
+                    <div class="input-group-append">
+                      <span class="input-group-text">{{ channel.mb }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
             </div>
           </div>
   `
@@ -60,6 +86,14 @@ Vue.component('ui-motor-channel', {
 
 onVueUILegInfo = (channelInfo) => {
   console.log('onVueUILegInfo channelInfo=<', channelInfo,'>');
+  channelInfo.elemIDCurrentPositionLabel = 'vue-ui-current-position-label-' + channelInfo.index;
+  channelInfo.elemIDCurrentPositionRange = 'vue-ui-current-position-range-' + channelInfo.index;
+  channelInfo.elemIDTargetPositionLabel = 'vue-ui-target-position-label-' + channelInfo.index;
+  channelInfo.elemIDTargetPositionRange = 'vue-ui-target-position-range-' + channelInfo.index;
+  channelInfo.mf = parseInt(channelInfo.mf);
+  channelInfo.mb = parseInt(channelInfo.mb);
+  channelInfo.wp = parseInt(channelInfo.wp);
+  channelInfo.mAva = (channelInfo.mf + channelInfo.mb)/2;
   gTempChannelInfo = channelInfo;
   if(channelInfo.index === 0) {
     new Vue({ el: '#ui-vue-motor-channel-A'});
