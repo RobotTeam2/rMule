@@ -104,7 +104,7 @@ onWSSMsg = (msg) => {
 
 onListSerial = () => {
   SerialPort.list((err, ports) => {
-    //console.log('ports=<',ports ,'>');
+    console.log('ports=<',ports ,'>');
     const serial = {serial:ports};
     if(port) {
       serial.open = true;
