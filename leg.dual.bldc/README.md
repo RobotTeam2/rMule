@@ -1,7 +1,6 @@
 # Command list
-====
 
-Read Information
+## Read Information
 format:
  info:,\r\n
  Host -> motor
