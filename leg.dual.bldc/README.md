@@ -1,7 +1,4 @@
-# rMule
-
 # Command list
-
 ====
 
 Read Information
