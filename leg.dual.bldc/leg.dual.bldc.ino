@@ -312,21 +312,23 @@ void readStatus() {
 bool bIsRunWheelByVolume[MAX_MOTOR_CH] = {false,false};
 
 void checkOverRunMaxWheel(int index) {
-  if(iVolumeDistanceWheel[index] < iEROMWheelMaxBack[index]) {
+  if(iVolumeDistanceWheel[index] > iEROMWheelMaxBack[index]) {
     bIsRunWheelByVolume[index] = false;
     STOP_WHEEL(index);
   }
-  if(iVolumeDistanceWheel[index] > iEROMWheelMaxFront[index]) {
+  if(iVolumeDistanceWheel[index] < iEROMWheelMaxFront[index]) {
     bIsRunWheelByVolume[index] = false;
     STOP_WHEEL(index);
   }  
 }
 void checkOverRunMax(void) {
+/*
   // stop
   if(wheelRunCounter-- <= 0 ) {
     STOP_WHEEL(0);
     STOP_WHEEL(1);
   }
+*/  
   checkOverRunMaxWheel(0);
   checkOverRunMaxWheel(1);
 }
@@ -370,7 +372,19 @@ const int iConstStarSpeed = 254;
 
 int iTargetVolumePostionWheel[MAX_MOTOR_CH] = {0,0};
 void runWheelVolume(int distPostion,int index) {
-  if(distPostion < iEROMWheelMaxBack[index] || distPostion > iEROMWheelMaxFront[index]) {
+  {
+    String resTex;
+    resTex += "dummy:distPostion,";
+    resTex += String(distPostion);
+    resTex += ":index,";
+    resTex += String(index);
+    resTex += ":iEROMWheelMaxBack,";
+    resTex += String(iEROMWheelMaxBack[index]);
+    resTex += ":iEROMWheelMaxFront,";
+    resTex += String(iEROMWheelMaxFront[index]);
+    responseTextTag(resTex);
+  }
+  if(distPostion > iEROMWheelMaxBack[index] || distPostion < iEROMWheelMaxFront[index]) {
     //DUMP_VAR(distPostion);
     //DUMP_VAR(iEROMWheelMaxBack[index]);
     //DUMP_VAR(iEROMWheelMaxFront[index]);
@@ -378,11 +392,20 @@ void runWheelVolume(int distPostion,int index) {
   }
   iTargetVolumePostionWheel[index] = distPostion;
   bIsRunWheelByVolume[index] = true;
+
+  {
+    String resTex;
+    resTex += "dummy:bIsRunWheelByVolume,";
+    resTex += String(bIsRunWheelByVolume[index]);
+    resTex += ":iTargetVolumePostionWheel,";
+    resTex += String(iTargetVolumePostionWheel[index]);
+    responseTextTag(resTex);
+  }
   
   int moveDiff = iTargetVolumePostionWheel[index] - iVolumeDistanceWheel[index];
-  bool bForwardRunWheel = true;
+  bool bForwardRunWheel = false;
   if(moveDiff > 0) {
-    bForwardRunWheel = false;
+    bForwardRunWheel = true;
   }
   //DUMP_VAR(bForwardRunWheel);
   if(bForwardRunWheel) {
@@ -411,6 +434,16 @@ int const aVolumeSpeedTable[] = {
   iConstStarSpeed
 };
 
+
+/*
+int const aVolumeSpeedTable[] = {
+  0,  0,130,130,130,
+  130,130,130,130,130,
+  160,160,160,160,160,
+  160,160,160,160,160,
+  iConstStarSpeed
+};
+*/
 
 long const aVolumeSpeedTableLength = sizeof(aVolumeSpeedTable)/sizeof(aVolumeSpeedTable[0]);
 
