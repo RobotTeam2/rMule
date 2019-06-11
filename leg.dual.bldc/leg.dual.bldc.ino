@@ -53,11 +53,11 @@ void runSerialCommand(void);
 void readStatus(void);
 void calcWheelTarget(int index);
 void loop() {
-  checkOverRunMax();
-  runSerialCommand();
   readStatus();
+  checkOverRunMax();
   calcWheelTarget(0);
   calcWheelTarget(1);
+  runSerialCommand();
 }
 
 
@@ -115,7 +115,7 @@ void B_Motor_FGS_By_Interrupt(void) {
 
 
 unsigned char speed_wheel[MAX_MOTOR_CH] = {0,0};
-static long wheelRunCounter = -1;
+static long wheelRunCounter[MAX_MOTOR_CH] = {-1,-1};
 static long const iRunTimeoutCounter = 10000L * 10L;
 
 #define FRONT_WHEEL(index) { \
@@ -138,12 +138,10 @@ int iVolumeDistanceWheel[2] = {};
 int runMotorFGSignlCouter = 0;
 int runMotorFGSignlCouter_NOT = 0;
 
-void runWheel(int spd,int front,int index) {
+void runWheel(int spd,bool front,int index) {
   speed_wheel[index] = spd;
   analogWrite(MOTER_PWM_WHEEL[index], spd);
-  wheelRunCounter = iRunTimeoutCounter;
-  runMotorFGSignlCouter = 0;
-  runMotorFGSignlCouter_NOT = 0;
+  wheelRunCounter[index] = iRunTimeoutCounter;
   if(front) {
     digitalWrite(MOTER_CCW_WHEEL[index] , HIGH);
     //DUMP_VAR(front);
@@ -188,11 +186,11 @@ void run_simple_command(void) {
   }
   if(gSerialInputCommand=="ff") {
     FRONT_WHEEL(0);
-    wheelRunCounter = iRunTimeoutCounter;
+    wheelRunCounter[0] = iRunTimeoutCounter;
   }
   if(gSerialInputCommand=="bb") {
     BACK_WHEEL(0);
-    wheelRunCounter = iRunTimeoutCounter;
+    wheelRunCounter[0] = iRunTimeoutCounter;
   }
   if(gSerialInputCommand=="ss") {
     speed_wheel[0] =0xff;
@@ -322,13 +320,14 @@ void checkOverRunMaxWheel(int index) {
   }  
 }
 void checkOverRunMax(void) {
-/*
+
   // stop
-  if(wheelRunCounter-- <= 0 ) {
+  if(wheelRunCounter[0]-- <= 0 ) {
     STOP_WHEEL(0);
+  }  
+  if(wheelRunCounter[1]-- <= 0 ) {
     STOP_WHEEL(1);
-  }
-*/  
+  }  
   checkOverRunMaxWheel(0);
   checkOverRunMaxWheel(1);
 }
