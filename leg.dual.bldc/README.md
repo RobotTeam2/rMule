@@ -12,13 +12,13 @@
 
 ## Change setting
 ### format:
-    setting:,\r\n
+    setting:id0,<id>:id1,<id>:mb0,<max back>:mb1,<max back>:mf0,<max front>:mf1,<max front>\r\n
 #### direction:
     Host -> Ardiono
 ### response:
     
 
-## gpio control
+## gpio control (TBD)
 ### format:
     gpio:,\r\n
 #### direction:
@@ -27,7 +27,7 @@
     
 ## run wheel
 ### format:
-    wheel:,\r\n
+    wheel:vol0,<target position>:vol1,<target position>\r\n
 #### direction:
     Host -> Ardiono
 ### response:
