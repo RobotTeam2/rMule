@@ -416,6 +416,7 @@ void runWheelVolume(int distPostion,int index) {
 
 
 
+
 int const aVolumeSpeedTable[] = {
   0,  0,130,130,130,
   130,130,130,130,130,
@@ -458,7 +459,7 @@ void calcWheelTarget(int index) {
     bIsRunWheelByVolume[index] = false;
     STOP_WHEEL(index);
     return;
-  } /*else {
+  }/*else {
       MyJsonDoc doc;
       JsonObject root = doc.to<JsonObject>();
       root["moveDiff"] = moveDiff;
@@ -470,7 +471,7 @@ void calcWheelTarget(int index) {
   if(moveDiff > 0) {
     bForwardRunWheel = false;
   }
-  DUMP_VAR(bForwardRunWheel);
+  //DUMP_VAR(bForwardRunWheel);
   int speedIndex = distanceToMove;
   if(distanceToMove >= aVolumeSpeedTableLength) {
     speedIndex = aVolumeSpeedTableLength -1;
