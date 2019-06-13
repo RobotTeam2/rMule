@@ -1,4 +1,7 @@
 # High Level Command
+## summary
+   relative x posion of one leg in mm  
+
 ## move leg
 ### format:
     legM:id,<id number>:xmm,<target position in mm>\r\n
