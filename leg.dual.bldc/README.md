@@ -1,7 +1,7 @@
 # High Level Command
 ## move leg
 ### format:
-    legM:id,<id number>:mm,<target position in mm>\r\n
+    legM:id,<id number>:xmm,<target position in mm>\r\n
 #### direction:
     Host -> Arduino
 ### response:
@@ -12,7 +12,7 @@
 #### direction:
     Host -> Arduino
 ### response:
-    legG:id,<id number>:hmm,<current position in mm>\r\n
+    legG:id,<id number>:xmm,<current position in mm>\r\n
 
 
 
