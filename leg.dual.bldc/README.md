@@ -1,11 +1,11 @@
-# Command list
+# Low Level Command
 
 ## Read Information
 ### format:
     info:,\r\n
     I:,\r\n
 #### direction:
-    Host -> Ardiono
+    Host -> Arduino
 ### response:
     &$info:ch,<&$total channel number>:id0,<motor id>:id1,<motor id>:mb0,<max back>:mb1,<max back>:mf0,<max front>:mf1,<max front>:wp0,<current position>:wp1,<current position>&$
 
@@ -14,7 +14,7 @@
 ### format:
     setting:id0,<id>:id1,<id>:mb0,<max back>:mb1,<max back>:mf0,<max front>:mf1,<max front>\r\n
 #### direction:
-    Host -> Ardiono
+    Host -> Arduino
 ### response:
     
 
@@ -22,14 +22,14 @@
 ### format:
     gpio:,\r\n
 #### direction:
-    Host -> Ardiono
+    Host -> Arduino
 ### response:
     
 ## run wheel
 ### format:
     wheel:vol0,<target position>:vol1,<target position>\r\n
 #### direction:
-    Host -> Ardiono
+    Host -> Arduino
 ### response:
     
 ## current wheel position
@@ -37,6 +37,24 @@
     wheel:vol0,<current position>
     wheel:vol1,<current position>
 #### direction:
-    Ardiono -> Host
+    Arduino -> Host
 ### response:
+
+
+
+# High Level Command
+## move leg
+### format:
+    legM:id,<id number>:h,<target position in mm>\r\n
+#### direction:
+    Host -> Arduino
+### response:
+
+## read leg position
+### format:
+    legG:id,<id number>\r\n
+#### direction:
+    Host -> Arduino
+### response:
+    legG:id,<id number>:h,<current position in mm>\r\n
 
