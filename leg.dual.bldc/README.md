@@ -1,3 +1,22 @@
+# High Level Command
+## move leg
+### format:
+    legM:id,<id number>:h,<target position in mm>\r\n
+#### direction:
+    Host -> Arduino
+### response:
+
+## read leg position
+### format:
+    legG:id,<id number>\r\n
+#### direction:
+    Host -> Arduino
+### response:
+    legG:id,<id number>:h,<current position in mm>\r\n
+
+
+
+
 # Low Level Command
 
 ## Read Information
@@ -41,20 +60,4 @@
 ### response:
 
 
-
-# High Level Command
-## move leg
-### format:
-    legM:id,<id number>:h,<target position in mm>\r\n
-#### direction:
-    Host -> Arduino
-### response:
-
-## read leg position
-### format:
-    legG:id,<id number>\r\n
-#### direction:
-    Host -> Arduino
-### response:
-    legG:id,<id number>:h,<current position in mm>\r\n
 
