@@ -5,14 +5,14 @@
 #### direction:
     Host -> Arduino
 ### response:
-
+    legM:id,<id number>:\r\n
 ## read leg position
 ### format:
     legG:id,<id number>\r\n
 #### direction:
     Host -> Arduino
 ### response:
-    legG:id,<id number>:mm,<current position in mm>\r\n
+    legG:id,<id number>:hmm,<current position in mm>\r\n
 
 
 
