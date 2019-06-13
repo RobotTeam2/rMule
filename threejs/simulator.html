@@ -2,19 +2,22 @@
 <html>
 <head>
   <meta charset="utf-8"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">  
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js" integrity="sha256-Mc6q7xXvKBXW87eVjSASXbPqfuc9tHqbn6AHp1R97J4=" crossorigin="anonymous"></script>
   <script src="./six_leg_robot.js"></script>
   <script src="./GLTFLoader.js"></script>
   <script>
     // ページの読み込みを待つ
     window.addEventListener('load', init);
-    window.addEventListener('mousedown', onMouseDown);
+    //window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('wheel', onMouseWheel);
     let camera = false;
     function onMouseDown(evt) {
       console.log('onMouseDown evt=<',evt,'>');
       console.log('onMouseDown camera=<',camera,'>');
-      camera.position.y = 5;
+      //camera.position.x = 10;
+      //camera.position.y = 10;
       /*
       //const positionX = 0;
       const positionY = 10// + evt.clientX / evt.clientY;
@@ -63,8 +66,8 @@
       console.log('onShowModel object=<',object,'>');
 
       // サイズを指定
-      const width = 1280;
-      const height = 720;
+      const width = 640;
+      const height = 480;
 
       // レンダラーを作成
       const canvas = document.querySelector('#myCanvas');
@@ -75,8 +78,9 @@
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(width, height);
       // カメラを作成
-      camera = new THREE.PerspectiveCamera(120, width / height);
-      camera.position.set(0, 10, 10);
+      camera = new THREE.PerspectiveCamera(80, width / height);
+      camera.position.set(0, 0, 16);
+      camera.lookAt(new THREE.Vector3(0,0,0));
       const scene = new THREE.Scene();
       scene.add(object);
       object.rotation.y =  Math.PI * 0.0;
@@ -98,7 +102,7 @@
     const MotionStep = Math.PI * 0.01;
     
     function motionLoop(object) {
-      /*
+      
       let leg11 = getLegByName(object,'11_lineActuator');
       //console.log('motionLoop leg11=<',leg11,'>');
       leg11.position.x = 0.8 * Math.sin(counterMotion++ * MotionStep);
@@ -122,7 +126,7 @@
       let leg13 = getLegByName(object,'13_lineActuator');
       //console.log('motionLoop leg13=<',leg13,'>');
       leg13.position.x = -1.5 + 0.8 * Math.cos(counterMotion++ * MotionStep);
-      */
+      
     }
     
     function getLegByName(object,name) {
@@ -145,11 +149,86 @@
     }
     function strokeLeg(name,pos) {
     }
-    
+    function onUICameraPosition(elem) {
+      console.log('onUICameraPosition elem=<',elem,'>');
+      const text = elem.textContent.trim();
+      console.log('onUICameraPosition text=<',text,'>');
+      if(text.endsWith('_left')){
+        camera.position.x += 1;
+      }
+      if(text.endsWith('_right')){
+        camera.position.x -= 1;
+      }
+      if(text.endsWith('_up')){
+        camera.position.y += 1;
+      }
+      if(text.endsWith('_down')){
+        camera.position.y -= 1;
+      }
+    }
     
   </script>
 </head>
 <body>
-  <canvas id="myCanvas"></canvas>
+  <div class="container">
+    <div class="row">
+      <div class="col-10">
+        <canvas id="myCanvas"></canvas>
+      </div>
+      <div class="col-2 mt-5">
+        <div class="row mt-5">
+          <div class="col">
+            <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+              <i class="material-icons">keyboard_arrow_left</i>
+            </button>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+              <i class="material-icons">keyboard_arrow_right</i>
+            </button>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col">
+            <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+              <i class="material-icons">keyboard_arrow_up</i>
+            </button>
+          </div>
+          <div class="col">
+            <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+              <i class="material-icons">keyboard_arrow_down</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--
+  <hr/>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+          <i class="material-icons">keyboard_arrow_left</i>
+        </button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+          <i class="material-icons">keyboard_arrow_right</i>
+        </button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+          <i class="material-icons">keyboard_arrow_up</i>
+        </button>
+      </div>
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-block" onclick="onUICameraPosition(this)">
+          <i class="material-icons">keyboard_arrow_down</i>
+        </button>
+      </div>
+    </div>
+  </div>
+  -->
 </body>
 </html>
