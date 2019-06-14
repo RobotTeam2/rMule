@@ -66,11 +66,19 @@ void loop() {
 const int  iEROMLegIdAddress[MAX_MOTOR_CH] = {0,2};
 const int  iEROMWheelMaxBackAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 2,iEROMLegIdAddress[1] + 4}; 
 const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 6,iEROMLegIdAddress[1] + 8}; 
+const int  iEROMCWDirectAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 10,iEROMLegIdAddress[1] + 12}; 
 
 uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMWheelMaxBack[MAX_MOTOR_CH] = {280,280}; 
 uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420}; 
+bool  iEROMCWDirect[MAX_MOTOR_CH] = {true,false}; 
 
+void loadEROMLegID(int index) {
+  byte value1 = EEPROM.read(iEROMLegIdAddress[index]);
+  byte value2 = EEPROM.read(iEROMLegIdAddress[index]+1);
+  iEROMLegId[index] = value1 | value2 << 8;
+  DUMP_VAR(iEROMLegId[index]);
+}
 
 void loadEROMLimitSetting(int index) {
   {
@@ -87,18 +95,20 @@ void loadEROMLimitSetting(int index) {
   }
 }
 
-void loadEROMLegID(int index) {
-  byte value1 = EEPROM.read(iEROMLegIdAddress[index]);
-  byte value2 = EEPROM.read(iEROMLegIdAddress[index]+1);
-  iEROMLegId[index] = value1 | value2 << 8;
-  DUMP_VAR(iEROMLegId[index]);
+void loadEROMCWDirect(int index) {
+  byte value1 = EEPROM.read(iEROMCWDirectAddress[index]);
+  iEROMCWDirect[index] = (value1 >0);
+  DUMP_VAR(iEROMCWDirect[index]);
 }
+
 
 void loadEROM(void) {
   loadEROMLegID(0);
   loadEROMLegID(1);
   loadEROMLimitSetting(0);
   loadEROMLimitSetting(1);
+  loadEROMCWDirect(0);
+  loadEROMCWDirect(1);
 }
 void saveEROM(int address,uint16_t value) {
   byte value1 =  value & 0xff;
@@ -140,8 +150,6 @@ int runMotorFGSignlCouter_NOT = 0;
 
 void runWheel(int spd,bool front,int index) {
   speed_wheel[index] = spd;
-  analogWrite(MOTER_PWM_WHEEL[index], spd);
-  wheelRunCounter[index] = iRunTimeoutCounter;
   if(front) {
     digitalWrite(MOTER_CCW_WHEEL[index] , HIGH);
     //DUMP_VAR(front);
@@ -149,6 +157,7 @@ void runWheel(int spd,bool front,int index) {
     digitalWrite(MOTER_CCW_WHEEL[index], LOW);
     //DUMP_VAR(front);
   }
+  analogWrite(MOTER_PWM_WHEEL[index], spd);
 }
 
 
@@ -219,7 +228,10 @@ void run_comand(void) {
     runGPIO();
   }
   if(gSerialInputCommand.startsWith("wheel:") || gSerialInputCommand.startsWith("W:")) {
-    runWheel();
+    runWheelByTag();
+  }
+  if(gSerialInputCommand.startsWith("detect:") || gSerialInputCommand.startsWith("D:")) {
+    runDetect();
   }
 }
 void runInfo(void) {
@@ -237,12 +249,16 @@ void runInfo(void) {
   resTex += String(iEROMWheelMaxFront[0]);
   resTex += ":wp0,";
   resTex += String(iVolumeDistanceWheel[0]);
+  resTex += ":cw0,";
+  resTex += String(iEROMCWDirect[0]);
   resTex += ":mb1,";
   resTex += String(iEROMWheelMaxBack[1]);      
   resTex += ":mf1,";
   resTex += String(iEROMWheelMaxFront[1]);
   resTex += ":wp1,";
   resTex += String(iVolumeDistanceWheel[1]);
+  resTex += ":cw1,";
+  resTex += String(iEROMCWDirect[1]);
   responseTextTag(resTex);
 }
 
@@ -286,7 +302,7 @@ void runSetting(void) {
   runLimmitSetting(1);
 }
 
-void runWheel(void) {
+void runWheelByTag(void) {
   int volDistA = 0;
   if(readTagValue(":v0,",":vol0,",&volDistA)) {
     DUMP_VAR(volDistA);
@@ -299,7 +315,15 @@ void runWheel(void) {
   }
 }
 
-
+void runDetect(void) {
+  int detect = 0;
+  if(readTagValue(":d0,",":dir0,",&detect)) {
+    runMotorDetect(0);
+  }
+  if(readTagValue(":d1,",":dir1,",&detect)) {
+    runMotorDetect(1);
+  }
+}
 
 
 void readStatus() {
@@ -347,6 +371,9 @@ int iVolumeDistanceWheelReported[MAX_MOTOR_CH] = {0,0};
 
 const String strConstWheelReportTag[MAX_MOTOR_CH] = {"wheel:vol0,","wheel:vol1,"};
 
+int iDetectDistanceStartMemo[MAX_MOTOR_CH] = {0,0};
+int iDetectIndex = -1;
+
 void readWheelVolume(int index) {
   int volume = analogRead(MOTER_VOLUME_WHEEL[index]);  
   bool iReport = abs(volume - iVolumeDistanceWheelReported[index]) > iConstVolumeDistanceWheelReportDiff;
@@ -364,7 +391,31 @@ void readWheelVolume(int index) {
     responseTextTag(resTex);
   }
   iVolumeDistanceWheel[index] = volume;
+  if(iDetectIndex > -1 && iDetectIndex == index) {
+    int detectDiff = volume - iDetectDistanceStartMemo[iDetectIndex];
+    if(abs(detectDiff) > 10) {
+      DUMP_VAR(detectDiff);
+      iDetectIndex = -1;
+      if(detectDiff > 0) {
+        saveEROM(iEROMCWDirectAddress[index],1);
+      } else {
+        saveEROM(iEROMCWDirectAddress[index],0);
+      }
+    }
+  }
 }
+
+const char iConstDetectSpeed = 130;
+const long iConstDetectTimeOut = 500L;
+void runMotorDetect(int index) {
+  int startVolume = analogRead(MOTER_VOLUME_WHEEL[index]);;
+  //DUMP_VAR(startVolume);
+  iDetectDistanceStartMemo[index] = iVolumeDistanceWheel[index];
+  runWheel(iConstDetectSpeed,1,index);
+  iDetectIndex = index;
+  wheelRunCounter[index] = iConstDetectTimeOut;
+}
+
 
 
 const int iConstStarSpeed = 254;
@@ -391,6 +442,7 @@ void runWheelVolume(int distPostion,int index) {
   }
   iTargetVolumePostionWheel[index] = distPostion;
   bIsRunWheelByVolume[index] = true;
+  wheelRunCounter[index] = iRunTimeoutCounter;
 
   {
     String resTex;
@@ -402,16 +454,14 @@ void runWheelVolume(int distPostion,int index) {
   }
   
   int moveDiff = iTargetVolumePostionWheel[index] - iVolumeDistanceWheel[index];
-  bool bForwardRunWheel = false;
+  bool bForwardRunWheel;
   if(moveDiff > 0) {
-    bForwardRunWheel = true;
-  }
-  //DUMP_VAR(bForwardRunWheel);
-  if(bForwardRunWheel) {
-    runWheel(iConstStarSpeed,1,index);
+    bForwardRunWheel = iEROMCWDirect[index];;
   } else {
-    runWheel(iConstStarSpeed,0,index);
+    bForwardRunWheel = !iEROMCWDirect[index];;
   }
+  DUMP_VAR(bForwardRunWheel);
+  runWheel(iConstStarSpeed,bForwardRunWheel,index);
 }
 
 
@@ -467,9 +517,11 @@ void calcWheelTarget(int index) {
       repsponseJson(doc);
   }*/
   
-  bool bForwardRunWheel = true;
+  bool bForwardRunWheel;
   if(moveDiff > 0) {
-    bForwardRunWheel = false;
+    bForwardRunWheel = iEROMCWDirect[index];;
+  } else {
+    bForwardRunWheel = !iEROMCWDirect[index];;
   }
   //DUMP_VAR(bForwardRunWheel);
   int speedIndex = distanceToMove;
@@ -477,11 +529,7 @@ void calcWheelTarget(int index) {
     speedIndex = aVolumeSpeedTableLength -1;
   }
   int speed = aVolumeSpeedTable[speedIndex];
-  if(bForwardRunWheel) {
-    runWheel(speed,1,index);
-  } else {
-    runWheel(speed,0,index);
-  }
+  runWheel(speed,bForwardRunWheel,index);
 }
 
 

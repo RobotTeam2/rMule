@@ -320,3 +320,13 @@ function onUIChangeTargetPosition(elem) {
   }
 }
 
+function onUIChangeDetectCW(elem) {
+  console.log('onUIChangeDetectCW elem=<', elem,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangeDetectCW channel=<', channel,'>');
+  if(!isNaN(channel)) {
+    let cw = 'detect:dir' + channel + ',1\n';
+    console.log('onUIChangeDetectCW cw=<', cw,'>');
+    ws.send(cw);
+  }
+}

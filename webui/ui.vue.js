@@ -52,6 +52,15 @@ Vue.component('ui-motor-channel', {
                   </div>
                 </div>
               </div>
+
+              <div class="row justify-content-center mt-2">
+                <div class="col">
+                  <button type="button" class="btn btn-primary" onclick="onUIChangeDetectCW(this)">
+                    Detect CW/CCW
+                    <i class="fas fa-check-circle"></i>
+                  </button>
+                </div>
+              </div>
               
               <div class="row justify-content-center">
                 <div class="col">
