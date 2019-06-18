@@ -66,7 +66,7 @@ Vue.component('ui-motor-channel', {
                 <div class="col">
                   <div class="form-group text-center">
                     <label>Curent Distance <span class="badge badge-primary" v-bind:id="channel.elemIDCurrentPositionLabel">{{ channel.wp }}</span>unit</label>
-                    <input type="range" disabled class="form-control-range" v-bind:id="channel.elemIDCurrentPositionRange" v-bind:value="channel.wp" min="0" max="1024">
+                    <input type="range" disabled class="form-control-range" v-bind:id="channel.elemIDCurrentPositionRange" v-bind:value="channel.wp" v-bind:min="channel.mf" v-bind:max="channel.mb">
                   </div>
                 </div>
               </div>

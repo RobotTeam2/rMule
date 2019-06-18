@@ -23,7 +23,8 @@ void setup()
 {
   // set pwm 9,10
   TCCR1B &= B11111000;
-  TCCR1B |= B00000001;
+  //TCCR1B |= B00000001;
+  TCCR1B |= B00000011;
 
   pin_motor_setup(0);
   attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL[0]),A_Motor_FGS_By_Interrupt , FALLING);
@@ -393,7 +394,7 @@ void readWheelVolume(int index) {
   iVolumeDistanceWheel[index] = volume;
   if(iDetectIndex > -1 && iDetectIndex == index) {
     int detectDiff = volume - iDetectDistanceStartMemo[iDetectIndex];
-    if(abs(detectDiff) > 10) {
+    if(abs(detectDiff) > 5) {
       DUMP_VAR(detectDiff);
       iDetectIndex = -1;
       if(detectDiff > 0) {
@@ -405,8 +406,8 @@ void readWheelVolume(int index) {
   }
 }
 
-const char iConstDetectSpeed = 130;
-const long iConstDetectTimeOut = 500L;
+const char iConstDetectSpeed = 150;
+const long iConstDetectTimeOut = 600L;
 void runMotorDetect(int index) {
   int startVolume = analogRead(MOTER_VOLUME_WHEEL[index]);;
   //DUMP_VAR(startVolume);
