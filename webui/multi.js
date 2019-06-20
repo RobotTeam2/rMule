@@ -31,7 +31,10 @@ SerialPort.list((err, ports) => {
 });
 
 onInitAnySerial = (port) => {
-  requestInfo(port);
+  setTimeout(()=> {
+    requestInfo(port);
+  },5000);
+
   port.on('data',(data)=> {
     //console.log('onInitAnySerial port.path=<',port.path ,'>');
     //console.log('onInitAnySerial data=<',data ,'>');
@@ -52,36 +55,42 @@ onInitAnySerial = (port) => {
 
 requestInfo = (port) => {
   let msg = 'info:\r\n';
-  setTimeout(()=> {
-    port.write(msg, (err) => {
-      if (err) {
-        console.log('requestInfo err=<', err,'>');
-        throw err;
-      }
-      console.log('requestInfo msg=<',msg ,'>');
-    });    
-  },5000);
+  port.write(msg, (err) => {
+    if (err) {
+      console.log('requestInfo err=<', err,'>');
+      throw err;
+    }
+    console.log('requestInfo msg=<',msg ,'>');
+  });    
 }
 
 
-onJsonMsg = (msg,port) => {
-  console.log('onJsonMsg msg=<',msg ,'>');
-  console.log('onJsonMsg port=<',port ,'>');
+onSerailJsonMsg = (msg,port) => {
+  console.log('onSerailJsonMsg msg=<',msg ,'>');
+  console.log('onSerailJsonMsg port=<',port ,'>');
   if(msg && msg.info) {
-    onLegInfo(msg.info,port);
+    onSerialLegInfo(msg.info,port);
   }
 }
 
-onLegInfo = (info,portName) => {
-  //console.log('onLegInfo info=<',info ,'>');
-  //console.log('onLegInfo portName=<',portName ,'>');
+onSerialLegInfo = (info,portName) => {
+  //console.log('onSerialLegInfo info=<',info ,'>');
+  //console.log('onSerialLegInfo portName=<',portName ,'>');
   let leg1 = info.id0;
   let leg2 = info.id1;
   let port = gLegSerialPortInternal[portName];
-  //console.log('onLegInfo port=<',port ,'>');
+  //console.log('onSerialLegInfo port=<',port ,'>');
   gLegSerialPort[leg1] = port;
   gLegSerialPort[leg2] = port;
-  //console.log('onLegInfo gLegSerialPort=<',gLegSerialPort ,'>');
+  //console.log('onSerialLegInfo gLegSerialPort=<',gLegSerialPort ,'>');
+  
+  let notifyMsg0 = {leg:info.id0,mb:info.mb0,mf:info.mf0,wp:info.wp0};
+  trans2ws(notifyMsg0);
+
+  let notifyMsg1 = {leg:info.id1,mb:info.mb1,mf:info.mf1,wp:info.wp1};
+  trans2ws(notifyMsg1);
+
+
 }
 
 
@@ -122,7 +131,7 @@ tryParseResponseMulti = (resText,port) => {
     }
     //console.log('tryParseResponseMulti json=<',json ,'>');
     if(json) {
-      onJsonMsg(json,port);
+      onSerailJsonMsg(json,port);
     } else {
       console.log('tryParseResponseMulti resText=<',resText ,'>');
     }
@@ -141,33 +150,20 @@ const wss = new WebSocket.Server({ host:'127.0.0.1',port: 18081 });
 
 onWSSMsg = (msg) => {
   console.log('onWSSMsg msg=<', msg,'>');
-  if(msg.startsWith('serial:list,')) {
-    onListSerial();
-  } else if(msg.startsWith('serial:open,')) {
-    onOpenSerial(msg);
-  } else {
-    trans2serial(msg);
+  let jsonMsg = JSON.parse(msg);
+  console.log('onWSSMsg jsonMsg=<', jsonMsg,'>');
+  if(jsonMsg && jsonMsg.info) {
+    onWSSRequest();
   }
 };
 
-onListSerial = () => {
-  SerialPort.list((err, ports) => {
-    console.log('ports=<',ports ,'>');
-    const serial = {serial:ports};
-    if(port) {
-      serial.open = true;
-    } else {
-      serial.open = false;
-    }
-    trans2ws(serial);
-  });  
-}
-
-onOpenSerial = (msg) => {
-  console.log('onOpenSerial msg=<',msg ,'>');
-  const portName = msg.replace('serial:open,','').trim();
-  console.log('onOpenSerial portName=<',portName ,'>');
-  openSerial(portName);
+onWSSRequest = () => {
+  for(let portName in gLegSerialPortInternal) {
+    //console.log('onWSSRequest portName=<', portName,'>');
+    let port = gLegSerialPortInternal[portName];
+    //console.log('onWSSRequest port=<', port,'>');
+    requestInfo(port);
+  }
 }
 
 
