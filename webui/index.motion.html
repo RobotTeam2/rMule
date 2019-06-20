@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>eMule</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" integrity="sha256-BtbhCIbtfeVWGsqxk1vOHEYXS6qcvQvLMZqjtpWUEx8=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css" integrity="sha384-PDle/QlgIONtM1aqA2Qemk5gPOE7wFq8+Em+G/hmo5Iq0CCmYZLv3fVRDJ4MMwEA" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js" integrity="sha384-7aThvCh9TypR7fIc2HV4O/nFMVCBwyIUKL8XCtKE+8xgCgl/PQGuFsvShjr74PBp" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.js" integrity="sha256-ufGElb3TnOtzl5E4c/qQnZFGP+FYEZj5kbSEdJNrw0A=" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <script src="./main.vue.js"></script>
+    <script src="./ui.vue.js"></script>
+    <div class="container">
+      <div class="row justify-content-center mt-5 mb-5">
+        <div class="col">
+          <div id="ui-vue-motor-channel-A">
+            <ui-motor-channel></ui-motor-channel>
+          </div>
+        </div>
+      </div>
+      <hr/>
+      <div class="row justify-content-center mt-5">
+        <div class="col">
+          <div id="ui-vue-motor-channel-B">
+            <ui-motor-channel></ui-motor-channel>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+<!--
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Channel</h5>
+              <div class="row justify-content-center">
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">@</span>
+                    </div>
+                      <input type="text" class="form-control" placeholder="leg id">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">@</span>
+                    </div>
+                      <input type="text" class="form-control" placeholder="Wheel Max Front">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">@</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Wheel Max Back">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row justify-content-center">
+                <div class="col">
+                  <div class="form-group">
+                    <label>Curent Distance <span class="badge badge-primary " >1</span>unit</label>
+                    <input type="range" class="form-control-range" value="350" min="300" max="400">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row justify-content-center">
+                <div class="col">
+                  <div class="form-group">
+                    <label>Curent Distance <span class="badge badge-primary " >1</span>unit</label>
+                    <input type="range" class="form-control-range" value="350" min="300" max="400">
+                  </div>
+                </div>
+              </div>
+              
+              
+            </div>
+          </div>
+        </div>
+        <div class="col">
+        </div>
+      </div>
+    </div>
+-->
+
+<!--    
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-3">
+          Leg ID:<span class="badge badge-primary " id="eMule-info-leg-id">---</span>
+          <input type="text" id="eMule-info-leg-id-text" size="4" maxlength="4" onchange="onUIChangeLegID(this)">
+        </div>
+        <div class="col-3">
+          Wheel Max Front:<span class="badge badge-primary " id="eMule-info-wheel-max-front">---</span>
+          <input type="text" id="eMule-info-wheel-max-front-text" size="4" maxlength="4" onchange="onUIChangeWheelMaxFront(this)">
+        </div>
+        <div class="col-3">
+          Wheel Max Back:<span class="badge badge-primary " id="eMule-info-wheel-max-back">---</span>
+          <input type="text" id="eMule-info-wheel-max-back-text" size="4" maxlength="4" onchange="onUIChangeWheelMaxBack(this)">
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-6">
+          <div class="form-group">
+            <label>Wheel Curent Distance <span class="badge badge-primary " id="eMule-wheel-distance-text-show">1</span>unit</label>
+            <input type="range" class="form-control-range" value="350" min="300" max="400" id="eMule-wheel-distance-slide-show" >
+          </div>
+        </div>
+      </div>
+      <hr/>
+    
+      <div class="row justify-content-center mt-5">
+        <div class="col-6">
+          <div class="form-group">
+            <label>Wheel Target Distance <span class="badge badge-primary " id="eMule-wheel-distance-text-set">1</span>unit</label>
+            <input type="range" class="form-control-range" value="350" min="300" max="400" id="eMule-wheel-distance-slide-set" >
+          </div>
+        </div>
+      </div>
+    
+    </div>
+
+    <div class="container">
+      <div class="row justify-content-center mt-5">
+        <div class="col-2">
+          <button type="button" class="btn btn-primary" onclick="onUILoop3()">繰り返し３回</button>
+        </div>
+      </div>
+      <hr/>
+      <div class="row justify-content-center mt-5">
+        <div class="col-3">
+          <button type="button" class="btn btn-primary" onclick="onUILinearUp()">直動シリンダー上</button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-primary" onclick="onUILinearUp2s()">直動シリンダー上(2s)</button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-primary" onclick="onUILinearDown()">直動シリンダー下</button>
+        </div>
+        <div class="col-3">
+          <button type="button" class="btn btn-primary" onclick="onUILinearDown2s()">直動シリンダー下(2s)</button>
+        </div>
+      </div>
+      <hr/>
+
+      <h1>歩行アニメモーション</h1>
+      <div class="row justify-content-center mt-5">
+        <div class="col-2">
+          <button type="button" class="btn btn-primary" onclick="onUIActionGroud()">着地</button>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-primary" onclick="onUIActionAir()">浮く</button>
+        </div>
+      </div>
+
+    </div>
+-->
+  </body>
+</html>
