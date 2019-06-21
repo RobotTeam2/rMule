@@ -84,10 +84,10 @@ onSerialLegInfo = (info,portName) => {
   gLegSerialPort[leg2] = port;
   //console.log('onSerialLegInfo gLegSerialPort=<',gLegSerialPort ,'>');
   
-  let notifyMsg0 = {leg:info.id0,mb:info.mb0,mf:info.mf0,wp:info.wp0};
+  let notifyMsg0 = {info:{leg:info.id0,mb:info.mb0,mf:info.mf0,wp:info.wp0}};
   trans2ws(notifyMsg0);
 
-  let notifyMsg1 = {leg:info.id1,mb:info.mb1,mf:info.mf1,wp:info.wp1};
+  let notifyMsg1 = {info:{leg:info.id1,mb:info.mb1,mf:info.mf1,wp:info.wp1}};
   trans2ws(notifyMsg1);
 
 
