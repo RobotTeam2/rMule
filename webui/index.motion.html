@@ -13,35 +13,55 @@
     <script src="./main.motion.vue.js"></script>
     <script src="./ui.motion.vue.js"></script>
     <div class="container">
-      <div class="row justify-content-center mt-5 mb-5">
+      <div class="row justify-content-center mt-3 mb-2">
         <div class="col">
-          <div id="ui-vue-motor-channel-A">
+          <div id="ui-vue-leg-11">
+            <ui-motion-leg></ui-motion-leg>
+          </div>
+        </div>
+        <div class="col">
+          <div id="ui-vue-leg-12">
+            <ui-motion-leg></ui-motion-leg>
+          </div>
+        </div>
+        <div class="col">
+          <div id="ui-vue-leg-13">
             <ui-motion-leg></ui-motion-leg>
           </div>
         </div>
       </div>
       <hr/>
-      <div class="row justify-content-center mt-5">
+      <div class="row justify-content-center mt-2">
         <div class="col">
-          <div id="ui-vue-motor-channel-B">
+          <div id="ui-vue-leg-21">
+            <ui-motion-leg></ui-motion-leg>
+          </div>
+        </div>
+        <div class="col">
+          <div id="ui-vue-leg-22">
+            <ui-motion-leg></ui-motion-leg>
+          </div>
+        </div>
+        <div class="col">
+          <div id="ui-vue-leg-23">
             <ui-motion-leg></ui-motion-leg>
           </div>
         </div>
       </div>
-      <hr/>
-      <div class="row justify-content-center mt-5">
+    </div>
+    <hr/>
+    
+    <div class="container">
+      <div class="row justify-content-center mt-3 mb-2">
         <div class="col">
-          <div id="ui-vue-motor-channel-C">
-            <ui-motion-leg></ui-motion-leg>
-          </div>
+          <button type="button" class="btn btn-primary btn-block" onclick="onUIMoveForward(this)">
+            <i class="fas fa-arrow-circle-right"></i>
+          </button>
         </div>
-      </div>
-      <hr/>
-      <div class="row justify-content-center mt-5">
         <div class="col">
-          <div id="ui-vue-motor-channel-D">
-            <ui-motion-leg></ui-motion-leg>
-          </div>
+          <button type="button" class="btn btn-primary btn-block" onclick="onUIMoveBackward(this)">
+            <i class="fas fa-arrow-circle-left"></i>
+          </button>
         </div>
       </div>
     </div>

@@ -75,29 +75,29 @@ uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420};
 bool  iEROMCWDirect[MAX_MOTOR_CH] = {true,false}; 
 
 void loadEROMLegID(int index) {
-  byte value1 = EEPROM.read(iEROMLegIdAddress[index]);
-  byte value2 = EEPROM.read(iEROMLegIdAddress[index]+1);
+  uint16_t value1 = EEPROM.read(iEROMLegIdAddress[index]);
+  uint16_t value2 = EEPROM.read(iEROMLegIdAddress[index]+1);
   iEROMLegId[index] = value1 | value2 << 8;
   DUMP_VAR(iEROMLegId[index]);
 }
 
 void loadEROMLimitSetting(int index) {
   {
-    byte value1 = EEPROM.read(iEROMWheelMaxBackAddress[index]);
-    byte value2 = EEPROM.read(iEROMWheelMaxBackAddress[index]+1);
+    uint16_t value1 = EEPROM.read(iEROMWheelMaxBackAddress[index]);
+    uint16_t value2 = EEPROM.read(iEROMWheelMaxBackAddress[index]+1);
     iEROMWheelMaxBack[index] = value1 | value2 << 8;
     DUMP_VAR(iEROMWheelMaxBack[index]);
   }
   {
-    byte value1 = EEPROM.read(iEROMWheelMaxFrontAddress[index]);
-    byte value2 = EEPROM.read(iEROMWheelMaxFrontAddress[index]+1);
+    uint16_t value1 = EEPROM.read(iEROMWheelMaxFrontAddress[index]);
+    uint16_t value2 = EEPROM.read(iEROMWheelMaxFrontAddress[index]+1);
     iEROMWheelMaxFront[index] = value1 | value2 << 8;
     DUMP_VAR(iEROMWheelMaxFront[index]);
   }
 }
 
 void loadEROMCWDirect(int index) {
-  byte value1 = EEPROM.read(iEROMCWDirectAddress[index]);
+  uint16_t value1 = EEPROM.read(iEROMCWDirectAddress[index]);
   iEROMCWDirect[index] = (value1 >0);
   DUMP_VAR(iEROMCWDirect[index]);
 }
