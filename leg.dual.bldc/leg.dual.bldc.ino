@@ -438,7 +438,7 @@ void readWheelVolume(int index) {
   }
 }
 
-const char iConstDetectSpeed = 150;
+const char iConstDetectSpeed = 254L;
 const long iConstDetectTimeOut = 600L;
 void runMotorDetect(int index) {
   int startVolume = analogRead(MOTER_VOLUME_WHEEL[index]);;
@@ -501,9 +501,32 @@ void runWheelVolume(int distPostion,int index) {
 
 
 int const aVolumeSpeedTable[] = {
-  0,  0,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
+  60,60,60,60,60,
+  70,70,70,70,70,
+  80,80,80,80,80,
+  90,90,90,90,90,
+  100,100,100,100,100,
+  160,160,160,160,160,
+  iConstStarSpeed
+};
+
+/*
+int const aVolumeSpeedTable[] = {
+
+  60,60,60,60,60,
+  70,70,70,70,70,
+  80,80,80,80,80,
+  90,90,90,90,90,
+  100,100,100,100,100,
+  100,100,100,100,100,
+  100,100,100,100,100,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
   130,130,130,130,130,
   130,130,130,130,130,
   130,130,130,130,130,
@@ -516,7 +539,7 @@ int const aVolumeSpeedTable[] = {
   160,160,160,160,160,
   iConstStarSpeed
 };
-
+*/
 
 /*
 int const aVolumeSpeedTable[] = {
@@ -530,7 +553,7 @@ int const aVolumeSpeedTable[] = {
 
 long const aVolumeSpeedTableLength = sizeof(aVolumeSpeedTable)/sizeof(aVolumeSpeedTable[0]);
 
-int const iConstVolumeWheelNearTarget = 3;
+int const iConstVolumeWheelNearTarget = 5;
 
 void calcWheelTarget(int index) {
   if(bIsRunWheelByVolume[index] == false) {
@@ -557,11 +580,14 @@ void calcWheelTarget(int index) {
     bForwardRunWheel = !iEROMCWDirect[index];;
   }
   //DUMP_VAR(bForwardRunWheel);
+  DUMP_VAR(distanceToMove);
   int speedIndex = distanceToMove;
+  DUMP_VAR(speedIndex);
   if(distanceToMove >= aVolumeSpeedTableLength) {
     speedIndex = aVolumeSpeedTableLength -1;
   }
   int speed = aVolumeSpeedTable[speedIndex];
+  DUMP_VAR(speed);
   runWheel(speed,bForwardRunWheel,index);
 }
 
