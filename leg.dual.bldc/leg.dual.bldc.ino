@@ -22,8 +22,8 @@ void loadEROM(void);
 void setup()
 {
   // set pwm 9,10
-  TCCR1B &= B11111000;
-  //TCCR1B |= B00000001;
+  //TCCR1B &= B11111000;
+  TCCR1B |= B00000001;
   TCCR1B |= B00000011;
 
   pin_motor_setup(0);
@@ -364,6 +364,29 @@ void checkOverRunMax(void) {
 }
 
 void moveLegToPosition() {
+  int idLeg = 0;
+  if(readTagValue(":id,",":id,",&idLeg)) {
+    DUMP_VAR(idLeg);
+    int legIndex = -1;
+    if(iEROMLegId[0] == idLeg) {
+      legIndex = 0;
+    }
+    if(iEROMLegId[1] == idLeg) {
+      legIndex = 1;
+    }
+    if(legIndex < 0 ){
+      return ;
+    }
+    int position = -1;
+    if(readTagValue(":xmm,",":xmm,",&position)) {
+      DUMP_VAR(position);
+      int volDist = calcVolumeFromMM(position);
+      runWheelVolume(volDist,legIndex);
+    }
+  }
+}
+int calcVolumeFromMM(int mm) {
+  return mm;
 }
 
 void getLegPosition() {
