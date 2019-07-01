@@ -234,6 +234,12 @@ void run_comand(void) {
   if(gSerialInputCommand.startsWith("detect:") || gSerialInputCommand.startsWith("D:")) {
     runDetect();
   }
+  if(gSerialInputCommand.startsWith("legM:") || gSerialInputCommand.startsWith("M:")) {
+    moveLegToPosition();
+  }
+  if(gSerialInputCommand.startsWith("legG:") || gSerialInputCommand.startsWith("P:")) {
+    getLegPosition();
+  }
 }
 void runInfo(void) {
   String resTex;
@@ -357,8 +363,11 @@ void checkOverRunMax(void) {
   checkOverRunMaxWheel(1);
 }
 
+void moveLegToPosition() {
+}
 
-
+void getLegPosition() {
+}
 
 int const iTargetDistanceMaxDiff = 1;
 
