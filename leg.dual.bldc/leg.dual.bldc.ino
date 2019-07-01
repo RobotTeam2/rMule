@@ -291,22 +291,38 @@ void runLimmitSetting(int index) {
     iEROMWheelMaxBack[index] = MaxBack;
   }
 }
-void runSetting(void) {
-  int legIDA = 0;
-  if(readTagValue(":id0,","",&legIDA)) {
-    //DUMP_VAR(legIDA);
-    saveEROM(iEROMLegIdAddress[0],legIDA);
-    iEROMLegId[0] =  legIDA;
-  }
-  int legIDB = 0;
-  if(readTagValue(":id1,","",&legIDB)) {
-    //DUMP_VAR(legIDB);
-    saveEROM(iEROMLegIdAddress[1],legIDB);
-    iEROMLegId[1] =  legIDB;
-  }
 
+void setLegID(int index) {
+  String tagLegID = ":id0,";
+  if(index > 0) {
+    tagLegID = ":id1,";
+  }
+  int legID = 0;
+  if(readTagValue(tagLegID,"",&legID)) {
+    saveEROM(iEROMLegIdAddress[index],legID);
+    iEROMLegId[index] =  legID;
+  }
+}
+
+void setCWFlag(int index) {
+  String tagCW = ":cw0,";
+  if(index > 0) {
+    tagCW = ":cw1,";
+  }
+  int cw = 0;
+  if(readTagValue(tagCW,"",&cw)) {
+    saveEROM(iEROMCWDirectAddress[index],cw);
+    iEROMCWDirect[index] =  cw;
+  }
+}
+
+void runSetting(void) {
+  setLegID(0);
+  setLegID(1);
   runLimmitSetting(0);
   runLimmitSetting(1);
+  setCWFlag(0);
+  setCWFlag(1);
 }
 
 void runWheelByTag(void) {

@@ -320,13 +320,14 @@ function onUIChangeTargetPosition(elem) {
   }
 }
 
-function onUIChangeDetectCW(elem) {
-  console.log('onUIChangeDetectCW elem=<', elem,'>');
+function onUIChangeCWFlag(elem,flag) {
+  console.log('onUIChangeCWFlag elem=<', elem,'>');
+  console.log('onUIChangeCWFlag flag=<', flag,'>');
   let channel = getChannelUITool(elem);
-  console.log('onUIChangeDetectCW channel=<', channel,'>');
+  console.log('onUIChangeCWFlag channel=<', channel,'>');
   if(!isNaN(channel)) {
-    let cw = 'detect:dir' + channel + ',1\n';
-    console.log('onUIChangeDetectCW cw=<', cw,'>');
+    let cw = 'setting:cw' + channel + ',' + flag + '\n';
+    console.log('onUIChangeCWFlag cw=<', cw,'>');
     ws.send(cw);
   }
 }
