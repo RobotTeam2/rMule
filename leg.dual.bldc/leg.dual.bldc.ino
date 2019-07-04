@@ -68,11 +68,13 @@ const int  iEROMLegIdAddress[MAX_MOTOR_CH] = {0,2};
 const int  iEROMWheelMaxBackAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 2,iEROMLegIdAddress[1] + 4}; 
 const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 6,iEROMLegIdAddress[1] + 8}; 
 const int  iEROMCWDirectAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 10,iEROMLegIdAddress[1] + 12}; 
+const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iEROMLegIdAddress[1] + 16}; 
 
 uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMWheelMaxBack[MAX_MOTOR_CH] = {280,280}; 
 uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420}; 
 bool  iEROMCWDirect[MAX_MOTOR_CH] = {true,false}; 
+uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0}; 
 
 void loadEROMLegID(int index) {
   uint16_t value1 = EEPROM.read(iEROMLegIdAddress[index]);
@@ -102,6 +104,12 @@ void loadEROMCWDirect(int index) {
   DUMP_VAR(iEROMCWDirect[index]);
 }
 
+void loadEROMPWMOffset(int index) {
+  uint16_t value1 = EEPROM.read(iEROMPWMOffsetAddress[index]);
+  iEROMPWMOffset[index] = (value1 >0);
+  DUMP_VAR(iEROMPWMOffset[index]);
+}
+
 
 void loadEROM(void) {
   loadEROMLegID(0);
@@ -110,6 +118,8 @@ void loadEROM(void) {
   loadEROMLimitSetting(1);
   loadEROMCWDirect(0);
   loadEROMCWDirect(1);
+  loadEROMPWMOffset(0);
+  loadEROMPWMOffset(1);
 }
 void saveEROM(int address,uint16_t value) {
   byte value1 =  value & 0xff;
@@ -258,6 +268,8 @@ void runInfo(void) {
   resTex += String(iVolumeDistanceWheel[0]);
   resTex += ":cw0,";
   resTex += String(iEROMCWDirect[0]);
+  resTex += ":pwm0,";
+  resTex += String(iEROMPWMOffset[0]);
   resTex += ":mb1,";
   resTex += String(iEROMWheelMaxBack[1]);      
   resTex += ":mf1,";
@@ -266,6 +278,8 @@ void runInfo(void) {
   resTex += String(iVolumeDistanceWheel[1]);
   resTex += ":cw1,";
   resTex += String(iEROMCWDirect[1]);
+  resTex += ":pwm1,";
+  resTex += String(iEROMPWMOffset[1]);
   responseTextTag(resTex);
 }
 
@@ -316,6 +330,18 @@ void setCWFlag(int index) {
   }
 }
 
+void setPWMOffset(int index) {
+  String tagPWM = ":pwm0,";
+  if(index > 0) {
+    tagPWM = ":pwm1,";
+  }
+  int offset = 0;
+  if(readTagValue(tagPWM,"",&offset)) {
+    saveEROM(iEROMPWMOffsetAddress[index],offset);
+    iEROMPWMOffset[index] =  offset;
+  }
+}
+
 void runSetting(void) {
   setLegID(0);
   setLegID(1);
@@ -323,6 +349,8 @@ void runSetting(void) {
   runLimmitSetting(1);
   setCWFlag(0);
   setCWFlag(1);
+  setPWMOffset(0);
+  setPWMOffset(1);
 }
 
 void runWheelByTag(void) {
@@ -591,9 +619,9 @@ void calcWheelTarget(int index) {
   
   bool bForwardRunWheel;
   if(moveDiff > 0) {
-    bForwardRunWheel = iEROMCWDirect[index];;
+    bForwardRunWheel = iEROMCWDirect[index];
   } else {
-    bForwardRunWheel = !iEROMCWDirect[index];;
+    bForwardRunWheel = !iEROMCWDirect[index];
   }
   //DUMP_VAR(bForwardRunWheel);
   DUMP_VAR(distanceToMove);
@@ -602,7 +630,10 @@ void calcWheelTarget(int index) {
   if(distanceToMove >= aVolumeSpeedTableLength) {
     speedIndex = aVolumeSpeedTableLength -1;
   }
-  int speed = aVolumeSpeedTable[speedIndex];
+  int speed = aVolumeSpeedTable[speedIndex] + iEROMPWMOffset[index];
+  if(speed > iConstStarSpeed) {
+    speed = iConstStarSpeed;
+  }
   DUMP_VAR(speed);
   runWheel(speed,bForwardRunWheel,index);
 }
