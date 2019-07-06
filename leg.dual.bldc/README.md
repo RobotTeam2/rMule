@@ -9,7 +9,7 @@
 #### direction:
     Host -> Arduino
 ### response:
-    iam:ch0,<id number>:ch1,<id number>\r\n   
+    who:ch0,<id number>:ch1,<id number>\r\n   
 ## move leg
 ### format:
     legM:id,<id number>:xmm,<target position in mm>\r\n  
@@ -24,8 +24,12 @@
     Host -> Arduino
 ### response:
     legG:id,<id number>:xmm,<current position in mm>\r\n  
-
-
+## log level
+### format:
+    log:level,1\r\n
+#### direction:
+    Host -> Arduino
+### response:   
 
 
 # Low Level Command

@@ -1,10 +1,14 @@
 #include <EEPROM.h>
 
+uint16_t iEROMPWMLogLevel = 0; 
+
 #define DUMP_VAR(x)  { \
-  Serial.print(__LINE__);\
-  Serial.print("@@"#x"=<");\
-  Serial.print(x);\
-  Serial.print(">&$");\
+  if(iEROMPWMLogLevel > 0 ) { \
+    Serial.print(__LINE__);\
+    Serial.print("@@"#x"=<");\
+    Serial.print(x);\
+    Serial.print(">&$");\
+  }\
 }
 
 #define MAX_MOTOR_CH (2)
@@ -22,9 +26,9 @@ void loadEROM(void);
 void setup()
 {
   // set pwm 9,10
-  //TCCR1B &= B11111000;
+  TCCR1B &= B11111000;
   TCCR1B |= B00000001;
-  TCCR1B |= B00000011;
+  //TCCR1B |= B00000011;
 
   pin_motor_setup(0);
   attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL[0]),A_Motor_FGS_By_Interrupt , FALLING);
@@ -35,7 +39,7 @@ void setup()
   //Serial.begin(9600);
   Serial.begin(115200);
 
-  Serial.print("start rMule leg&$");\
+  //Serial.print("start rMule leg&$");\
 
   loadEROM();
 }
@@ -68,13 +72,14 @@ const int  iEROMLegIdAddress[MAX_MOTOR_CH] = {0,2};
 const int  iEROMWheelMaxBackAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 2,iEROMLegIdAddress[1] + 4}; 
 const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 6,iEROMLegIdAddress[1] + 8}; 
 const int  iEROMCWDirectAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 10,iEROMLegIdAddress[1] + 12}; 
-const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iEROMLegIdAddress[1] + 16}; 
+const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iEROMLegIdAddress[1] + 16};
+const int  iEROMPWMLogLevelAddress = iEROMPWMOffsetAddress[1] + 2;
 
 uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMWheelMaxBack[MAX_MOTOR_CH] = {280,280}; 
 uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420}; 
 bool  iEROMCWDirect[MAX_MOTOR_CH] = {true,false}; 
-uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0}; 
+uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
 
 void loadEROMLegID(int index) {
   uint16_t value1 = EEPROM.read(iEROMLegIdAddress[index]);
@@ -106,12 +111,21 @@ void loadEROMCWDirect(int index) {
 
 void loadEROMPWMOffset(int index) {
   uint16_t value1 = EEPROM.read(iEROMPWMOffsetAddress[index]);
-  iEROMPWMOffset[index] = (value1 >0);
+  uint16_t value2 = EEPROM.read(iEROMPWMOffsetAddress[index]+1);
+  iEROMPWMOffset[index] = value1 | value2 << 8;;
   DUMP_VAR(iEROMPWMOffset[index]);
+}
+
+void loadEROMLogLevel(void) {
+  uint16_t value1 = EEPROM.read(iEROMPWMLogLevelAddress);
+  iEROMPWMLogLevel = value1;
+  DUMP_VAR(iEROMPWMLogLevel);
 }
 
 
 void loadEROM(void) {
+  loadEROMLogLevel();
+  
   loadEROMLegID(0);
   loadEROMLegID(1);
   loadEROMLimitSetting(0);
@@ -244,6 +258,9 @@ void run_comand(void) {
   if(gSerialInputCommand.startsWith("detect:") || gSerialInputCommand.startsWith("D:")) {
     runDetect();
   }
+  if(gSerialInputCommand.startsWith("who:") || gSerialInputCommand.startsWith("H:")) {
+    whois();
+  }
   if(gSerialInputCommand.startsWith("legM:") || gSerialInputCommand.startsWith("M:")) {
     moveLegToPosition();
   }
@@ -280,6 +297,15 @@ void runInfo(void) {
   resTex += String(iEROMCWDirect[1]);
   resTex += ":pwm1,";
   resTex += String(iEROMPWMOffset[1]);
+  responseTextTag(resTex);
+}
+void whois(void) {
+  String resTex;
+  resTex += "who";
+  resTex += ":ch0,";
+  resTex += String(iEROMLegId[0]);      
+  resTex += ":ch1,";
+  resTex += String(iEROMLegId[1]);      
   responseTextTag(resTex);
 }
 
