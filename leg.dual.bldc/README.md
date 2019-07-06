@@ -2,20 +2,28 @@
 ## summary
    relative x posion of one leg in mm  
 
+
+## read leg id
+### format:
+    who:\r\n
+#### direction:
+    Host -> Arduino
+### response:
+    iam:ch0,<id number>:ch1,<id number>\r\n   
 ## move leg
 ### format:
-    legM:id,<id number>:xmm,<target position in mm>\r\n
-#### direction:
-    Host -> Arduino
+    legM:id,<id number>:xmm,<target position in mm>\r\n  
+#### direction:  
+    Host -> Arduino  
 ### response:
-    legM:id,<id number>:\r\n
+    legM:id,<id number>:\r\n  
 ## read leg position
 ### format:
-    legG:id,<id number>\r\n
+    legG:id,<id number>\r\n  
 #### direction:
     Host -> Arduino
 ### response:
-    legG:id,<id number>:xmm,<current position in mm>\r\n
+    legG:id,<id number>:xmm,<current position in mm>\r\n  
 
 
 
