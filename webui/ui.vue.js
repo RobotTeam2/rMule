@@ -28,6 +28,18 @@ Vue.component('ui-motor-channel', {
                 <div class="col">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
+                      <span class="input-group-text">{{ channel.pwmoffset }}</span>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangePWMOffset(this)">
+                        <i class="fas fa-wave-square"></i>
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="pwm offset">
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
                       <span class="input-group-text">{{ channel.mf }}</span>
                       <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangeMaxFront(this)">
                         <i class="fas fa-hand-point-right"></i>

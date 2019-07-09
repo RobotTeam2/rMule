@@ -69,6 +69,7 @@ onLegInfo = (info) => {
     channelInfo.mb = info.mb0;
     channelInfo.mf = info.mf0;
     channelInfo.wp = info.wp0;
+    channelInfo.pwmoffset = info.pwm0;
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
@@ -81,6 +82,7 @@ onLegInfo = (info) => {
     channelInfo.mb = info.mb1;
     channelInfo.mf = info.mf1;
     channelInfo.wp = info.wp1;
+    channelInfo.pwmoffset = info.pwm1;
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
@@ -329,5 +331,18 @@ function onUIChangeCWFlag(elem,flag) {
     let cw = 'setting:cw' + channel + ',' + flag + '\n';
     console.log('onUIChangeCWFlag cw=<', cw,'>');
     ws.send(cw);
+  }
+}
+
+function onUIChangePWMOffset(elem) {
+  console.log('onUIChangePWMOffset elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangePWMOffset limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangePWMOffset channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let pwm = 'setting:pwm' + channel + ',' + limit + '\n';
+    console.log('onUIChangePWMOffset pwm=<', pwm,'>');
+    ws.send(pwm);
   }
 }

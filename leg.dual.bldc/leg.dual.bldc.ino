@@ -255,9 +255,6 @@ void run_comand(void) {
   if(gSerialInputCommand.startsWith("wheel:") || gSerialInputCommand.startsWith("W:")) {
     runWheelByTag();
   }
-  if(gSerialInputCommand.startsWith("detect:") || gSerialInputCommand.startsWith("D:")) {
-    runDetect();
-  }
   if(gSerialInputCommand.startsWith("who:") || gSerialInputCommand.startsWith("H:")) {
     whois();
   }
@@ -320,6 +317,7 @@ void runLimmitSetting(int index) {
     saveEROM(iEROMWheelMaxFrontAddress[index],MaxFront);
     iEROMWheelMaxFront[index] = MaxFront;
   }
+  
   int MaxBack = 0;
   String tagmb = ":mb0,";
   if(index > 0) {
@@ -389,16 +387,6 @@ void runWheelByTag(void) {
   if(readTagValue(":v1,",":vol1,",&volDistB)) {
     DUMP_VAR(volDistB);
     runWheelVolume(volDistB,1);
-  }
-}
-
-void runDetect(void) {
-  int detect = 0;
-  if(readTagValue(":d0,",":dir0,",&detect)) {
-    runMotorDetect(0);
-  }
-  if(readTagValue(":d1,",":dir1,",&detect)) {
-    runMotorDetect(1);
   }
 }
 
@@ -507,18 +495,6 @@ void readWheelVolume(int index) {
     }
   }
 }
-
-const char iConstDetectSpeed = 254L;
-const long iConstDetectTimeOut = 600L;
-void runMotorDetect(int index) {
-  int startVolume = analogRead(MOTER_VOLUME_WHEEL[index]);;
-  //DUMP_VAR(startVolume);
-  iDetectDistanceStartMemo[index] = iVolumeDistanceWheel[index];
-  runWheel(iConstDetectSpeed,1,index);
-  iDetectIndex = index;
-  wheelRunCounter[index] = iConstDetectTimeOut;
-}
-
 
 
 const int iConstStarSpeed = 254;
