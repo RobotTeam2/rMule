@@ -14,6 +14,8 @@ scenario = [
             [["left"]],
             [["back","11"],["forward","21"],["back","12"],["forward","22"],["back","13"],["forward","23"]]
            ]
+scenario_repeat = 5
+scenario_wait = 2
 
 arduino_ports = []
 stm_ports = []
@@ -56,7 +58,7 @@ def setup():
     print(comlist)
     for port in comlist:
         print(port)
-        ser = serial.Serial(port, 115200)
+        ser = serial.Serial(port, 115200,timeout=2)
         line = ser.readline()
         ser.write(b"who\r\n") 
         line = ser.readline()
@@ -214,10 +216,10 @@ def main():
     print("         scenario start !!          ")
     print("************************************")
 
-    for i in range(2):
+    for i in range(scenario_repeat):
         print("---- turn %1d ----" % (i+1))
         player(scenario,sender_queue)
-        time.sleep(2)
+        time.sleep(scenario_wait)
 
     print("************************************")
     print("         scenario end !!            ")
