@@ -1,70 +1,254 @@
 import time
 import sys
+import glob
+import serial
+import re
+import threading
+import queue
+
+arduino_id_mapping = {"11":0,"12":1,"13":2,"21":0,"22":1,"23":2}
 
 scenario = [
             [["right"]],
-            [["forward",1],["back",2],["forward",3],["back",4],["forward",5],["back",6]],
+            [["forward","11"],["back","21"],["forward","12"],["back","22"],["forward","13"],["back","23"]],
             [["left"]],
-            [["back",1],["forward",2],["back",3],["forward",4],["back",5],["forward",6]]
+            [["back","11"],["forward","21"],["back","12"],["forward","22"],["back","13"],["forward","23"]]
            ]
 
+arduino_ports = []
+stm_ports = []
+arduino_ser = []
+stm_ser = []
 
-def arduino_command(a):
-    print("arduino")
-    if a[0] == "forward":
-        print("legM:id,%1d:xmm,0" % a[1])
-    elif  a[0] == "back":
-        print("legM:id,%1d:xmm,150" % a[1])
+def serial_ports():
+    """ Lists serial port names
+
+        :raises EnvironmentError:
+            On unsupported or unknown platforms
+        :returns:
+            A list of the serial ports available on the system
+    """
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(32)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
     else:
-        pass
+        raise EnvironmentError('Unsupported platform')
 
-def stm_command(a):
-    print("stm")
-    if a[0] == "height":
-        print("height:%1d" % a[1])
-    elif a[0] == "right":
-        print("right")
-    elif a[0] == "left":
-        print("left")
-    else:
-        pass
-
-def player(scenario):
-    for motion in scenario:
-        print(motion) 
-        for command in motion:
-            if command[0] == "right":
-                stm_command(command)
-            elif  command[0] == "left":
-                stm_command(command)
-            elif  command[0] == "forward":
-                arduino_command(command)
-            elif  command[0] == "back":
-                arduino_command(command)
-            else:
-                pass
-
-        time.sleep(1.0)
+    result = []
+    for port in ports:
+        try:
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+        except (OSError, serial.SerialException):
+            pass
+    return result
 
 def setup():
-    # TO DO 
-    pass
+    
+    comlist = serial_ports()
+    temp_arduino_ports = []
 
+    print(comlist)
+    for port in comlist:
+        print(port)
+        ser = serial.Serial(port, 115200)
+        ser.flush()
+        line = ser.readline()
+        ser.write(b"who\r\n") 
+        line = ser.readline()
+        result = re.search(b"arduino",line)
+        if result:
+            print("arduino")
+            ser.write(b"info:,\r\n") 
+            info = ser.readline()
+            print(info)
+            id0 = ((re.findall(b"id0,[1-9]+",info))[0])[4:]
+            id1 = ((re.findall(b"id1,[1-9]+",info))[0])[4:]
+            temp_arduino_ports.append([port,id0,id1])
+            
+        else:
+            result = re.search(b"stm",line)
+            if result:
+                print("stm")
+                stm_ports.append(port)
+        ser.close()
+        
+#    print(temp_arduino_ports)
+#    print(sorted(temp_arduino_ports,key=lambda x:x[1]))
+    for port in sorted(temp_arduino_ports,key=lambda x:x[1]):
+        arduino_ports.append(port[0])
+    print(arduino_ports)
+    print(stm_ports)
+
+    for i in range(len(arduino_ports)):
+        print(arduino_ports[i])
+        arduino_ser.append(serial.Serial(arduino_ports[i], 115200))
+    
+    for i in range(len(stm_ports)):
+        print(stm_ports[i])
+        stm_ser.append(serial.Serial(stm_ports[i], 115200))
+
+
+def arduino_command(command,sender_queue):
+    if command[0] == "forward":
+        item = "legM:id,{0}:xmm,0\r\n".format(command[1])
+        print("arduino[%1d] << %s" %(arduino_id_mapping[command[1]],item))
+        sender_queue[arduino_id_mapping[command[1]]].put(item)
+    elif  command[0] == "back":
+        item = "legM:id,{0}:xmm,150\r\n".format(command[1])
+        print("arduino[%1d] << %s" %(arduino_id_mapping[command[1]],item))
+        sender_queue[arduino_id_mapping[command[1]]].put(item)
+    else:
+        pass
+
+def stm_command(command,sender_queue):
+    if command[0] == "height":
+        item = "height:{0}\r\n".format(command[1])
+        print("stm << %s" % item)
+        sender_queue[3].put(item)
+    elif command[0] == "right":
+        item = "right\r\n"
+        print("stm << %s" % item)
+        sender_queue[3].put(item)
+    elif command[0] == "left":
+        item = "left\r\n"
+        print("stm << %s" % item)
+        sender_queue[3].put(item)
+    else:
+        pass
+
+def sender(queue,ser):
+    print("sender start")
+    while True:
+        item = queue.get()
+        if item is None:
+            break
+        ser.write(item.encode('utf-8')) 
+        print(item.encode('utf-8'))
+        queue.task_done()
+    
+def reader(ser):
+    print("reader start")
+    while ser.isOpen():
+        line = ser.readline()
+        if line is not None:
+            ser.flushInput()
+            print(line)
+            time.sleep(0.025)
+    print("serial closed")
+
+def player(scenario,sender_queue):
+    for motion in scenario:
+        print("motion ::: %s" % motion) 
+        for command in motion:
+            if command[0] == "right":
+                stm_command(command,sender_queue)
+            elif  command[0] == "left":
+                stm_command(command,sender_queue)
+            elif  command[0] == "forward":
+                arduino_command(command,sender_queue)
+            elif  command[0] == "back":
+                arduino_command(command,sender_queue)
+            else:
+                pass
+        time.sleep(1.0)
 
 def main():
 
+    print("************************************")
+    print("         port set up start !!       ")
+    print("************************************")
+
+    # start serial ports
+
     setup()
 
-    i = 0
+    # start threads
 
-    while 1:
-        player(scenario)
-        print("---------")
+    sender_queue = []
+    ts = []
+    rs = []
+
+    for i in range(len(arduino_ports)):
+        sender_queue.append(queue.Queue())
+        ser = arduino_ser[i]
+        ser.flush()
+        t = threading.Thread(target=sender,args=(sender_queue[i],ser,))
+        r = threading.Thread(target=reader,args=(ser,))
+        t.setDaemon(True)
+        r.setDaemon(True)
+        ts.append(t)
+        rs.append(r)
+        t.start()
+        r.start()
+
+    for i in range(len(stm_ports)):
+        sender_queue.append(queue.Queue())
+        ser = stm_ser[i]
+        ser.flush()
+        t = threading.Thread(target=sender,args=(sender_queue[i],ser,))
+        r = threading.Thread(target=reader,args=(ser,))
+        t.setDaemon(True)
+        r.setDaemon(True)
+        ts.append(t)
+        rs.append(r)
+        t.start()
+        r.start()
+
+    print("************************************")
+    print("         port set up end   !!       ")
+    print("************************************")
+
+    time.sleep(2)
+
+    print("************************************")
+    print("         scenario start !!          ")
+    print("************************************")
+
+    for i in range(10):
+        print("---- turn %1d ----" % i)
+        player(scenario,sender_queue)
         time.sleep(2)
 
-        i = i + 1
-        if (i == 10):
-            sys.exit()
+    print("************************************")
+    print("         scenario end !!            ")
+    print("************************************")
+
+    # stop sender queue
+       
+    sender_queue[0].put(None)
+    sender_queue[1].put(None)
+    sender_queue[2].put(None)    
+    sender_queue[3].put(None)
+
+    sender_queue[0].put(None)
+    sender_queue[1].put(None)
+    sender_queue[2].put(None)    
+    sender_queue[3].put(None)
+
+    sender_queue[0].put(None)
+    sender_queue[1].put(None)
+    sender_queue[2].put(None)    
+    sender_queue[3].put(None)
+
+    # stop serial ports and threads
+
+    for t in ts:
+        t.join()
+
+    for ser in arduino_ser:
+        ser.close()
+
+    for ser in stm_ser:
+        ser.close()
+
+    for r in rs:
+        r.join()
         
 
 if __name__ == '__main__':
