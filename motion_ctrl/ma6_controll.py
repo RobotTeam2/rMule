@@ -57,7 +57,6 @@ def setup():
     for port in comlist:
         print(port)
         ser = serial.Serial(port, 115200)
-        ser.flush()
         line = ser.readline()
         ser.write(b"who\r\n") 
         line = ser.readline()
@@ -97,11 +96,11 @@ def setup():
 def arduino_command(command,sender_queue):
     if command[0] == "forward":
         item = "legM:id,{0}:xmm,0\r\n".format(command[1])
-        print("arduino[%1d] << %s" %(arduino_id_mapping[command[1]],item))
+        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[command[1]],item))
         sender_queue[arduino_id_mapping[command[1]]].put(item)
     elif  command[0] == "back":
         item = "legM:id,{0}:xmm,150\r\n".format(command[1])
-        print("arduino[%1d] << %s" %(arduino_id_mapping[command[1]],item))
+        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[command[1]],item))
         sender_queue[arduino_id_mapping[command[1]]].put(item)
     else:
         pass
@@ -109,15 +108,15 @@ def arduino_command(command,sender_queue):
 def stm_command(command,sender_queue):
     if command[0] == "height":
         item = "height:{0}\r\n".format(command[1])
-        print("stm << %s" % item)
+        print("[S] stm: %s" % item)
         sender_queue[3].put(item)
     elif command[0] == "right":
         item = "right\r\n"
-        print("stm << %s" % item)
+        print("[S] stm: %s" % item)
         sender_queue[3].put(item)
     elif command[0] == "left":
         item = "left\r\n"
-        print("stm << %s" % item)
+        print("[S] stm: %s" % item)
         sender_queue[3].put(item)
     else:
         pass
@@ -129,22 +128,27 @@ def sender(queue,ser):
         if item is None:
             break
         ser.write(item.encode('utf-8')) 
-        print(item.encode('utf-8'))
+#        print(item.encode('utf-8'))
+        while ser.out_waiting > 0:
+            time.sleep(0.001)
         queue.task_done()
     
-def reader(ser):
+def reader(ser,number):
     print("reader start")
     while ser.isOpen():
         line = ser.readline()
         if line is not None:
-            ser.flushInput()
-            print(line)
-            time.sleep(0.025)
+            #ser.flushInput()
+            if number < len(arduino_ports):
+                print("[R] arduino[%d]: %s" %(number,line))
+            else:
+                print("[R] stm: %s" % line)
+            time.sleep(0.005)
     print("serial closed")
 
 def player(scenario,sender_queue):
     for motion in scenario:
-        print("motion ::: %s" % motion) 
+        print("motion :: %s" % motion) 
         for command in motion:
             if command[0] == "right":
                 stm_command(command,sender_queue)
@@ -179,7 +183,7 @@ def main():
         ser = arduino_ser[i]
         ser.flush()
         t = threading.Thread(target=sender,args=(sender_queue[i],ser,))
-        r = threading.Thread(target=reader,args=(ser,))
+        r = threading.Thread(target=reader,args=(ser,i,))
         t.setDaemon(True)
         r.setDaemon(True)
         ts.append(t)
@@ -192,7 +196,7 @@ def main():
         ser = stm_ser[i]
         ser.flush()
         t = threading.Thread(target=sender,args=(sender_queue[i],ser,))
-        r = threading.Thread(target=reader,args=(ser,))
+        r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports),))
         t.setDaemon(True)
         r.setDaemon(True)
         ts.append(t)
@@ -210,8 +214,8 @@ def main():
     print("         scenario start !!          ")
     print("************************************")
 
-    for i in range(10):
-        print("---- turn %1d ----" % i)
+    for i in range(2):
+        print("---- turn %1d ----" % (i+1))
         player(scenario,sender_queue)
         time.sleep(2)
 
