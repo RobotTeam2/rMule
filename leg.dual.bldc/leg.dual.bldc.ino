@@ -239,17 +239,17 @@ void runSerialCommand(void) {
 void responseTextTag(String &res) {
   res = "&$" + res;
   res += "&$";
-  //res += "\r\n";
+  res += "\r\n";
   Serial.print(res);
 }
 void run_simple_command(void) {
   if(gSerialInputCommand=="uu") {
     speed_wheel[0] -= 5;
-    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel[0]);  
   }
   if(gSerialInputCommand=="dd") {
     speed_wheel[0] += 5;
-    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel[0]);  
   }
   if(gSerialInputCommand=="ff") {
     FRONT_WHEEL(0);
@@ -261,18 +261,18 @@ void run_simple_command(void) {
   }
   if(gSerialInputCommand=="ss") {
     speed_wheel[0] =0xff;
-    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel[0]);  
   }
   if(gSerialInputCommand=="gg") {
     speed_wheel[0] =0;
-    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel);  
+    analogWrite(MOTER_CCW_WHEEL[0], speed_wheel[0]);  
   }
 }
 
 
 void run_comand(void) {
   //DUMP_VAR(InputCommand);
-  //DUMP_VAR(speed_wheel);
+  //DUMP_VAR(speed_wheel[0]);
   run_simple_command();
   
   if(gSerialInputCommand.startsWith("info:") || gSerialInputCommand.startsWith("I:")) {
@@ -409,6 +409,10 @@ void moveLegToPosition() {
       runWheelVolume(volDist,legIndex);
       String resTex;
       resTex += "legM:1";
+      resTex += ",volDist:";
+      resTex += String(volDist);
+      resTex += ",legIndex:";
+      resTex += String(legIndex);
       responseTextTag(resTex);
       return;
     }
@@ -522,47 +526,48 @@ void runWheelVolume(int distPostion,int index) {
 
 
 
-
-int const aVolumeSpeedTable[] = {
-  60,60,60,60,60,
-  70,70,70,70,70,
-  80,80,80,80,80,
-  90,90,90,90,90,
-  100,100,100,100,100,
-  160,160,160,160,160,
-  iConstStarSpeed
-};
-
 /*
 int const aVolumeSpeedTable[] = {
-
   60,60,60,60,60,
   70,70,70,70,70,
   80,80,80,80,80,
   90,90,90,90,90,
   100,100,100,100,100,
-  100,100,100,100,100,
-  100,100,100,100,100,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
   160,160,160,160,160,
   iConstStarSpeed
 };
 */
+
+
+int const aVolumeSpeedTable[] = {
+
+  60,60,60,60,60,
+  70,70,70,70,70,
+  80,80,80,80,80,
+  90,90,90,90,90,
+  100,100,100,100,100,
+  100,100,100,100,100,
+  100,100,100,100,100,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  127,127,127,127,127,
+  130,130,130,130,130,
+  130,130,130,130,130,
+  130,130,130,130,130,
+  130,130,130,130,130,
+  130,130,130,130,130,
+  160,160,160,160,160,
+  160,160,160,160,160,
+  160,160,160,160,160,
+  160,160,160,160,160,
+  160,160,160,160,160,
+  iConstStarSpeed
+};
+
 
 /*
 int const aVolumeSpeedTable[] = {
