@@ -12,6 +12,17 @@ uint8_t iEROMPWMLogLevel = 0;
   }\
 }
 
+
+
+#define LOG_VAR(x)  { \
+  Serial.print(__LINE__);\
+  Serial.print("@@"#x"=<");\
+  Serial.print(x);\
+  Serial.print(">&$");\
+  Serial.print("\r\n");\
+}
+
+
 #define MAX_MOTOR_CH (2)
 
 // Interrupt
@@ -38,11 +49,7 @@ void setup()
   pin_motor_setup(1);
   attachInterrupt(digitalPinToInterrupt(MOTER_FGS_WHEEL[1]),B_Motor_FGS_By_Interrupt , FALLING);
 
-  //Serial.begin(9600);
   Serial.begin(115200);
-
-  //Serial.print("start rMule leg&$");\
-
   loadEROM();
 }
 
@@ -400,8 +407,14 @@ void moveLegToPosition() {
       legIndex = 1;
     }
     if(legIndex < 0 ){
+      String resTex;
+      resTex += "legM:0";
+      resTex += ",legIndex:";
+      resTex += String(legIndex);
+      responseTextTag(resTex);
       return ;
     }
+    DUMP_VAR(legIndex);
     int position = -1;
     if(readTagValue(":xmm,",":xmm,",&position)) {
       DUMP_VAR(position);
@@ -421,7 +434,7 @@ void moveLegToPosition() {
   resTex += "legM:0";
   responseTextTag(resTex);
 }
-const float fMM2VolumeFactor = 0.1;
+const float fMM2VolumeFactor = 1.1;
 int calcVolumeFromMM(int index,int mm) {
   int zeroP = iEROMZeroPosition[index];
   int volume = fMM2VolumeFactor * (float)mm + zeroP;

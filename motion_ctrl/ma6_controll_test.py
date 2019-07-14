@@ -5,6 +5,7 @@ import serial
 import re
 import threading
 import queue
+from datetime import datetime
 
 #arduino_id_mapping = {"2":0,"3":1,"4":2,"5":0,"6":1,"7":2}
 arduino_id_mapping = {"4":0,"7":0}
@@ -74,29 +75,33 @@ def setup():
     for port in comlist:
         print(port)
         ser = serial.Serial(port, 115200,timeout=2)
-        line = ser.readline()
-        ser.write(b"who:\r\n")  
-        line = ser.readline()
-        print(line)
-        line = ser.readline()
-        #print(line)
-        #line = ser.readline()
-        #print(line)
-        result = re.search(b"arduino",line)
-        if result:
-            print("arduino")
-            ser.write(b"info:,\r\n") 
-            info = ser.readline()
-            print(info)
-            id0 = ((re.findall(b"id0,[1-9]+",info))[0])[4:]
-            id1 = ((re.findall(b"id1,[1-9]+",info))[0])[4:]
-            temp_arduino_ports.append([port,id0,id1])
-            
-        else:
-            result = re.search(b"stm",line)
+        start = datetime.now();
+        while True:
+            line = ser.readline()
+            ser.write(b"who:\r\n")
+            line = ser.readline()
+            print(line)
+            result = re.search(b"arduino",line)
             if result:
-                print("stm")
-                stm_ports.append(port)
+                print("arduino")
+                ser.write(b"info:,\r\n") 
+                info = ser.readline()
+                print(info)
+                id0 = ((re.findall(b"id0,[1-9]+",info))[0])[4:]
+                id1 = ((re.findall(b"id1,[1-9]+",info))[0])[4:]
+                temp_arduino_ports.append([port,id0,id1])
+                break;
+            else:
+                result = re.search(b"stm",line)
+                if result:
+                    print("stm")
+                    stm_ports.append(port)
+                    break
+            end = datetime.now();
+            escape = end - start;
+            if escape.total_seconds() > 16 :
+                break;
+            print(escape.total_seconds())
         ser.close()
         
 #    print(temp_arduino_ports)
