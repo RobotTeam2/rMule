@@ -70,6 +70,8 @@ onLegInfo = (info) => {
     channelInfo.mf = info.mf0;
     channelInfo.wp = info.wp0;
     channelInfo.pwmoffset = info.pwm0;
+    channelInfo.zero = info.zeroP0;
+    channelInfo.log = info.loglevel
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
@@ -83,6 +85,8 @@ onLegInfo = (info) => {
     channelInfo.mf = info.mf1;
     channelInfo.wp = info.wp1;
     channelInfo.pwmoffset = info.pwm1;
+    channelInfo.zero = info.zeroP1;
+    channelInfo.log = info.loglevel
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
@@ -357,5 +361,17 @@ function onUIChangeZeroPosition(elem) {
     let zeroP = 'setting:zeroP' + channel + ',' + limit + '\n';
     console.log('onUIChangeZeroPosition zeroP=<', zeroP,'>');
     ws.send(zeroP);
+  }
+}
+
+
+function onUIChangeLogLevel(elem) {
+  console.log('onUIChangeLogLevel elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangeLogLevel limit=<', limit,'>');
+  if(!isNaN(limit)) {
+    let log = 'setting:log,'+ limit + '\n';
+    console.log('onUIChangeLogLevel log=<', log,'>');
+    ws.send(log);
   }
 }

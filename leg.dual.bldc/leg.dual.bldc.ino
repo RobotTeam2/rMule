@@ -8,6 +8,7 @@ uint8_t iEROMPWMLogLevel = 0;
     Serial.print("@@"#x"=<");\
     Serial.print(x);\
     Serial.print(">&$");\
+    Serial.print("\r\n");\
   }\
 }
 
@@ -238,6 +239,7 @@ void runSerialCommand(void) {
 void responseTextTag(String &res) {
   res = "&$" + res;
   res += "&$";
+  //res += "\r\n";
   Serial.print(res);
 }
 void run_simple_command(void) {
@@ -329,6 +331,8 @@ void runInfo(void) {
   resTex += String(iEROMPWMOffset[1]);
   resTex += ":zeroP1,";
   resTex += String(iEROMZeroPosition[1]);
+  resTex += ":loglevel,";
+  resTex += String(iEROMPWMLogLevel);
   responseTextTag(resTex);
 }
 
@@ -403,10 +407,17 @@ void moveLegToPosition() {
       DUMP_VAR(position);
       int volDist = calcVolumeFromMM(legIndex,position);
       runWheelVolume(volDist,legIndex);
+      String resTex;
+      resTex += "legM:1";
+      responseTextTag(resTex);
+      return;
     }
   }
+  String resTex;
+  resTex += "legM:0";
+  responseTextTag(resTex);
 }
-const float fMM2VolumeFactor = 1.0;
+const float fMM2VolumeFactor = 0.1;
 int calcVolumeFromMM(int index,int mm) {
   int zeroP = iEROMZeroPosition[index];
   int volume = fMM2VolumeFactor * (float)mm + zeroP;
