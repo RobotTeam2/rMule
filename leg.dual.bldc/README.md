@@ -26,7 +26,8 @@
     legG:id,<id number>:xmm,<current position in mm>\r\n  
 ## log level
 ### format:
-    log:level,<level 0~>\r\n
+    log:level,<level 0~>\r\n  
+    degug:level,<level 0~>\r\n  
 #### direction:
     Host -> Arduino
 ### response:   
