@@ -1,6 +1,6 @@
 #include <EEPROM.h>
 
-uint16_t iEROMPWMLogLevel = 0; 
+uint8_t iEROMPWMLogLevel = 0; 
 
 #define DUMP_VAR(x)  { \
   if(iEROMPWMLogLevel > 0 ) { \
@@ -18,6 +18,7 @@ const static char MOTER_FGS_WHEEL[MAX_MOTOR_CH] = {2,3};
 const static char MOTER_PWM_WHEEL[MAX_MOTOR_CH] = {9,10};
 const static char MOTER_CCW_WHEEL[MAX_MOTOR_CH] = {4,8};
 const static char MOTER_VOLUME_WHEEL[MAX_MOTOR_CH] = {A1,A2};
+
 
 void A_Motor_FGS_By_Interrupt(void);
 void B_Motor_FGS_By_Interrupt(void);
@@ -73,74 +74,104 @@ const int  iEROMWheelMaxBackAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 2,iE
 const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 6,iEROMLegIdAddress[1] + 8}; 
 const int  iEROMCWDirectAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 10,iEROMLegIdAddress[1] + 12}; 
 const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iEROMLegIdAddress[1] + 16};
-const int  iEROMPWMLogLevelAddress = iEROMPWMOffsetAddress[1] + 2;
+const int  iEROMZeroPositionAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 18,iEROMLegIdAddress[1] + 20};
+
+const int  iEROMPWMLogLevelAddress = iEROMLegIdAddress[1] + 30;
+
 
 uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMWheelMaxBack[MAX_MOTOR_CH] = {280,280}; 
 uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420}; 
-bool  iEROMCWDirect[MAX_MOTOR_CH] = {true,false}; 
+uint16_t  iEROMCWDirect[MAX_MOTOR_CH] = {1,0}; 
 uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
+uint16_t  iEROMZeroPosition[MAX_MOTOR_CH] = {0,0};
 
-void loadEROMLegID(int index) {
-  uint16_t value1 = EEPROM.read(iEROMLegIdAddress[index]);
-  uint16_t value2 = EEPROM.read(iEROMLegIdAddress[index]+1);
-  iEROMLegId[index] = value1 | value2 << 8;
-  DUMP_VAR(iEROMLegId[index]);
+
+
+void loadEROM1Byte(int address,uint8_t *dst) {
+  uint8_t value1 = EEPROM.read(address);
+  *dst = value1;
 }
 
-void loadEROMLimitSetting(int index) {
-  {
-    uint16_t value1 = EEPROM.read(iEROMWheelMaxBackAddress[index]);
-    uint16_t value2 = EEPROM.read(iEROMWheelMaxBackAddress[index]+1);
-    iEROMWheelMaxBack[index] = value1 | value2 << 8;
-    DUMP_VAR(iEROMWheelMaxBack[index]);
-  }
-  {
-    uint16_t value1 = EEPROM.read(iEROMWheelMaxFrontAddress[index]);
-    uint16_t value2 = EEPROM.read(iEROMWheelMaxFrontAddress[index]+1);
-    iEROMWheelMaxFront[index] = value1 | value2 << 8;
-    DUMP_VAR(iEROMWheelMaxFront[index]);
-  }
+void loadEROM2Byte(int index,int address[],uint16_t dst[]) {
+  uint16_t value1 = EEPROM.read(address[index]);
+  uint16_t value2 = EEPROM.read(address[index]+1);
+  dst[index] = value1 | value2 << 8;;
 }
-
-void loadEROMCWDirect(int index) {
-  uint16_t value1 = EEPROM.read(iEROMCWDirectAddress[index]);
-  iEROMCWDirect[index] = (value1 >0);
-  DUMP_VAR(iEROMCWDirect[index]);
-}
-
-void loadEROMPWMOffset(int index) {
-  uint16_t value1 = EEPROM.read(iEROMPWMOffsetAddress[index]);
-  uint16_t value2 = EEPROM.read(iEROMPWMOffsetAddress[index]+1);
-  iEROMPWMOffset[index] = value1 | value2 << 8;;
-  DUMP_VAR(iEROMPWMOffset[index]);
-}
-
-void loadEROMLogLevel(void) {
-  uint16_t value1 = EEPROM.read(iEROMPWMLogLevelAddress);
-  iEROMPWMLogLevel = value1;
-  DUMP_VAR(iEROMPWMLogLevel);
-}
-
 
 void loadEROM(void) {
-  loadEROMLogLevel();
+  loadEROM1Byte(iEROMPWMLogLevelAddress,&iEROMPWMLogLevel);
   
-  loadEROMLegID(0);
-  loadEROMLegID(1);
-  loadEROMLimitSetting(0);
-  loadEROMLimitSetting(1);
-  loadEROMCWDirect(0);
-  loadEROMCWDirect(1);
-  loadEROMPWMOffset(0);
-  loadEROMPWMOffset(1);
+  loadEROM2Byte(0,iEROMLegIdAddress,iEROMLegId);
+  loadEROM2Byte(1,iEROMLegIdAddress,iEROMLegId);
+  
+  loadEROM2Byte(0,iEROMWheelMaxBackAddress,iEROMWheelMaxBack);
+  loadEROM2Byte(1,iEROMWheelMaxBackAddress,iEROMWheelMaxBack);
+  loadEROM2Byte(0,iEROMWheelMaxFrontAddress,iEROMWheelMaxFront);
+  loadEROM2Byte(1,iEROMWheelMaxFrontAddress,iEROMWheelMaxFront);
+  
+  loadEROM2Byte(0,iEROMCWDirectAddress,iEROMCWDirect);
+  loadEROM2Byte(1,iEROMCWDirectAddress,iEROMCWDirect);
+ 
+  
+  loadEROM2Byte(0,iEROMPWMOffsetAddress,iEROMPWMOffset);
+  loadEROM2Byte(1,iEROMPWMOffsetAddress,iEROMPWMOffset);
+
+  loadEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition);
+  loadEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition);
+
 }
+
+
 void saveEROM(int address,uint16_t value) {
   byte value1 =  value & 0xff;
   EEPROM.write(address,value1);
   byte value2 = (value >> 8) & 0xff;
   EEPROM.write(address+1,value2);
 }
+
+void saveEROM1Byte(int address,uint8_t *valueRam,String tag) {
+  int valueTag = 0;
+  if(readTagValue(tag,"",&valueTag)) {
+    saveEROM(address,valueTag);
+    *valueRam =  valueTag;
+  }
+}
+
+void saveEROM2Byte(int index,int address[],uint16_t valueRam[],String tag) {
+  int valueTag = 0;
+  if(readTagValue(tag,"",&valueTag)) {
+    saveEROM(address[index],valueTag);
+    valueRam[index] =  valueTag;
+  }
+}
+
+
+
+void runSetting(void) {
+  saveEROM1Byte(iEROMPWMLogLevelAddress,&iEROMPWMLogLevel,":debug,");
+  saveEROM1Byte(iEROMPWMLogLevelAddress,&iEROMPWMLogLevel,":log,");
+
+  saveEROM2Byte(0,iEROMLegIdAddress,iEROMLegId,":id0,");
+  saveEROM2Byte(1,iEROMLegIdAddress,iEROMLegId,":id1,");
+
+  saveEROM2Byte(0,iEROMWheelMaxFrontAddress,iEROMWheelMaxFront,":mf0,");
+  saveEROM2Byte(1,iEROMWheelMaxFrontAddress,iEROMWheelMaxFront,":mf1,");
+  saveEROM2Byte(0,iEROMWheelMaxBackAddress,iEROMWheelMaxBack,":mb0,");
+  saveEROM2Byte(1,iEROMWheelMaxBackAddress,iEROMWheelMaxBack,":mb1,");
+
+
+  saveEROM2Byte(0,iEROMCWDirectAddress,iEROMCWDirect,":cw0,");
+  saveEROM2Byte(1,iEROMCWDirectAddress,iEROMCWDirect,":cw1,");
+  
+  saveEROM2Byte(0,iEROMPWMOffsetAddress,iEROMPWMOffset,":pwm0,");
+  saveEROM2Byte(1,iEROMPWMOffsetAddress,iEROMPWMOffset,":pwm1,");
+
+  saveEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition,":zeroP0,");
+  saveEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition,":zeroP1,");
+
+}
+
 
 
 void A_Motor_FGS_By_Interrupt(void) {
@@ -307,76 +338,7 @@ void whois(void) {
   responseTextTag(resTex);
 }
 
-void runLimmitSetting(int index) {
-  int MaxFront = 0;
-  String tagmf = ":mf0,";
-  if(index > 0) {
-    tagmf = ":mf1,";
-  }
-  if(readTagValue(tagmf,"",&MaxFront)) {
-    //DUMP_VAR(MaxFront);
-    saveEROM(iEROMWheelMaxFrontAddress[index],MaxFront);
-    iEROMWheelMaxFront[index] = MaxFront;
-  }
-  
-  int MaxBack = 0;
-  String tagmb = ":mb0,";
-  if(index > 0) {
-    tagmb = ":mb1,";
-  }
-  if(readTagValue(tagmb,"",&MaxBack)) {
-    //DUMP_VAR(MaxBackA);
-    saveEROM(iEROMWheelMaxBackAddress[index],MaxBack);
-    iEROMWheelMaxBack[index] = MaxBack;
-  }
-}
 
-void setLegID(int index) {
-  String tagLegID = ":id0,";
-  if(index > 0) {
-    tagLegID = ":id1,";
-  }
-  int legID = 0;
-  if(readTagValue(tagLegID,"",&legID)) {
-    saveEROM(iEROMLegIdAddress[index],legID);
-    iEROMLegId[index] =  legID;
-  }
-}
-
-void setCWFlag(int index) {
-  String tagCW = ":cw0,";
-  if(index > 0) {
-    tagCW = ":cw1,";
-  }
-  int cw = 0;
-  if(readTagValue(tagCW,"",&cw)) {
-    saveEROM(iEROMCWDirectAddress[index],cw);
-    iEROMCWDirect[index] =  cw;
-  }
-}
-
-void setPWMOffset(int index) {
-  String tagPWM = ":pwm0,";
-  if(index > 0) {
-    tagPWM = ":pwm1,";
-  }
-  int offset = 0;
-  if(readTagValue(tagPWM,"",&offset)) {
-    saveEROM(iEROMPWMOffsetAddress[index],offset);
-    iEROMPWMOffset[index] =  offset;
-  }
-}
-
-void runSetting(void) {
-  setLegID(0);
-  setLegID(1);
-  runLimmitSetting(0);
-  runLimmitSetting(1);
-  setCWFlag(0);
-  setCWFlag(1);
-  setPWMOffset(0);
-  setPWMOffset(1);
-}
 
 void runWheelByTag(void) {
   int volDistA = 0;
