@@ -346,3 +346,16 @@ function onUIChangePWMOffset(elem) {
     ws.send(pwm);
   }
 }
+
+function onUIChangeZeroPosition(elem) {
+  console.log('onUIChangeZeroPosition elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangeZeroPosition limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangeZeroPosition channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let zeroP = 'setting:zeroP' + channel + ',' + limit + '\n';
+    console.log('onUIChangeZeroPosition zeroP=<', zeroP,'>');
+    ws.send(zeroP);
+  }
+}

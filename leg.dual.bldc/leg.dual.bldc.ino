@@ -315,6 +315,8 @@ void runInfo(void) {
   resTex += String(iEROMCWDirect[0]);
   resTex += ":pwm0,";
   resTex += String(iEROMPWMOffset[0]);
+  resTex += ":zeroP0,";
+  resTex += String(iEROMZeroPosition[0]);
   resTex += ":mb1,";
   resTex += String(iEROMWheelMaxBack[1]);      
   resTex += ":mf1,";
@@ -325,16 +327,14 @@ void runInfo(void) {
   resTex += String(iEROMCWDirect[1]);
   resTex += ":pwm1,";
   resTex += String(iEROMPWMOffset[1]);
+  resTex += ":zeroP1,";
+  resTex += String(iEROMZeroPosition[1]);
   responseTextTag(resTex);
 }
 
 void whois(void) {
   String resTex;
-  resTex += "who";
-  resTex += ":ch0,";
-  resTex += String(iEROMLegId[0]);      
-  resTex += ":ch1,";
-  resTex += String(iEROMLegId[1]);      
+  resTex += "arduino";
   responseTextTag(resTex);
 }
 
@@ -401,13 +401,16 @@ void moveLegToPosition() {
     int position = -1;
     if(readTagValue(":xmm,",":xmm,",&position)) {
       DUMP_VAR(position);
-      int volDist = calcVolumeFromMM(position);
+      int volDist = calcVolumeFromMM(legIndex,position);
       runWheelVolume(volDist,legIndex);
     }
   }
 }
-int calcVolumeFromMM(int mm) {
-  return mm;
+const float fMM2VolumeFactor = 1.0;
+int calcVolumeFromMM(int index,int mm) {
+  int zeroP = iEROMZeroPosition[index];
+  int volume = fMM2VolumeFactor * (float)mm + zeroP;
+  return volume;
 }
 
 void getLegPosition() {
