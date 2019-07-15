@@ -84,7 +84,7 @@ const int  iEROMCWDirectAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 10,iEROM
 const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iEROMLegIdAddress[1] + 16};
 const int  iEROMZeroPositionAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 18,iEROMLegIdAddress[1] + 20};
 
-const int  iEROMPWMLogLevelAddress = iEROMLegIdAddress[1] + 30;
+const int  iEROMPWMLogLevelAddress = iEROMLegIdAddress[1] + 256;
 
 
 uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
