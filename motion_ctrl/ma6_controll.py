@@ -39,7 +39,7 @@ def serial_ports():
         ports = ['COM%s' % (i + 1) for i in range(32)]
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         # this excludes your current terminal "/dev/tty"
-        ports = glob.glob('/dev/tty[A-Za-z]*')
+        ports = glob.glob('/dev/ttyUSB*')
     elif sys.platform.startswith('darwin'):
         ports = glob.glob('/dev/tty.*')
     else:
@@ -171,25 +171,35 @@ def sender(queue,ser):
     while True:
         item = queue.get()
         if item is None:
+            queue.task_done()
             break
         ser.write(item.encode('utf-8')) 
 #        print(item.encode('utf-8'))
         while ser.out_waiting > 0:
             time.sleep(0.001)
-        queue.task_done()
+
     
 def reader(ser,number):
 #    print("reader start")
     while ser.isOpen():
-        line = ser.readline()
-        if line is not None:
-            #ser.flushInput()
-            if number < len(arduino_ports):
-                print("[R] arduino[%d]: %s" %(number,line))
-            else:
-                print("[R] stm: %s" % line)
-            time.sleep(0.005)
-    print("serial closed")
+        try:
+            line = ser.readline()
+        except:
+            break
+        else:
+            if line is not None:
+               #ser.flushInput()
+               if number < len(arduino_ports):
+                   print("[R] arduino[%d]: %s" %(number,line))
+               else:
+                   print("[R] stm: %s" % line)
+               time.sleep(0.005)
+
+    if number < len(arduino_ports):
+        print("arduino[%d] port closed" %number)
+    else:
+        print("stm port closed")
+
 
 def player(scenario,sender_queue):
     for motion in scenario:
@@ -272,6 +282,8 @@ def main():
     print("************************************")
     print("         scenario end !!            ")
     print("************************************")
+    
+    print("closing ports")
 
     # stop sender queue
     for _ in range(3):
@@ -279,20 +291,32 @@ def main():
             q.put(None)
 
     # stop serial ports and threads
-
     for t in ts:
         t.join()
+    #print("sender done")
+    time.sleep(1.0)
 
     if len(arduino_ser):
         for ser in arduino_ser:
             ser.close()
+            time.sleep(3.0)
+    
+    #print("arduino ser closed")
 
     if len(stm_ser):
         for ser in stm_ser:
             ser.close()
+            time.sleep(3.0)
 
+    #print("stm ser closed")
+    
+    #print("len(rs) %d" %(len(rs)))
     for r in rs:
         r.join()
+    
+    #print("reader closed")
+    
+    print("Done!!")
         
 
 if __name__ == '__main__':
