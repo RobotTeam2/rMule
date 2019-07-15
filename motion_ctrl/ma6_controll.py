@@ -6,16 +6,21 @@ import re
 import threading
 import queue
 
-arduino_id_mapping = {"11":0,"12":1,"13":2,"21":0,"22":1,"23":2}
+motor_id_mapping = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
+arduino_id_mapping = {}
 
 scenario = [
+            [["stm_init"]],
+            [["wait",3.0]],
             [["right"]],
-            [["forward","11"],["back","21"],["forward","12"],["back","22"],["forward","13"],["back","23"]],
+            [["forward",0],["back",1],["forward",2],["back",3],["forward",4],["back",5]],
             [["left"]],
-            [["back","11"],["forward","21"],["back","12"],["forward","22"],["back","13"],["forward","23"]]
+            [["back",0],["forward",1],["back",2],["forward",3],["back",4],["forward",5]]
            ]
+
 scenario_repeat = 5
-scenario_wait = 2
+scenario_wait = 2.0
+motion_interval = 2.0
 
 arduino_ports = []
 stm_ports = []
@@ -60,56 +65,94 @@ def setup():
         print(port)
         ser = serial.Serial(port, 115200,timeout=2)
         line = ser.readline()
-        ser.write(b"who\r\n") 
-        line = ser.readline()
-        result = re.search(b"arduino",line)
-        if result:
-            print("arduino")
-            ser.write(b"info:,\r\n") 
-            info = ser.readline()
-            print(info)
-            id0 = ((re.findall(b"id0,[1-9]+",info))[0])[4:]
-            id1 = ((re.findall(b"id1,[1-9]+",info))[0])[4:]
-            temp_arduino_ports.append([port,id0,id1])
-            
-        else:
-            result = re.search(b"stm",line)
+        ser.write(b"who:\r\n") 
+        start_time = current_time = time.time()
+        search_arduino_ids = False
+
+        while current_time - start_time < 5.0:
+
+            line = ser.readline()
+
+            if not search_arduino_ids:
+                result = re.search(b"arduino",line)
+                if result:
+                    print("arduino")
+                    ser.write(b"info:,\r\n") 
+                    search_arduino_ids = True
+
+            else:
+                id0 = ((re.findall(b"id0,[1-9]+",line))[0])[4:]
+                id1 = ((re.findall(b"id1,[1-9]+",line))[0])[4:]
+                if id0 and id1:
+                    print("port id0 = %s, id1 = %s" %(id0,id1))
+                    temp_arduino_ports.append([port,id0,id1])
+                    break
+
+            result = re.search(b"stm",line)   
             if result:
                 print("stm")
                 stm_ports.append(port)
+                break
+            
+            time.sleep(0.1)
+            current_time = time.time()
+        
         ser.close()
         
 #    print(temp_arduino_ports)
 #    print(sorted(temp_arduino_ports,key=lambda x:x[1]))
+    
+   
+    i = 0
     for port in sorted(temp_arduino_ports,key=lambda x:x[1]):
         arduino_ports.append(port[0])
-    print(arduino_ports)
-    print(stm_ports)
+        arduino_id_mapping.setdefault(port[1].decode('utf-8'),i)
+        arduino_id_mapping.setdefault(port[2].decode('utf-8'),i)
+        i = i + 1
+    print("arduino_ports = %s" % arduino_ports)
+    print("arduino_id_mapping = %s" % arduino_id_mapping)
+    print("stm_ports = %s" % stm_ports)
 
-    for i in range(len(arduino_ports)):
-        print(arduino_ports[i])
-        arduino_ser.append(serial.Serial(arduino_ports[i], 115200))
-    
-    for i in range(len(stm_ports)):
-        print(stm_ports[i])
-        stm_ser.append(serial.Serial(stm_ports[i], 115200))
+    if len(arduino_ports):
+        for i in range(len(arduino_ports)):
+            for _ in range(5):
+                try:
+                    s = serial.Serial(arduino_ports[i], 115200)
+                    break
+                except (OSError, serial.SerialException):
+                    time.sleep(1.0)
+                    pass
+#            print(arduino_ports[i])
+            arduino_ser.append(s)
+        
+    if len(stm_ports):
+        for i in range(len(stm_ports)):
+            for _ in range(5):
+                try:
+                    s = serial.Serial(stm_ports[i], 115200)
+                    break
+                except (OSError, serial.SerialException):
+                    time.sleep(1.0)
+                    pass
+#            print(stm_ports[i])
+            stm_ser.append(s)
 
 
 def arduino_command(command,sender_queue):
     if command[0] == "forward":
-        item = "legM:id,{0}:xmm,0\r\n".format(command[1])
-        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[command[1]],item))
-        sender_queue[arduino_id_mapping[command[1]]].put(item)
+        item = "legM:id,{0}:xmm,0\r\n".format(motor_id_mapping[command[1]])
+        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]] ,item))
+        sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
     elif  command[0] == "back":
-        item = "legM:id,{0}:xmm,150\r\n".format(command[1])
-        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[command[1]],item))
-        sender_queue[arduino_id_mapping[command[1]]].put(item)
+        item = "legM:id,{0}:xmm,150\r\n".format(motor_id_mapping[command[1]])
+        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]],item))
+        sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
     else:
         pass
 
 def stm_command(command,sender_queue):
-    if command[0] == "height":
-        item = "height:{0}\r\n".format(command[1])
+    if command[0] == "stm_init":
+        item = "init\r\n"
         print("[S] stm: %s" % item)
         sender_queue[3].put(item)
     elif command[0] == "right":
@@ -124,7 +167,7 @@ def stm_command(command,sender_queue):
         pass
 
 def sender(queue,ser):
-    print("sender start")
+#    print("sender start")
     while True:
         item = queue.get()
         if item is None:
@@ -136,7 +179,7 @@ def sender(queue,ser):
         queue.task_done()
     
 def reader(ser,number):
-    print("reader start")
+#    print("reader start")
     while ser.isOpen():
         line = ser.readline()
         if line is not None:
@@ -152,7 +195,9 @@ def player(scenario,sender_queue):
     for motion in scenario:
         print("motion :: %s" % motion) 
         for command in motion:
-            if command[0] == "right":
+            if command[0] == "stm_init":
+                stm_command(command,sender_queue)
+            elif command[0] == "right":
                 stm_command(command,sender_queue)
             elif  command[0] == "left":
                 stm_command(command,sender_queue)
@@ -160,9 +205,11 @@ def player(scenario,sender_queue):
                 arduino_command(command,sender_queue)
             elif  command[0] == "back":
                 arduino_command(command,sender_queue)
+            elif  command[0] == "wait":
+                time.sleep(command[1])
             else:
                 pass
-        time.sleep(1.0)
+        time.sleep(motion_interval)
 
 def main():
 
@@ -197,15 +244,15 @@ def main():
         sender_queue.append(queue.Queue())
         ser = stm_ser[i]
         ser.flush()
-        t = threading.Thread(target=sender,args=(sender_queue[i],ser,))
-        r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports),))
+        t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)],ser,))
+        r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports) ,))
         t.setDaemon(True)
         r.setDaemon(True)
         ts.append(t)
         rs.append(r)
         t.start()
         r.start()
-
+    
     print("************************************")
     print("         port set up end   !!       ")
     print("************************************")
@@ -217,8 +264,9 @@ def main():
     print("************************************")
 
     for i in range(scenario_repeat):
-        print("---- turn %1d ----" % (i+1))
+        print("---- turn %d / %d ----" % (i+1,scenario_repeat))
         player(scenario,sender_queue)
+        print("wait %d sec" %scenario_wait)
         time.sleep(scenario_wait)
 
     print("************************************")
@@ -226,32 +274,22 @@ def main():
     print("************************************")
 
     # stop sender queue
-       
-    sender_queue[0].put(None)
-    sender_queue[1].put(None)
-    sender_queue[2].put(None)    
-    sender_queue[3].put(None)
-
-    sender_queue[0].put(None)
-    sender_queue[1].put(None)
-    sender_queue[2].put(None)    
-    sender_queue[3].put(None)
-
-    sender_queue[0].put(None)
-    sender_queue[1].put(None)
-    sender_queue[2].put(None)    
-    sender_queue[3].put(None)
+    for _ in range(3):
+        for q in sender_queue:
+            q.put(None)
 
     # stop serial ports and threads
 
     for t in ts:
         t.join()
 
-    for ser in arduino_ser:
-        ser.close()
+    if len(arduino_ser):
+        for ser in arduino_ser:
+            ser.close()
 
-    for ser in stm_ser:
-        ser.close()
+    if len(stm_ser):
+        for ser in stm_ser:
+            ser.close()
 
     for r in rs:
         r.join()
