@@ -63,7 +63,7 @@ def setup():
     print(comlist)
     for port in comlist:
         print(port)
-        ser = serial.Serial(port, 115200,timeout=2)
+        ser = serial.Serial(port, 115200,timeout=2.0)
         line = ser.readline()
         ser.write(b"who:\r\n") 
         start_time = current_time = time.time()
@@ -98,11 +98,7 @@ def setup():
             current_time = time.time()
         
         ser.close()
-        
-#    print(temp_arduino_ports)
-#    print(sorted(temp_arduino_ports,key=lambda x:x[1]))
-    
-   
+          
     i = 0
     for port in sorted(temp_arduino_ports,key=lambda x:x[1]):
         arduino_ports.append(port[0])
@@ -117,7 +113,7 @@ def setup():
         for i in range(len(arduino_ports)):
             for _ in range(5):
                 try:
-                    s = serial.Serial(arduino_ports[i], 115200)
+                    s = serial.Serial(arduino_ports[i], 115200,timeout=2.0)
                     break
                 except (OSError, serial.SerialException):
                     time.sleep(1.0)
@@ -129,7 +125,7 @@ def setup():
         for i in range(len(stm_ports)):
             for _ in range(5):
                 try:
-                    s = serial.Serial(stm_ports[i], 115200)
+                    s = serial.Serial(stm_ports[i], 115200,timeout=2.0)
                     break
                 except (OSError, serial.SerialException):
                     time.sleep(1.0)
@@ -185,10 +181,13 @@ def reader(ser,number):
         try:
             line = ser.readline()
         except:
+            if number < len(arduino_ports):
+                print("arduino[%d] exception" %number)
+            else:
+                print("stm port exception")
             break
         else:
-            if line is not None:
-               #ser.flushInput()
+            if len(line) > 0:
                if number < len(arduino_ports):
                    print("[R] arduino[%d]: %s" %(number,line))
                else:
@@ -293,29 +292,18 @@ def main():
     # stop serial ports and threads
     for t in ts:
         t.join()
-    #print("sender done")
-    time.sleep(1.0)
 
     if len(arduino_ser):
         for ser in arduino_ser:
             ser.close()
-            time.sleep(3.0)
-    
-    #print("arduino ser closed")
 
     if len(stm_ser):
         for ser in stm_ser:
             ser.close()
-            time.sleep(3.0)
-
-    #print("stm ser closed")
     
-    #print("len(rs) %d" %(len(rs)))
     for r in rs:
         r.join()
-    
-    #print("reader closed")
-    
+       
     print("Done!!")
         
 
