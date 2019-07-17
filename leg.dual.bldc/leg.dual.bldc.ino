@@ -51,6 +51,8 @@ void setup()
 
   Serial.begin(115200);
   loadEROM();
+
+  
 }
 
 void pin_motor_setup(int index) {
@@ -94,6 +96,8 @@ uint16_t  iEROMCWDirect[MAX_MOTOR_CH] = {1,0};
 uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMZeroPosition[MAX_MOTOR_CH] = {0,0};
 
+bool bZeroPositionNearSmall[MAX_MOTOR_CH] = {false,false};
+
 
 
 void loadEROM1Byte(int address,uint8_t *dst) {
@@ -127,6 +131,9 @@ void loadEROM(void) {
 
   loadEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition);
   loadEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition);
+
+  bZeroPositionNearSmall[0] = abs(iEROMWheelMaxFront[0] -iEROMZeroPosition[0]) < abs(iEROMWheelMaxBack[0] -iEROMZeroPosition[0]);
+  bZeroPositionNearSmall[1] = abs(iEROMWheelMaxFront[1] -iEROMZeroPosition[1]) < abs(iEROMWheelMaxBack[1] -iEROMZeroPosition[1]);
 
 }
 
@@ -326,6 +333,8 @@ void runInfo(void) {
   resTex += String(iEROMPWMOffset[0]);
   resTex += ":zeroP0,";
   resTex += String(iEROMZeroPosition[0]);
+  resTex += ":nearsmall0,";
+  resTex += String(bZeroPositionNearSmall[0]);
   resTex += ":mb1,";
   resTex += String(iEROMWheelMaxBack[1]);      
   resTex += ":mf1,";
@@ -338,6 +347,8 @@ void runInfo(void) {
   resTex += String(iEROMPWMOffset[1]);
   resTex += ":zeroP1,";
   resTex += String(iEROMZeroPosition[1]);
+  resTex += ":nearsmall1,";
+  resTex += String(bZeroPositionNearSmall[1]);
   resTex += ":loglevel,";
   resTex += String(iEROMPWMLogLevel);
   responseTextTag(resTex);
@@ -437,7 +448,13 @@ void moveLegToPosition() {
 const float fMM2VolumeFactor = 1.1;
 int calcVolumeFromMM(int index,int mm) {
   int zeroP = iEROMZeroPosition[index];
-  int volume = fMM2VolumeFactor * (float)mm + zeroP;
+  int moveInVolume = 0;
+  if(bZeroPositionNearSmall[index]) {
+    moveInVolume = fMM2VolumeFactor * (float)mm;
+  } else {
+    moveInVolume = 0 - fMM2VolumeFactor * (float)mm;
+  }
+  int volume =  moveInVolume + zeroP;
   return volume;
 }
 

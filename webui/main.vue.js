@@ -364,6 +364,26 @@ function onUIChangeZeroPosition(elem) {
   }
 }
 
+function getLegIDUITool(elem) {
+  let channelElem = elem.parentElement.parentElement.parentElement.parentElement.parentElement.getElementsByTagName('span')[0];
+  console.log('getChannelUITool channelElem=<', channelElem,'>');
+  return parseInt(channelElem.textContent.replace('Channel of ','').trim());
+}
+
+
+function onUIMovePosition(elem) {
+  console.log('onUIMovePosition elem=<', elem,'>');
+  let xmm = getInputUITool(elem);
+  console.log('onUIMovePosition xmm=<', xmm,'>');
+  let leg = getLegIDUITool(elem);
+  console.log('onUIMovePosition leg=<', leg,'>');
+  if(!isNaN(leg) && !isNaN(xmm)) {
+    let moveP = 'legM:id,' + leg + ':xmm,' + xmm + '\r\n';
+    console.log('onUIMovePosition moveP=<', moveP,'>');
+    ws.send(moveP);
+  }
+}
+
 
 function onUIChangeLogLevel(elem) {
   console.log('onUIChangeLogLevel elem=<', elem,'>');

@@ -67,7 +67,7 @@ Vue.component('ui-motor-channel', {
 
 
               <div class="row justify-content-center">
-                <div class="col-4">
+                <div class="col-3">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">{{ channel.zero }}</span>
@@ -79,7 +79,19 @@ Vue.component('ui-motor-channel', {
                     <input type="text" class="form-control" placeholder="zero position">
                   </div>
                 </div>
-                <div class="col-4">
+                <div class="col-3">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">?</span>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIMovePosition(this)">
+                        <i class="fas fa-running"></i>
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="move to mm">
+                  </div>
+                </div>
+                <div class="col-3">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">{{ channel.log }}</span>
@@ -91,6 +103,10 @@ Vue.component('ui-motor-channel', {
                     <input type="text" class="form-control" placeholder="log level">
                   </div>
                 </div>
+                
+                <div class="col-3">
+                </div>
+                
               </div>
 
 
