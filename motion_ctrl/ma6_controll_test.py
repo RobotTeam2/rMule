@@ -74,7 +74,7 @@ def setup():
     print(comlist)
     for port in comlist:
         print(port)
-        ser = serial.Serial(port, 115200,timeout=2)
+        ser = serial.Serial(port, 115200,timeout=1.0)
         start = datetime.now();
         while True:
             line = ser.readline()
@@ -99,7 +99,7 @@ def setup():
                     break
             end = datetime.now();
             escape = end - start;
-            if escape.total_seconds() > 16 :
+            if escape.total_seconds() > 5 :
                 break;
             print(escape.total_seconds())
         ser.close()
