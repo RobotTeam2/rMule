@@ -1,28 +1,17 @@
-const util = require('util');
-const graphviz = require('graphviz');
-const fs=require("fs");
 
-
-module.exports = class NetJson2Dot {
+module.exports = class JsonNetLoader {
   constructor(netJson) {
-    this.netGraph_ = graphviz.graph(netJson.name);
     this.netJson_ = netJson;
+    this.layerWeight_ = {};
+    this.layerBias_ = {};
     this.createLayer_();
     this.joinLayer_();
   }
-  write() {
-    const netDot = this.netGraph_.to_dot();
-    //console.log('::netDot=<',netDot,'>');
-    fs.writeFileSync('./network_' + this.netJson_.name+ '.dot',netDot);    
-  }
-  
-  
-  
+    
   createLayer_() {
     for(let layerKey in this.netJson_.layers) {
       //console.log('::layerKey=<',layerKey,'>');
-      const layerCluster = this.netGraph_.addCluster( layerKey);
-      this.addLayerNodes_(layerKey,layerCluster);
+      this.addLayerNodes_(layerKey);
     }    
   }
   joinLayer_() {
@@ -32,119 +21,35 @@ module.exports = class NetJson2Dot {
     }    
   }
   
-  addLayerNodes_(layerkey,graph){
-    const nodeAttr = {
-        label:'',
-        color:'darkgreen',
-        shape :'"circle"'
-    };
-    if(layerkey === 'input') {
-      nodeAttr.color = 'blue';
-    }
-    if(layerkey === 'output') {
-      nodeAttr.color = 'red';
-    }
+  addLayerNodes_(layerkey){
     let layerJson = this.netJson_.layers[layerkey];
     for(let i = 0;i < layerJson.width ;i++) {
-      if(layerJson.label) {
-        nodeAttr.label = layerJson.label + i;
-      }
-      graph.addNode( layerkey + '_' + i,nodeAttr);
     }
   }
 
   connectLayerNodes_(layerKey) {
     //console.log('connectLayer::layerKey=<',layerKey,'>');
     let layer = this.netJson_.layers[layerKey];
-    //console.log('connectLayer::layer=<',layer,'>');
+    console.log('connectLayer::layer=<',layer,'>');
     if(layer.left) {
-      //console.log('connectLayer::layer.left=<',layer.left,'>');
+      console.log('connectLayer::layer.left=<',layer.left,'>');
       let layerLeft = this.netJson_.layers[layer.left];
-      //console.log('connectLayer::layerLeft=<',layerLeft,'>');
-      let clusterMine = this.netGraph_.getCluster( layerKey);
-      let clusterLeft = this.netGraph_.getCluster( layer.left);
-      //console.log('connectLayer::clusterMine=<',clusterMine,'>');
-      //console.log('connectLayer::clusterLeft=<',clusterLeft,'>');
-      for(let nodeIdLeft in clusterLeft.nodes.items) {
-        //console.log('connectLayer::nodeIdLeft=<',nodeIdLeft,'>');
-        let nodeLeft = clusterLeft.getNode(nodeIdLeft);
-        //console.log('connectLayer::nodeLeft=<',nodeLeft,'>');
-        for(let nodeIdMine in clusterMine.nodes.items) {
-          //console.log('connectLayer::nodeIdMine=<',nodeIdMine,'>');
-          let nodeMine = clusterMine.getNode(nodeIdMine);
-          //console.log('connectLayer::nodeMine=<',nodeMine,'>');
-          this.netGraph_.addEdge(nodeLeft,nodeMine);
+      console.log('connectLayer::layerLeft=<',layerLeft,'>');
+      let wMatrix = [];
+      let bMatrix = [];
+      for(let i = 0;i < layer.width;i++) {
+        let wVector = [];
+        let bVector = [];
+        for(let j = 0;j < layerLeft.width;j++) {
+          wVector.push(0.1);
+          bVector.push(0.000001);
         }
+        wMatrix.push(wVector);
+        bMatrix.push(bVector);
       }
+      this.layerWeight_[layerKey] = wMatrix;
+      this.layerBias_[layerKey] = bMatrix;
     }
   }
 
 };
-
-/*
-const netGraph = graphviz.graph(netJson.name);
-
-const addLayerToDot = (layerkey,graph) => {
-  const nodeAttr = {
-      label:'',
-      color:'darkgreen',
-      shape :'"circle"'
-  };
-  if(layerkey === 'input') {
-    nodeAttr.color = 'blue';
-  }
-  if(layerkey === 'output') {
-    nodeAttr.color = 'red';
-  }
-  let layerJson = netJson.layers[layerkey];
-  for(let i = 0;i < layerJson.width ;i++) {
-    if(layerJson.label) {
-      nodeAttr.label = layerJson.label + i;
-    }
-    graph.addNode( layerkey + '_' + i,nodeAttr);
-  }
-};
-
-
-for(let layerKey in netJson.layers) {
-  //console.log('::layerKey=<',layerKey,'>');
-  const layerCluster = netGraph.addCluster( layerKey);
-  addLayerToDot(layerKey,layerCluster);
-}
-
-const connectLayerToDot = (layerKey) => {
-  //console.log('connectLayer::layerKey=<',layerKey,'>');
-  let layer = netJson.layers[layerKey];
-  //console.log('connectLayer::layer=<',layer,'>');
-  if(layer.left) {
-    //console.log('connectLayer::layer.left=<',layer.left,'>');
-    let layerLeft = netJson.layers[layer.left];
-    //console.log('connectLayer::layerLeft=<',layerLeft,'>');
-    let clusterMine = netGraph.getCluster( layerKey);
-    let clusterLeft = netGraph.getCluster( layer.left);
-    //console.log('connectLayer::clusterMine=<',clusterMine,'>');
-    //console.log('connectLayer::clusterLeft=<',clusterLeft,'>');
-    for(let nodeIdLeft in clusterLeft.nodes.items) {
-      //console.log('connectLayer::nodeIdLeft=<',nodeIdLeft,'>');
-      let nodeLeft = clusterLeft.getNode(nodeIdLeft);
-      //console.log('connectLayer::nodeLeft=<',nodeLeft,'>');
-      for(let nodeIdMine in clusterMine.nodes.items) {
-        //console.log('connectLayer::nodeIdMine=<',nodeIdMine,'>');
-        let nodeMine = clusterMine.getNode(nodeIdMine);
-        //console.log('connectLayer::nodeMine=<',nodeMine,'>');
-        netGraph.addEdge(nodeLeft,nodeMine);
-      }
-    }
-  }
-}
-
-for(let layerKey in netJson.layers) {
-  //console.log('::layerKey=<',layerKey,'>');
-  connectLayerToDot(layerKey);
-}
-
-
-const netDot = netGraph.to_dot();
-//console.log('::netDot=<',netDot,'>');
-fs.writeFileSync('./network.dot',netDot);
-*/
