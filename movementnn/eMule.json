@@ -2,25 +2,33 @@
   "name":"eMule",
   "layers" :{
     "input": {
-      "width":6
+      "width":6,
+      "label":"pwm"
     },
     "layer1": {
       "left":"input",
-      "width":4,
+      "width":5,
       "right":"layer2"
     },
     "layer2": {
       "left":"layer1",
-      "width":3,
+      "width":4,
       "right":"layer3"
     },
     "layer3": {
       "left":"layer2",
+      "width":3,
+      "right":"output"
+    },
+    "layer4": {
+      "left":"layer3",
       "width":2,
       "right":"output"
     },
     "output":{
-      "width":1
+      "left":"layer4",
+      "width":1,
+      "label":"imu"
     }
   }
 }
