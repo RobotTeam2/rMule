@@ -30,11 +30,11 @@ module.exports = class JsonNetLoader {
   connectLayerNodes_(layerKey) {
     //console.log('connectLayer::layerKey=<',layerKey,'>');
     let layer = this.netJson_.layers[layerKey];
-    console.log('connectLayer::layer=<',layer,'>');
+    //console.log('connectLayer::layer=<',layer,'>');
     if(layer.left) {
-      console.log('connectLayer::layer.left=<',layer.left,'>');
+      //console.log('connectLayer::layer.left=<',layer.left,'>');
       let layerLeft = this.netJson_.layers[layer.left];
-      console.log('connectLayer::layerLeft=<',layerLeft,'>');
+      //console.log('connectLayer::layerLeft=<',layerLeft,'>');
       let wMatrix = [];
       let bMatrix = [];
       for(let i = 0;i < layer.width;i++) {
