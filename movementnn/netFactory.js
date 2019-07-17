@@ -13,7 +13,7 @@ module.exports = class NetJson2Dot {
   write() {
     const netDot = this.netGraph_.to_dot();
     //console.log('::netDot=<',netDot,'>');
-    fs.writeFileSync('./dotnetwork_' + this.netJson_.name+ '.dot',netDot);    
+    fs.writeFileSync('./network_' + this.netJson_.name+ '.dot',netDot);    
   }
   
   
