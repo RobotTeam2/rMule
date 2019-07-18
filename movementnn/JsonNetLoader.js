@@ -2,6 +2,7 @@
 module.exports = class JsonNetLoader {
   constructor(netJson) {
     this.netJson_ = netJson;
+    this.layerStats_ = {};
     this.layerWeight_ = {};
     this.layerBias_ = {};
     this.createLayer_();
@@ -21,10 +22,13 @@ module.exports = class JsonNetLoader {
     }    
   }
   
-  addLayerNodes_(layerkey){
-    let layerJson = this.netJson_.layers[layerkey];
+  addLayerNodes_(layerKey){
+    let layerJson = this.netJson_.layers[layerKey];
+    this.layerStats_[layerKey] = new Array(layerJson.width);
+    /*
     for(let i = 0;i < layerJson.width ;i++) {
     }
+    */
   }
 
   connectLayerNodes_(layerKey) {

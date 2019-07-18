@@ -1,2 +1,4 @@
 dotnetwork_*.dot
 dotnetwork_*.png
+dumpout
+node_modules

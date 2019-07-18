@@ -4,7 +4,8 @@
   "description": "",
   "main": "net.js",
   "dependencies": {
-    "graphviz": "0.0.9"
+    "graphviz": "0.0.9",
+    "opencv4nodejs": "^5.1.0"
   },
   "devDependencies": {},
   "scripts": {

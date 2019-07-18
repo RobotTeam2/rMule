@@ -3,6 +3,8 @@
   "layers" :{
     "input": {
       "width":9,
+      "x":3,
+      "y":3,
       "label":"3x3_mono"
     },
     "layer1": {

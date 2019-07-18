@@ -8,4 +8,13 @@ netOfDot.write();
 
 const JsonNetLoader = require('./JsonNetLoader.js');
 const net = new JsonNetLoader(netJson);
-console.log('::net=<',JSON.stringify(net,undefined,true),'>');
+//console.log('::net=<',JSON.stringify(net,undefined,true),'>');
+
+const ImageLoaderCV = require('./ImageLoaderCV.js');
+const img = new ImageLoaderCV('./input/IMG_6043.JPG',net);
+const inputVectors = img.crash();
+//console.log('::inputVectors=<',inputVectors,'>');
+const PreTrain = require('./PreTrain.js');
+const pre = new PreTrain(net);
+pre.step(inputVectors);
+
