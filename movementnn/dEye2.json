@@ -1,0 +1,28 @@
+{
+  "name":"dEye2",
+  "layers" :{
+    "input": {
+      "width":16,
+      "x":4,
+      "y":4,
+      "label":"3x3_mono"
+    },
+    "layer1": {
+      "left":"input",
+      "width":7
+    },
+    "layer2": {
+      "left":"layer1",
+      "width":5
+    },
+    "layer3": {
+      "left":"layer2",
+      "width":3
+    },
+    "output":{
+      "left":"layer3",
+      "width":5,
+      "label":"line_direct"
+    }
+  }
+}

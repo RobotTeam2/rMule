@@ -3,6 +3,7 @@ module.exports = class JsonNetLoader {
   constructor(netJson) {
     this.netJson_ = netJson;
     this.layerStats_ = {};
+    this.layerVertex_ = {};
     this.layerWeight_ = {};
     this.layerBias_ = {};
     this.createLayer_();
@@ -41,18 +42,23 @@ module.exports = class JsonNetLoader {
       //console.log('connectLayer::layerLeft=<',layerLeft,'>');
       let wMatrix = [];
       let bMatrix = [];
+      let vMatrix = [];
       for(let i = 0;i < layer.width;i++) {
         let wVector = [];
         let bVector = [];
+        let vVector = [];
         for(let j = 0;j < layerLeft.width;j++) {
           wVector.push(0.1);
           bVector.push(0.000001);
+          vVector.push(Math.random());
         }
         wMatrix.push(wVector);
         bMatrix.push(bVector);
+        vMatrix.push(vVector);
       }
       this.layerWeight_[layerKey] = wMatrix;
       this.layerBias_[layerKey] = bMatrix;
+      this.layerVertex_[layerKey] = vMatrix;
     }
   }
 

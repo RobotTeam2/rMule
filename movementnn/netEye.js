@@ -12,7 +12,7 @@ const net = new JsonNetLoader(netJson);
 
 const ImageLoaderCV = require('./ImageLoaderCV.js');
 const img = new ImageLoaderCV('./input/IMG_6043.JPG',net);
-const inputVectors = img.crash();
+const inputVectors = img.crashRed();
 //console.log('::inputVectors=<',inputVectors,'>');
 const PreTrain = require('./PreTrain.js');
 const pre = new PreTrain(net);

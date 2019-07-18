@@ -1,4 +1,6 @@
 
+const fs=require("fs");
+
 module.exports = class PreTrain {
   constructor(net) {
     this.net_ = net;
@@ -24,6 +26,7 @@ module.exports = class PreTrain {
           }
         } else {
           inputStats[i] = new Array(255);
+          inputStats[i].fill(0);
         }
         /*
         if(typeof inputStats[i][pixel] === 'undefined') {
@@ -34,6 +37,7 @@ module.exports = class PreTrain {
         */
       } 
     }
-    //console.log('PreTrain::step this.net_=<',JSON.stringify(this.net_,undefined,'  '),'>');
+    console.log('PreTrain::step this.net_=<',JSON.stringify(this.net_,undefined,'  '),'>');
+    fs.writeFileSync('./modelnetwork_' + this.net_.netJson_.name+ '.model',JSON.stringify(this.net_,undefined,'  '));
   }  
 };
