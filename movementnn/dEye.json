@@ -1,30 +1,26 @@
 {
-  "name":"eMule",
+  "name":"dEye",
   "layers" :{
     "input": {
-      "width":6,
-      "label":"pwm"
+      "width":9,
+      "label":"3x3_mono"
     },
     "layer1": {
       "left":"input",
-      "width":5
+      "width":7
     },
     "layer2": {
       "left":"layer1",
-      "width":4
+      "width":5
     },
     "layer3": {
       "left":"layer2",
       "width":3
     },
-    "layer4": {
-      "left":"layer3",
-      "width":2
-    },
     "output":{
-      "left":"layer4",
-      "width":1,
-      "label":"imu"
+      "left":"layer3",
+      "width":5,
+      "label":"line_direct"
     }
   }
 }

@@ -13,7 +13,9 @@ module.exports = class NetJson2Dot {
   write() {
     const netDot = this.netGraph_.to_dot();
     //console.log('::netDot=<',netDot,'>');
-    fs.writeFileSync('./dotnetwork_' + this.netJson_.name+ '.dot',netDot);    
+    fs.writeFileSync('./dotnetwork_' + this.netJson_.name+ '.dot',netDot);
+    this.netGraph_.setGraphVizPath( 'D:/program/graphbiz/bin/' );
+    this.netGraph_.output( 'png', './dotnetwork_' + this.netJson_.name+ '.png' );
   }
   
   
