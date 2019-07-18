@@ -28,9 +28,9 @@ module.exports = class ImageLoaderCV {
     return this.crashChannel_(this.rMat_);
   }
   
-  dumpClips_(blockPixs) {
+  dumpClips_(blockPixs,channelMat) {
     let counter = 0;
-    cv.imwrite('./dumpout/img_grid-' + counter++ + '.png', this.grayMat_);
+    cv.imwrite('./dumpout/img_channel-' + counter++ + '.png', channelMat);
     for(let block of blockPixs) {
       console.log('ImageLoaderCV::dumpClips_ block=<',block,'>');
       const whiteMat = new cv.Mat(Buffer.from(block),this.inputLayer_.y, this.inputLayer_.x, cv.CV_8UC1);
@@ -65,7 +65,7 @@ module.exports = class ImageLoaderCV {
         blockPixs.push(localPixs);
       }
     }
-    //this.dumpClips_(blockPixs);
+    this.dumpClips_(blockPixs,channelMat);
     return blockPixs;
   }
 };
