@@ -132,8 +132,26 @@ void loadEROM(void) {
   loadEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition);
   loadEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition);
 
-  bZeroPositionNearSmall[0] = abs(iEROMWheelMaxFront[0] -iEROMZeroPosition[0]) < abs(iEROMWheelMaxBack[0] -iEROMZeroPosition[0]);
-  bZeroPositionNearSmall[1] = abs(iEROMWheelMaxFront[1] -iEROMZeroPosition[1]) < abs(iEROMWheelMaxBack[1] -iEROMZeroPosition[1]);
+  //DUMP_VAR(iEROMWheelMaxFront[0]);
+  //DUMP_VAR(iEROMZeroPosition[0]);
+  //DUMP_VAR(iEROMWheelMaxBack[0]);
+  
+  int16_t mfDist0 = iEROMWheelMaxFront[0] - iEROMZeroPosition[0];
+  int16_t mbDist0 = iEROMWheelMaxBack[0] - iEROMZeroPosition[0];
+  //DUMP_VAR(mfDist0);
+  //DUMP_VAR(mbDist0);
+  bZeroPositionNearSmall[0] = mfDist0 * mfDist0 <= mbDist0 * mbDist0;
+
+
+  //DUMP_VAR(iEROMWheelMaxFront[0]);
+  //DUMP_VAR(iEROMZeroPosition[0]);
+  //DUMP_VAR(iEROMWheelMaxBack[0]);
+
+  int16_t mfDist1 = iEROMWheelMaxFront[1]- iEROMZeroPosition[1];
+  int16_t mbDist1 = iEROMWheelMaxBack[1] - iEROMZeroPosition[1];
+  //DUMP_VAR(mfDist1);
+  //DUMP_VAR(mbDist1);
+  bZeroPositionNearSmall[1] = mfDist1 * mfDist1 <= mbDist1 * mbDist1;
 
 }
 
@@ -445,7 +463,9 @@ void moveLegToPosition() {
   resTex += "legM:0";
   responseTextTag(resTex);
 }
-const float fMM2VolumeFactor = 1.1;
+
+
+const float fMM2VolumeFactor = 0.5;
 int calcVolumeFromMM(int index,int mm) {
   int zeroP = iEROMZeroPosition[index];
   int moveInVolume = 0;
