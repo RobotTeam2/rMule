@@ -115,10 +115,23 @@ Vue.component('ui-motor-channel', {
                     <input type="text" class="form-control" placeholder="log level">
                   </div>
                 </div>
-                
-                
               </div>
 
+
+              <div class="row justify-content-center">
+                <div class="col-3">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">{{ channel.startdelay }}</span>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangeStartDelay(this)">
+                        <i class="fas fa-wave-square"></i>
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="start delay">
+                  </div>
+                </div>
+              </div>
 
               <div class="row justify-content-start mt-2">
                 <div class="col-3">

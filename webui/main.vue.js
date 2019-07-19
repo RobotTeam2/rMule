@@ -72,6 +72,7 @@ onLegInfo = (info) => {
     channelInfo.pwmoffset = info.pw0;
     channelInfo.payloadpwmoffset = info.pl0;
     channelInfo.zero = info.zp0;
+    channelInfo.startdelay = info.sd0;
     channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
@@ -88,6 +89,7 @@ onLegInfo = (info) => {
     channelInfo.pwmoffset = info.pw1;
     channelInfo.payloadpwmoffset = info.pl1;
     channelInfo.zero = info.zp1;
+    channelInfo.startdelay = info.sd1;
     channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
@@ -365,6 +367,21 @@ function onUIChangePayloadPWMOffset(elem) {
     ws.send(pwm);
   }
 }
+
+
+function onUIChangeStartDelay(elem) {
+  console.log('onUIChangeStartDelay elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangeStartDelay limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangeStartDelay channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let startdelay = 'setting:startdelay' + channel + ',' + limit + '\n';
+    console.log('onUIChangeStartDelay startdelay=<', startdelay,'>');
+    ws.send(startdelay);
+  }
+}
+
 
 
 function onUIChangeZeroPosition(elem) {

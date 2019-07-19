@@ -86,6 +86,7 @@ const int  iEROMCWDirectAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 10,iEROM
 const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iEROMLegIdAddress[1] + 16};
 const int  iEROMZeroPositionAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 18,iEROMLegIdAddress[1] + 20};
 const int  iEROMPayloadPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 22,iEROMLegIdAddress[1] + 24};
+const int  iEROMStartDelayAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 26,iEROMLegIdAddress[1] + 28};
 
 const int  iEROMPWMLogLevelAddress = iEROMLegIdAddress[1] + 256;
 
@@ -97,6 +98,7 @@ uint16_t  iEROMCWDirect[MAX_MOTOR_CH] = {1,0};
 uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMZeroPosition[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMPayloadPWMOffset[MAX_MOTOR_CH] = {0,0};
+uint16_t  iEROMStartDelay[MAX_MOTOR_CH] = {0,0};
 
 bool bZeroPositionNearSmall[MAX_MOTOR_CH] = {false,false};
 
@@ -136,6 +138,9 @@ void loadEROM(void) {
 
   loadEROM2Byte(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
   loadEROM2Byte(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
+
+  loadEROM2Byte(0,iEROMStartDelayAddress,iEROMStartDelay);
+  loadEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay);
 
   //DUMP_VAR(iEROMWheelMaxFront[0]);
   //DUMP_VAR(iEROMZeroPosition[0]);
@@ -211,6 +216,9 @@ void runSetting(void) {
   saveEROM2Byte(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm0,");
   saveEROM2Byte(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm1,");
 
+  saveEROM2Byte(0,iEROMStartDelayAddress,iEROMStartDelay,":startdelay0,");
+  saveEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay,":startdelay1,");
+
 }
 
 
@@ -278,10 +286,22 @@ void runSerialCommand(void) {
 
 void responseTextTag(String &res) {
   res = "&$" + res;
-  res += "&$";
-  res += "\r\n";
+  res += "&$\r\n";
   Serial.print(res);
 }
+
+void responseTextContinue(String &res) {
+  res = "&$" + res;
+  Serial.print(res);
+}
+
+void responseTextFinnish(String &res) {
+  res = res;
+  res += "&$\r\n";
+  Serial.print(res);
+}
+
+
 void run_simple_command(void) {
   if(gSerialInputCommand=="uu") {
     speed_wheel[0] -= 5;
@@ -363,6 +383,10 @@ void runInfo(void) {
   resTex += String(bZeroPositionNearSmall[0]);
   resTex += ":pl0,";
   resTex += String(iEROMPayloadPWMOffset[0]);
+  resTex += ":sd0,";
+  resTex += String(iEROMStartDelay[0]);
+  responseTextContinue(resTex);
+  resTex = "";
   resTex += ":mb1,";
   resTex += String(iEROMWheelMaxBack[1]);      
   resTex += ":mf1,";
@@ -379,9 +403,11 @@ void runInfo(void) {
   resTex += String(bZeroPositionNearSmall[1]);
   resTex += ":pl1,";
   resTex += String(iEROMPayloadPWMOffset[1]);
+  resTex += ":sd1,";
+  resTex += String(iEROMStartDelay[1]);
   resTex += ":lv,";
   resTex += String(iEROMPWMLogLevel);
-  responseTextTag(resTex);
+  responseTextFinnish(resTex);
 }
 
 void whois(void) {
@@ -548,6 +574,7 @@ const int iConstStarSpeed = 254;
 
 int iTargetVolumePostionWheel[MAX_MOTOR_CH] = {0,0};
 int iTargetVolumePayload[MAX_MOTOR_CH] = {0,0};
+int iTargetVolumeStartDelay[MAX_MOTOR_CH] = {0,0};
 void runWheelVolume(int distPostion,int index,int payload) {
   {
     String resTex;
@@ -588,7 +615,10 @@ void runWheelVolume(int distPostion,int index,int payload) {
     bForwardRunWheel = !iEROMCWDirect[index];;
   }
   DUMP_VAR(bForwardRunWheel);
-  runWheel(iConstStarSpeed,bForwardRunWheel,index);
+  iTargetVolumeStartDelay[index] = iEROMStartDelay[index];
+  if(iTargetVolumeStartDelay[index] < 1) {
+    runWheel(iConstStarSpeed,bForwardRunWheel,index);
+  }
   iTargetVolumePayload[index] = payload;
 }
 
@@ -668,6 +698,10 @@ void calcWheelTarget(int index) {
       root["bIsRunWheelByVolume"] = bIsRunWheelByVolume;
       repsponseJson(doc);
   }*/
+  if(iTargetVolumeStartDelay[index] > 0) {
+    return;
+  }
+
   
   bool bForwardRunWheel;
   if(moveDiff > 0) {
@@ -692,7 +726,11 @@ void calcWheelTarget(int index) {
     speed = iConstStarSpeed;
   }
   DUMP_VAR(speed);
+  if(iTargetVolumeStartDelay[index] == 0) {
+    speed = iConstStarSpeed;
+  }
   runWheel(speed,bForwardRunWheel,index);
+  iTargetVolumeStartDelay[index]--;
 }
 
 
