@@ -14,7 +14,7 @@
 ### format:
     legM:id,<id number>:xmm,<target position in mm>:payload,<0,1>\r\n  
 ### format short:
-    M:id,<id number>:xm,<target position in mm>:pl,<0,1>\r\n  
+    M:i,<id number>:x,<target position in mm>:p,<0,1>\r\n  
 #### direction:  
     Host -> Arduino  
 ### response:
