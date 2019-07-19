@@ -3,7 +3,7 @@
    relative x posion of one leg in mm  
 
 
-## read leg id
+## read board info
 ### format:
     who:\r\n
 #### direction:
