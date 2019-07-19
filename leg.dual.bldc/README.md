@@ -10,9 +10,11 @@
     Host -> Arduino
 ### response:
     who:ch0,<id number>:ch1,<id number>\r\n   
-## move leg
+## move leg  
 ### format:
-    legM:id,<id number>:xmm,<target position in mm>\r\n  
+    legM:id,<id number>:xmm,<target position in mm>:payload,<0,1>\r\n  
+### format short:
+    M:id,<id number>:xm,<target position in mm>:pl,<0,1>\r\n  
 #### direction:  
     Host -> Arduino  
 ### response:
