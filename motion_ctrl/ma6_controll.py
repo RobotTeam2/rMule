@@ -5,27 +5,61 @@ import serial
 import re
 import threading
 import queue
+import os
+
+log_enable = True
 
 motor_id_mapping = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
+
+#
+#         Front
+#        +-----+
+#  0:"2" |     | 3:"5"
+#  1:"3" |     | 4:"6"
+#  2:"4" |     | 5:"7"
+#        +-----+
+#         Back
+#
+#  right: 0:"2",4:"6",2:"4"
+#  left : 3:"5",1:"3",5:"7"
+#  
+
 arduino_id_mapping = {}
 
-scenario = [
-            [["stm_init"]],
-            [["wait",3.0]],
-            [["right"]],
-            [["forward",0],["back",1],["forward",2],["back",3],["forward",4],["back",5]],
-            [["left"]],
-            [["back",0],["forward",1],["back",2],["forward",3],["back",4],["forward",5]]
-           ]
+scenario_init = [
+    [["stm_init"]],
+    [["wait",5.0]]
+]
+
+scenario_walk = [
+    [["right"]], # up:0 "2""6""4" -> 0,4,2
+
+    [["wait",5.0]],
+
+    [["move",0,0,0],  ["move",3,150,1],
+     ["move",1,150,1],["move",4,0,0],
+     ["move",2,0,0],  ["move",5,150,1]],
+    
+    [["wait",5.0]],
+
+    [["left"]], # up:0 "5""3""7" -> 3,1,5
+    [["wait",5.0]],
+
+    [["move",0,150,1],  ["move",3,0,0],
+     ["move",1,0,0],    ["move",4,150,1],
+     ["move",2,150,1],  ["move",5,0,0]],
+
+    [["wait",5.0]]
+]
 
 scenario_repeat = 5
-scenario_wait = 2.0
-motion_interval = 2.0
 
 arduino_ports = []
 stm_ports = []
 arduino_ser = []
 stm_ser = []
+print_lock = threading.Lock()
+
 
 def serial_ports():
     """ Lists serial port names
@@ -134,35 +168,45 @@ def setup():
             stm_ser.append(s)
 
 
-def arduino_command(command,sender_queue):
-    if command[0] == "forward":
-        item = "legM:id,{0}:xmm,0\r\n".format(motor_id_mapping[command[1]])
-        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]] ,item))
-        sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
-    elif  command[0] == "back":
-        item = "legM:id,{0}:xmm,150\r\n".format(motor_id_mapping[command[1]])
-        print("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]],item))
+def arduino_command(command,sender_queue,log_file):
+    if command[0] == "move":
+        item = "legM:id,{0}:xmm,{1}:payload,{2}\r\n".format(motor_id_mapping[command[1]],command[2],command[3])
         sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
     else:
+        item = "None"
         pass
+    
+    print_lock.acquire()
+    print("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]] ,item))
+    if log_enable:
+        log_file.write("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]] ,item))
+        log_file.write("\n")
+    print_lock.release()
+    time.sleep(0.005)
 
-def stm_command(command,sender_queue):
+def stm_command(command,sender_queue,log_file):
     if command[0] == "stm_init":
         item = "init\r\n"
-        print("[S] stm: %s" % item)
         sender_queue[3].put(item)
     elif command[0] == "right":
         item = "right\r\n"
-        print("[S] stm: %s" % item)
         sender_queue[3].put(item)
     elif command[0] == "left":
         item = "left\r\n"
-        print("[S] stm: %s" % item)
         sender_queue[3].put(item)
     else:
+        item = "None"
         pass
+    
+    print_lock.acquire()
+    print("[S] stm: %s" % item)
+    if log_enable:
+        log_file.write("[S] stm: %s" % item)
+        log_file.write("\n")
+    print_lock.release()
+    time.sleep(0.002)
 
-def sender(queue,ser):
+def sender(queue,ser,log_file):
 #    print("sender start")
     while True:
         item = queue.get()
@@ -172,53 +216,85 @@ def sender(queue,ser):
         ser.write(item.encode('utf-8')) 
 #        print(item.encode('utf-8'))
         while ser.out_waiting > 0:
-            time.sleep(0.001)
+            time.sleep(0.002)
 
     
-def reader(ser,number):
+def reader(ser,number,log_file):
 #    print("reader start")
     while ser.isOpen():
         try:
             line = ser.readline()
+            time.sleep(0.001)
         except:
             if number < len(arduino_ports):
+                print_lock.acquire()
                 print("arduino[%d] exception" %number)
+                if log_enable:
+                    log_file.write("arduino[%d] exception" %number)
+                    log_file.write("\n")
+                print_lock.release()
             else:
+                print_lock.acquire()
                 print("stm port exception")
+                if log_enable:
+                    log_file.write("stm port exception")
+                    log_file.write("\n")
+                print_lock.release()
             break
         else:
             if len(line) > 0:
-               if number < len(arduino_ports):
-                   print("[R] arduino[%d]: %s" %(number,line))
-               else:
-                   print("[R] stm: %s" % line)
-               time.sleep(0.005)
+                if number < len(arduino_ports):
+                    print_lock.acquire()
+                    print("[R] arduino[%d]: %s" %(number,line))
+                    if log_enable:
+                        log_file.write("[R] arduino[%d]: %s" %(number,line))
+                        log_file.write("\n")
+                    print_lock.release()
+                else:
+                    print_lock.acquire()
+                    print("[R] stm: %s" % line)
+                    if log_enable:
+                        log_file.write("[R] stm: %s" % line)
+                        log_file.write("\n")
+                    print_lock.release()
+                time.sleep(0.001)
 
     if number < len(arduino_ports):
+        print_lock.acquire()
         print("arduino[%d] port closed" %number)
+        if log_enable:
+            log_file.write("arduino[%d] port closed" %number)
+            log_file.write("\n")
+        print_lock.release()
     else:
+        print_lock.acquire()
         print("stm port closed")
+        if log_enable:
+            log_file.write("stm port closed")
+            log_file.write("\n")
+        print_lock.release()
 
-
-def player(scenario,sender_queue):
+def player(scenario,sender_queue,log_file):
     for motion in scenario:
+        print_lock.acquire()
         print("motion :: %s" % motion) 
+        if log_enable:
+            log_file.write("motion :: %s" % motion)
+            log_file.write("\n")
+        print_lock.release()
         for command in motion:
             if command[0] == "stm_init":
-                stm_command(command,sender_queue)
+                stm_command(command,sender_queue,log_file)
             elif command[0] == "right":
-                stm_command(command,sender_queue)
+                stm_command(command,sender_queue,log_file)
             elif  command[0] == "left":
-                stm_command(command,sender_queue)
-            elif  command[0] == "forward":
-                arduino_command(command,sender_queue)
-            elif  command[0] == "back":
-                arduino_command(command,sender_queue)
+                stm_command(command,sender_queue,log_file)
+            elif  command[0] == "move":
+                arduino_command(command,sender_queue,log_file)
             elif  command[0] == "wait":
                 time.sleep(command[1])
             else:
                 pass
-        time.sleep(motion_interval)
 
 def main():
 
@@ -230,6 +306,14 @@ def main():
 
     setup()
 
+    # log file open
+    if log_enable:
+        os.makedirs("./log",exist_ok=True)
+        file_name = "./log/log-" + time.strftime("%Y%m%d-%H%M%S", time.strptime(time.ctime()))+".txt"
+        log_file = open(file_name,'w')
+    else:
+        log_file = None
+
     # start threads
 
     sender_queue = []
@@ -240,8 +324,8 @@ def main():
         sender_queue.append(queue.Queue())
         ser = arduino_ser[i]
         ser.flush()
-        t = threading.Thread(target=sender,args=(sender_queue[i],ser,))
-        r = threading.Thread(target=reader,args=(ser,i,))
+        t = threading.Thread(target=sender,args=(sender_queue[i],ser,log_file,))
+        r = threading.Thread(target=reader,args=(ser,i,log_file,))
         t.setDaemon(True)
         r.setDaemon(True)
         ts.append(t)
@@ -253,8 +337,8 @@ def main():
         sender_queue.append(queue.Queue())
         ser = stm_ser[i]
         ser.flush()
-        t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)],ser,))
-        r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports) ,))
+        t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)],ser,log_file,))
+        r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports) ,log_file,))
         t.setDaemon(True)
         r.setDaemon(True)
         ts.append(t)
@@ -272,11 +356,22 @@ def main():
     print("         scenario start !!          ")
     print("************************************")
 
+    print_lock.acquire()
+    print("---- init ----")
+    if log_enable:
+        log_file.write("---- init ----")
+        log_file.write("\n")
+    print_lock.release()
+    player(scenario_init,sender_queue,log_file)
+
     for i in range(scenario_repeat):
+        print_lock.acquire()
         print("---- turn %d / %d ----" % (i+1,scenario_repeat))
-        player(scenario,sender_queue)
-        print("wait %d sec" %scenario_wait)
-        time.sleep(scenario_wait)
+        if log_enable:
+            log_file.write("---- turn %d / %d ----" % (i+1,scenario_repeat))
+            log_file.write("\n")
+        print_lock.release()
+        player(scenario_walk,sender_queue,log_file)
 
     print("************************************")
     print("         scenario end !!            ")
@@ -303,7 +398,12 @@ def main():
     
     for r in rs:
         r.join()
-       
+
+    # log file close
+    if log_enable:
+        log_file.close()
+
+
     print("Done!!")
         
 
