@@ -69,9 +69,10 @@ onLegInfo = (info) => {
     channelInfo.mb = info.mb0;
     channelInfo.mf = info.mf0;
     channelInfo.wp = info.wp0;
-    channelInfo.pwmoffset = info.pwm0;
-    channelInfo.zero = info.zeroP0;
-    channelInfo.log = info.loglevel
+    channelInfo.pwmoffset = info.pw0;
+    channelInfo.payloadpwmoffset = info.pl0;
+    channelInfo.zero = info.zp0;
+    channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
@@ -84,9 +85,10 @@ onLegInfo = (info) => {
     channelInfo.mb = info.mb1;
     channelInfo.mf = info.mf1;
     channelInfo.wp = info.wp1;
-    channelInfo.pwmoffset = info.pwm1;
-    channelInfo.zero = info.zeroP1;
-    channelInfo.log = info.loglevel
+    channelInfo.pwmoffset = info.pw1;
+    channelInfo.payloadpwmoffset = info.pl1;
+    channelInfo.zero = info.zp1;
+    channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
       onVueUILegInfo(channelInfo);
@@ -350,6 +352,20 @@ function onUIChangePWMOffset(elem) {
     ws.send(pwm);
   }
 }
+
+function onUIChangePayloadPWMOffset(elem) {
+  console.log('onUIChangePayloadPWMOffset elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangePayloadPWMOffset limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangePayloadPWMOffset channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let pwm = 'setting:payloadpwm' + channel + ',' + limit + '\n';
+    console.log('onUIChangePayloadPWMOffset pwm=<', pwm,'>');
+    ws.send(pwm);
+  }
+}
+
 
 function onUIChangeZeroPosition(elem) {
   console.log('onUIChangeZeroPosition elem=<', elem,'>');

@@ -28,13 +28,13 @@ Vue.component('ui-motor-channel', {
                 <div class="col">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">{{ channel.pwmoffset }}</span>
-                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangePWMOffset(this)">
-                        <i class="fas fa-wave-square"></i>
+                      <span class="input-group-text">{{ channel.zero }}</span>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangeZeroPosition(this)">
+                        <i class="fas fa-stamp"></i>
                         <i class="fas fa-check-circle"></i>
                       </button>
                     </div>
-                    <input type="text" class="form-control" placeholder="pwm offset">
+                    <input type="text" class="form-control" placeholder="zero position">
                   </div>
                 </div>
                 <div class="col">
@@ -67,19 +67,31 @@ Vue.component('ui-motor-channel', {
 
 
               <div class="row justify-content-center">
-                <div class="col-3">
+                <div class="col">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">{{ channel.zero }}</span>
-                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangeZeroPosition(this)">
-                        <i class="fas fa-stamp"></i>
+                      <span class="input-group-text">{{ channel.pwmoffset }}</span>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangePWMOffset(this)">
+                        <i class="fas fa-wave-square"></i>
                         <i class="fas fa-check-circle"></i>
                       </button>
                     </div>
-                    <input type="text" class="form-control" placeholder="zero position">
+                    <input type="text" class="form-control" placeholder="empty pwm">
                   </div>
                 </div>
-                <div class="col-3">
+                <div class="col">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">{{ channel.payloadpwmoffset }}</span>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangePayloadPWMOffset(this)">
+                        <i class="fas fa-wave-square"></i>
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="payload pwm ">
+                  </div>
+                </div>
+                <div class="col">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">?</span>
@@ -91,7 +103,7 @@ Vue.component('ui-motor-channel', {
                     <input type="text" class="form-control" placeholder="move to mm">
                   </div>
                 </div>
-                <div class="col-3">
+                <div class="col">
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text">{{ channel.log }}</span>
@@ -104,8 +116,6 @@ Vue.component('ui-motor-channel', {
                   </div>
                 </div>
                 
-                <div class="col-3">
-                </div>
                 
               </div>
 

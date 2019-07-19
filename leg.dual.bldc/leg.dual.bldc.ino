@@ -85,6 +85,7 @@ const int  iEROMWheelMaxFrontAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 6,i
 const int  iEROMCWDirectAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 10,iEROMLegIdAddress[1] + 12}; 
 const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iEROMLegIdAddress[1] + 16};
 const int  iEROMZeroPositionAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 18,iEROMLegIdAddress[1] + 20};
+const int  iEROMPayloadPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 22,iEROMLegIdAddress[1] + 24};
 
 const int  iEROMPWMLogLevelAddress = iEROMLegIdAddress[1] + 256;
 
@@ -95,6 +96,7 @@ uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420};
 uint16_t  iEROMCWDirect[MAX_MOTOR_CH] = {1,0}; 
 uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMZeroPosition[MAX_MOTOR_CH] = {0,0};
+uint16_t  iEROMPayloadPWMOffset[MAX_MOTOR_CH] = {0,0};
 
 bool bZeroPositionNearSmall[MAX_MOTOR_CH] = {false,false};
 
@@ -131,6 +133,9 @@ void loadEROM(void) {
 
   loadEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition);
   loadEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition);
+
+  loadEROM2Byte(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
+  loadEROM2Byte(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
 
   //DUMP_VAR(iEROMWheelMaxFront[0]);
   //DUMP_VAR(iEROMZeroPosition[0]);
@@ -202,6 +207,9 @@ void runSetting(void) {
 
   saveEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition,":zeroP0,");
   saveEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition,":zeroP1,");
+
+  saveEROM2Byte(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm0,");
+  saveEROM2Byte(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm1,");
 
 }
 
@@ -347,12 +355,14 @@ void runInfo(void) {
   resTex += String(iVolumeDistanceWheel[0]);
   resTex += ":cw0,";
   resTex += String(iEROMCWDirect[0]);
-  resTex += ":pwm0,";
+  resTex += ":pw0,";
   resTex += String(iEROMPWMOffset[0]);
-  resTex += ":zeroP0,";
+  resTex += ":zp0,";
   resTex += String(iEROMZeroPosition[0]);
-  resTex += ":nearsmall0,";
+  resTex += ":ns0,";
   resTex += String(bZeroPositionNearSmall[0]);
+  resTex += ":pl0,";
+  resTex += String(iEROMPayloadPWMOffset[0]);
   resTex += ":mb1,";
   resTex += String(iEROMWheelMaxBack[1]);      
   resTex += ":mf1,";
@@ -361,13 +371,15 @@ void runInfo(void) {
   resTex += String(iVolumeDistanceWheel[1]);
   resTex += ":cw1,";
   resTex += String(iEROMCWDirect[1]);
-  resTex += ":pwm1,";
+  resTex += ":pw1,";
   resTex += String(iEROMPWMOffset[1]);
-  resTex += ":zeroP1,";
+  resTex += ":zp1,";
   resTex += String(iEROMZeroPosition[1]);
-  resTex += ":nearsmall1,";
+  resTex += ":ns1,";
   resTex += String(bZeroPositionNearSmall[1]);
-  resTex += ":loglevel,";
+  resTex += ":pl1,";
+  resTex += String(iEROMPayloadPWMOffset[1]);
+  resTex += ":lv,";
   resTex += String(iEROMPWMLogLevel);
   responseTextTag(resTex);
 }
@@ -384,12 +396,12 @@ void runWheelByTag(void) {
   int volDistA = 0;
   if(readTagValue(":v0,",":vol0,",&volDistA)) {
     DUMP_VAR(volDistA);
-    runWheelVolume(volDistA,0);
+    runWheelVolume(volDistA,0,0);
   }
   int volDistB = 0;
   if(readTagValue(":v1,",":vol1,",&volDistB)) {
     DUMP_VAR(volDistB);
-    runWheelVolume(volDistB,1);
+    runWheelVolume(volDistB,1,0);
   }
 }
 
@@ -444,11 +456,15 @@ void moveLegToPosition() {
       return ;
     }
     DUMP_VAR(legIndex);
+    int payload = -1;
+    if(readTagValue(":xmm,",":xmm,",&payload)) {
+      
+    }
     int position = -1;
     if(readTagValue(":xmm,",":xmm,",&position)) {
       DUMP_VAR(position);
       int volDist = calcVolumeFromMM(legIndex,position);
-      runWheelVolume(volDist,legIndex);
+      runWheelVolume(volDist,legIndex,payload);
       String resTex;
       resTex += "legM:1";
       resTex += ",volDist:";
@@ -531,7 +547,8 @@ void readWheelVolume(int index) {
 const int iConstStarSpeed = 254;
 
 int iTargetVolumePostionWheel[MAX_MOTOR_CH] = {0,0};
-void runWheelVolume(int distPostion,int index) {
+int iTargetVolumePayload[MAX_MOTOR_CH] = {0,0};
+void runWheelVolume(int distPostion,int index,int payload) {
   {
     String resTex;
     resTex += "dummy:distPostion,";
@@ -572,6 +589,7 @@ void runWheelVolume(int distPostion,int index) {
   }
   DUMP_VAR(bForwardRunWheel);
   runWheel(iConstStarSpeed,bForwardRunWheel,index);
+  iTargetVolumePayload[index] = payload;
 }
 
 
@@ -664,7 +682,12 @@ void calcWheelTarget(int index) {
   if(distanceToMove >= aVolumeSpeedTableLength) {
     speedIndex = aVolumeSpeedTableLength -1;
   }
-  int speed = aVolumeSpeedTable[speedIndex] + iEROMPWMOffset[index];
+  int speed = aVolumeSpeedTable[speedIndex];
+  if(iTargetVolumePayload[index] > 0) {
+    speed += iEROMPayloadPWMOffset[index];
+  } else {
+    speed += iEROMPWMOffset[index];
+  }
   if(speed > iConstStarSpeed) {
     speed = iConstStarSpeed;
   }
