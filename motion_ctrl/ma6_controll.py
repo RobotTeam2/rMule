@@ -8,16 +8,15 @@ import queue
 import os
 
 log_enable = True
-stm_available = True
-legs = 6
+stm_available = False
+legs = 4
+scenario_repeat = 2
 
 if legs == 4:
     motor_id_mapping = {0:"2",1:"3",2:"5",3:"6"}
-else:
-    motor_id_mapping = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
 
 #
-#  4 legs
+#  4 legs (3番目のArduinoを外した状態)
 #
 #         Front
 #        +-----+
@@ -29,6 +28,9 @@ else:
 #  right: 0:"2",4:"6",2:"4"
 #  left : 3:"5",1:"3",5:"7"
 #  
+
+else:
+    motor_id_mapping = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
 
 #
 #  6 legs
@@ -115,7 +117,7 @@ scenario_walk = [
     [["wait",5.0]]
 ]
 
-scenario_repeat = 5
+
 
 arduino_ports = []
 stm_ports = []
@@ -160,15 +162,18 @@ def setup():
     print(comlist)
     for port in comlist:
         print(port)
-        ser = serial.Serial(port, 115200,timeout=2.0)
+        ser = serial.Serial(port, 115200,timeout=5.0)
         line = ser.readline()
         ser.write(b"who:\r\n") 
+        print("[S] who:\r\n") 
         start_time = current_time = time.time()
         search_arduino_ids = False
 
-        while current_time - start_time < 10.0:
+        while current_time - start_time < 20.0:
 
             line = ser.readline()
+            if len(line) > 0:
+                print("[R] %s" %line)
 
             if not search_arduino_ids:
                 result = re.search(b"arduino",line)
@@ -371,6 +376,14 @@ def main():
 
     setup()
 
+    if len(arduino_ports) != legs/2:
+        print("Error Number of legs and aruduino is mismatched !!")
+        exit()
+    
+    if len(stm_ports) == 0 and stm_available == True:
+        print("Error stm is expected to be available !!")
+        exit()
+
     # log file open
     if log_enable:
         os.makedirs("./log",exist_ok=True)
@@ -438,7 +451,7 @@ def main():
             log_file.write("---- turn %d / %d ----" % (i+1,scenario_repeat))
             log_file.write("\n")
         print_lock.release()
-        if stm_available:
+        if stm_available and legs == 6:
             player(scenario_walk,sender_queue,log_file)
         elif legs == 4:
             player(scenario_walk_4legs_ground,sender_queue,log_file)
