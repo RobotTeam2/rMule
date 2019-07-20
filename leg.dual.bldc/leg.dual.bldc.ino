@@ -482,9 +482,8 @@ void moveLegToPosition() {
       return ;
     }
     DUMP_VAR(legIndex);
-    int payload = -1;
+    int payload = 0;
     if(readTagValue(":xmm,",":xmm,",&payload)) {
-      
     }
     int position = -1;
     if(readTagValue(":xmm,",":xmm,",&position)) {
