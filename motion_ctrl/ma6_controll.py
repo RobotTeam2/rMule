@@ -8,8 +8,8 @@ import queue
 import os
 
 log_enable = True
-stm_available = False
-legs = 4
+stm_available = True
+legs = 6
 scenario_repeat = 2
 
 if legs == 4:
@@ -80,29 +80,15 @@ scenario_walk_6legs_ground = [
     [["wait",5.0]]
 ]
 
-scenario_walk_6legs_ground = [
-    [["move",0,0,1],  ["move",3,0,1],
-     ["move",1,0,1],  ["move",4,0,1],
-     ["move",2,0,1],  ["move",5,0,1]],
-
-    [["wait",5.0]],
-
-    [["move",0,100,1],  ["move",3,100,1],
-     ["move",1,100,1],  ["move",4,100,1],
-     ["move",2,100,1],  ["move",5,100,1]],
-
-    [["wait",5.0]]
-]
-
 scenario_walk = [
 
     [["right"]],
 
     [["wait",5.0]],
 
-    [["move",0,0,1],  ["move",3,0,1],
-     ["move",1,0,1],  ["move",4,0,1],
-     ["move",2,0,1],  ["move",5,0,1]],
+    [["move",0,0,0],  ["move",3,0,1],
+     ["move",1,0,1],  ["move",4,0,0],
+     ["move",2,0,0],  ["move",5,0,1]],
 
     [["wait",5.0]],
 
@@ -110,9 +96,9 @@ scenario_walk = [
 
     [["wait",5.0]],
 
-    [["move",0,100,1],  ["move",3,100,1],
-     ["move",1,100,1],  ["move",4,100,1],
-     ["move",2,100,1],  ["move",5,100,1]],
+    [["move",0,100,1],  ["move",3,100,0],
+     ["move",1,100,0],  ["move",4,100,1],
+     ["move",2,100,1],  ["move",5,100,0]],
 
     [["wait",5.0]]
 ]
@@ -156,6 +142,8 @@ def serial_ports():
 
 def setup():
 
+    # detect arduino or stm
+    
     comlist = serial_ports()
     temp_arduino_ports = []
 
@@ -201,16 +189,29 @@ def setup():
         
         ser.close()
           
+    # motor id check and assign id to detected and sorted port
+    
     i = 0
     for port in sorted(temp_arduino_ports,key=lambda x:x[1]):
         arduino_ports.append(port[0])
-        arduino_id_mapping.setdefault(port[1].decode('utf-8'),i)
-        arduino_id_mapping.setdefault(port[2].decode('utf-8'),i)
+        if port[1].decode('utf-8') in motor_id_mapping.values():
+            arduino_id_mapping.setdefault(port[1].decode('utf-8'),i)
+        else:
+            print("id mismatch happens !!")
+            exit()
+        if port[2].decode('utf-8') in motor_id_mapping.values():
+            arduino_id_mapping.setdefault(port[2].decode('utf-8'),i)
+        else:
+            print("id mismatch happens !!")
+            exit()
         i = i + 1
+
     print("arduino_ports = %s" % arduino_ports)
     print("arduino_id_mapping = %s" % arduino_id_mapping)
     print("stm_ports = %s" % stm_ports)
 
+    # opening serial ports
+    
     if len(arduino_ports):
         for i in range(len(arduino_ports)):
             for _ in range(5):
@@ -220,7 +221,6 @@ def setup():
                 except (OSError, serial.SerialException):
                     time.sleep(1.0)
                     pass
-#            print(arduino_ports[i])
             arduino_ser.append(s)
         
     if stm_available:
@@ -233,7 +233,6 @@ def setup():
                     except (OSError, serial.SerialException):
                         time.sleep(1.0)
                         pass
-    #            print(stm_ports[i])
                 stm_ser.append(s)
 
 
@@ -276,21 +275,18 @@ def stm_command(command,sender_queue,log_file):
     time.sleep(0.002)
 
 def sender(queue,ser,log_file):
-#    print("sender start")
     while True:
         item = queue.get()
         if item is None:
             queue.task_done()
             break
         ser.write(item.encode('utf-8')) 
-#        print(item.encode('utf-8'))
         while ser.out_waiting > 0:
 
             time.sleep(0.002)
 
     
 def reader(ser,number,log_file):
-#    print("reader start")
     while ser.isOpen():
         try:
             line = ser.readline()
