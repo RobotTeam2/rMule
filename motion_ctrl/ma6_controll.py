@@ -8,9 +8,30 @@ import queue
 import os
 
 log_enable = True
+stm_available = True
+legs = 6
 
-motor_id_mapping = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
+if legs == 4:
+    motor_id_mapping = {0:"2",1:"3",2:"5",3:"6"}
+else:
+    motor_id_mapping = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
 
+#
+#  4 legs
+#
+#         Front
+#        +-----+
+#  0:"2" |     | 2:"5"
+#  1:"3" |     | 3:"6"
+#        +-----+
+#         Back
+#
+#  right: 0:"2",4:"6",2:"4"
+#  left : 3:"5",1:"3",5:"7"
+#  
+
+#
+#  6 legs
 #
 #         Front
 #        +-----+
@@ -31,23 +52,65 @@ scenario_init = [
     [["wait",5.0]]
 ]
 
-scenario_walk = [
-    [["right"]], # up:0 "2""6""4" -> 0,4,2
+scenario_walk_4legs_ground = [
+    [["move",0,0,1],  ["move",2,0,1],
+     ["move",1,0,1],  ["move",3,0,1]],
 
     [["wait",5.0]],
-
-    [["move",0,0,0],  ["move",3,150,1],
-     ["move",1,150,1],["move",4,0,0],
-     ["move",2,0,0],  ["move",5,150,1]],
     
+    [["move",0,100,1],  ["move",2,100,1],
+     ["move",1,100,1],  ["move",3,100,1]],
+
+    [["wait",5.0]]
+]
+
+scenario_walk_6legs_ground = [
+    [["move",0,0,1],  ["move",3,0,1],
+     ["move",1,0,1],  ["move",4,0,1],
+     ["move",2,0,1],  ["move",5,0,1]],
+
+    [["wait",5.0]],   
+    
+    [["move",0,100,1],  ["move",3,100,1],
+     ["move",1,100,1],  ["move",4,100,1],
+     ["move",2,100,1],  ["move",5,100,1]],
+
+    [["wait",5.0]]
+]
+
+scenario_walk_6legs_ground = [
+    [["move",0,0,1],  ["move",3,0,1],
+     ["move",1,0,1],  ["move",4,0,1],
+     ["move",2,0,1],  ["move",5,0,1]],
+
     [["wait",5.0]],
 
-    [["left"]], # up:0 "5""3""7" -> 3,1,5
+    [["move",0,100,1],  ["move",3,100,1],
+     ["move",1,100,1],  ["move",4,100,1],
+     ["move",2,100,1],  ["move",5,100,1]],
+
+    [["wait",5.0]]
+]
+
+scenario_walk = [
+
+    [["right"]],
+
     [["wait",5.0]],
 
-    [["move",0,150,1],  ["move",3,0,0],
-     ["move",1,0,0],    ["move",4,150,1],
-     ["move",2,150,1],  ["move",5,0,0]],
+    [["move",0,0,1],  ["move",3,0,1],
+     ["move",1,0,1],  ["move",4,0,1],
+     ["move",2,0,1],  ["move",5,0,1]],
+
+    [["wait",5.0]],
+
+    [["left"]],
+
+    [["wait",5.0]],
+
+    [["move",0,100,1],  ["move",3,100,1],
+     ["move",1,100,1],  ["move",4,100,1],
+     ["move",2,100,1],  ["move",5,100,1]],
 
     [["wait",5.0]]
 ]
@@ -90,7 +153,7 @@ def serial_ports():
     return result
 
 def setup():
-    
+
     comlist = serial_ports()
     temp_arduino_ports = []
 
@@ -103,7 +166,7 @@ def setup():
         start_time = current_time = time.time()
         search_arduino_ids = False
 
-        while current_time - start_time < 5.0:
+        while current_time - start_time < 10.0:
 
             line = ser.readline()
 
@@ -155,17 +218,18 @@ def setup():
 #            print(arduino_ports[i])
             arduino_ser.append(s)
         
-    if len(stm_ports):
-        for i in range(len(stm_ports)):
-            for _ in range(5):
-                try:
-                    s = serial.Serial(stm_ports[i], 115200,timeout=2.0)
-                    break
-                except (OSError, serial.SerialException):
-                    time.sleep(1.0)
-                    pass
-#            print(stm_ports[i])
-            stm_ser.append(s)
+    if stm_available:
+        if len(stm_ports):
+            for i in range(len(stm_ports)):
+                for _ in range(5):
+                    try:
+                        s = serial.Serial(stm_ports[i], 115200,timeout=2.0)
+                        break
+                    except (OSError, serial.SerialException):
+                        time.sleep(1.0)
+                        pass
+    #            print(stm_ports[i])
+                stm_ser.append(s)
 
 
 def arduino_command(command,sender_queue,log_file):
@@ -216,6 +280,7 @@ def sender(queue,ser,log_file):
         ser.write(item.encode('utf-8')) 
 #        print(item.encode('utf-8'))
         while ser.out_waiting > 0:
+
             time.sleep(0.002)
 
     
@@ -333,18 +398,19 @@ def main():
         t.start()
         r.start()
 
-    for i in range(len(stm_ports)):
-        sender_queue.append(queue.Queue())
-        ser = stm_ser[i]
-        ser.flush()
-        t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)],ser,log_file,))
-        r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports) ,log_file,))
-        t.setDaemon(True)
-        r.setDaemon(True)
-        ts.append(t)
-        rs.append(r)
-        t.start()
-        r.start()
+    if stm_available:
+        for i in range(len(stm_ports)):
+            sender_queue.append(queue.Queue())
+            ser = stm_ser[i]
+            ser.flush()
+            t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)],ser,log_file,))
+            r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports) ,log_file,))
+            t.setDaemon(True)
+            r.setDaemon(True)
+            ts.append(t)
+            rs.append(r)
+            t.start()
+            r.start()
     
     print("************************************")
     print("         port set up end   !!       ")
@@ -356,13 +422,14 @@ def main():
     print("         scenario start !!          ")
     print("************************************")
 
-    print_lock.acquire()
-    print("---- init ----")
-    if log_enable:
-        log_file.write("---- init ----")
-        log_file.write("\n")
-    print_lock.release()
-    player(scenario_init,sender_queue,log_file)
+    if stm_available:
+        print_lock.acquire()
+        print("---- init ----")
+        if log_enable:
+            log_file.write("---- init ----")
+            log_file.write("\n")
+        print_lock.release()
+        player(scenario_init,sender_queue,log_file)
 
     for i in range(scenario_repeat):
         print_lock.acquire()
@@ -371,7 +438,12 @@ def main():
             log_file.write("---- turn %d / %d ----" % (i+1,scenario_repeat))
             log_file.write("\n")
         print_lock.release()
-        player(scenario_walk,sender_queue,log_file)
+        if stm_available:
+            player(scenario_walk,sender_queue,log_file)
+        elif legs == 4:
+            player(scenario_walk_4legs_ground,sender_queue,log_file)
+        elif legs == 6:
+            player(scenario_walk_6legs_ground,sender_queue,log_file)
 
     print("************************************")
     print("         scenario end !!            ")
@@ -392,9 +464,10 @@ def main():
         for ser in arduino_ser:
             ser.close()
 
-    if len(stm_ser):
-        for ser in stm_ser:
-            ser.close()
+    if stm_available:
+        if len(stm_ser):
+            for ser in stm_ser:
+                ser.close()
     
     for r in rs:
         r.join()
