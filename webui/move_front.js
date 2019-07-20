@@ -104,7 +104,7 @@ const onRunFront = () => {
       if (err) {
         return console.log('Error on write: ', err.message);
       }
-      console.log('trans2serial msg=<', msg,'>');
+      console.log('onRunFront moveMsg=<', moveMsg,'>');
     });
   }
 }

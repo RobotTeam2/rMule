@@ -483,10 +483,11 @@ void moveLegToPosition() {
     }
     DUMP_VAR(legIndex);
     int payload = 0;
-    if(readTagValue(":xmm,",":xmm,",&payload)) {
+    if(readTagValue(":payload,",":payload,",&payload)) {
     }
     int position = -1;
     if(readTagValue(":xmm,",":xmm,",&position)) {
+      
       DUMP_VAR(position);
       int volDist = calcVolumeFromMM(legIndex,position);
       runWheelVolume(volDist,legIndex,payload);
@@ -569,7 +570,7 @@ void readWheelVolume(int index) {
 }
 
 
-const int iConstStarSpeed = 254;
+const uint16_t iConstStarSpeed = 254;
 
 int iTargetVolumePostionWheel[MAX_MOTOR_CH] = {0,0};
 int iTargetVolumePayload[MAX_MOTOR_CH] = {0,0};
@@ -597,14 +598,6 @@ void runWheelVolume(int distPostion,int index,int payload) {
   bIsRunWheelByVolume[index] = true;
   wheelRunCounter[index] = iRunTimeoutCounter;
 
-  {
-    String resTex;
-    resTex += "dummy:bIsRunWheelByVolume,";
-    resTex += String(bIsRunWheelByVolume[index]);
-    resTex += ":iTargetVolumePostionWheel,";
-    resTex += String(iTargetVolumePostionWheel[index]);
-    responseTextTag(resTex);
-  }
   
   int moveDiff = iTargetVolumePostionWheel[index] - iVolumeDistanceWheel[index];
   bool bForwardRunWheel;
@@ -619,6 +612,18 @@ void runWheelVolume(int distPostion,int index,int payload) {
     runWheel(iConstStarSpeed,bForwardRunWheel,index);
   }
   iTargetVolumePayload[index] = payload;
+
+  {
+    String resTex;
+    resTex += "dummy:bIsRunWheelByVolume,";
+    resTex += String(bIsRunWheelByVolume[index]);
+    resTex += ":iTargetVolumePostionWheel,";
+    resTex += String(iTargetVolumePostionWheel[index]);
+    resTex += ":iTargetVolumePayload,";
+    resTex += String(iTargetVolumePayload[index]);
+    responseTextTag(resTex);
+  }
+
 }
 
 
@@ -698,6 +703,13 @@ void calcWheelTarget(int index) {
       repsponseJson(doc);
   }*/
   if(iTargetVolumeStartDelay[index] > 0) {
+    {
+      String resTex;
+      resTex += "dummy:delay,";
+      resTex += String(iTargetVolumeStartDelay[index]);
+      responseTextTag(resTex);
+    }
+    iTargetVolumeStartDelay[index]--;
     return;
   }
 
@@ -715,11 +727,32 @@ void calcWheelTarget(int index) {
   if(distanceToMove >= aVolumeSpeedTableLength) {
     speedIndex = aVolumeSpeedTableLength -1;
   }
-  int speed = aVolumeSpeedTable[speedIndex];
+  uint16_t speed = aVolumeSpeedTable[speedIndex];
+  DUMP_VAR(speed);
   if(iTargetVolumePayload[index] > 0) {
     speed += iEROMPayloadPWMOffset[index];
+    #if 0
+    {
+      String resTex;
+      resTex += "dummy:payloadpwmoffset,";
+      resTex += String(iEROMPayloadPWMOffset[index]);
+      resTex += ":leg,";
+      resTex += String(iEROMLegId[index]);
+      responseTextTag(resTex);
+    }
+    #endif
   } else {
     speed += iEROMPWMOffset[index];
+    #if 0
+    {
+      String resTex;
+      resTex += "dummy:pwmoffset,";
+      resTex += String(iEROMPWMOffset[index]);
+      resTex += ":leg,";
+      resTex += String(iEROMLegId[index]);
+      responseTextTag(resTex);
+    }
+    #endif
   }
   if(speed > iConstStarSpeed) {
     speed = iConstStarSpeed;
@@ -729,7 +762,6 @@ void calcWheelTarget(int index) {
     speed = iConstStarSpeed;
   }
   runWheel(speed,bForwardRunWheel,index);
-  iTargetVolumeStartDelay[index]--;
 }
 
 

@@ -95,16 +95,16 @@ const onJsonResponse = (msg,portName) => {
   }
 }
 
-const onRunBack = () => {
+const onRunFront = () => {
   for(let leg in legList) {
-    let moveMsg = 'legM:id,' + leg + ':xmm,0:payload,1\r\n';
+    let moveMsg = 'legM:id,' + leg + ':xmm,100:payload,0\r\n';
     console.log('onRunFront moveMsg=<',moveMsg ,'>');
     let port = legList[leg];
     port.write(moveMsg, (err) => {
       if (err) {
         return console.log('Error on write: ', err.message);
       }
-      console.log('onRunBack moveMsg=<', moveMsg,'>');
+      console.log('onRunFront moveMsg=<', moveMsg,'>');
     });
   }
 }
@@ -117,7 +117,7 @@ const onInfoMsg = (info,portName) => {
   const leg1 = info.id1;
   legList[leg1] = portList[portName];
   //console.log('onInfoMsg legList=<',legList ,'>');
-  setTimeout(onRunBack,2000);
+  setTimeout(onRunFront,2000);
 }
 
 trans2serial = (msg,portName) => {
