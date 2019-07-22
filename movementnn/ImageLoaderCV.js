@@ -27,6 +27,16 @@ module.exports = class ImageLoaderCV {
   crashRed() {
     return this.crashChannel_(this.rMat_);
   }
+  pixelGray(){
+    //console.log('ImageLoaderCV::crash this.grayMat_=<',this.grayMat_,'>');
+    const pixels = [];
+    for(let x = 0; x < this.grayMat_.cols;x++) {
+      for(let y = 0; y < this.grayMat_.rows;y++) {
+        pixels.push(this.grayMat_.at(y,x));
+      }
+    }
+    return pixels;
+  }
   
   dumpClips_(blockPixs,channelMat) {
     let counter = 0;
@@ -65,7 +75,9 @@ module.exports = class ImageLoaderCV {
         blockPixs.push(localPixs);
       }
     }
-    this.dumpClips_(blockPixs,channelMat);
+    //this.dumpClips_(blockPixs,channelMat);
     return blockPixs;
   }
+  
+  
 };

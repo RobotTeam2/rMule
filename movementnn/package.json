@@ -4,6 +4,7 @@
   "description": "",
   "main": "net.js",
   "dependencies": {
+    "fft-js": "0.0.12",
     "graphviz": "0.0.9",
     "opencv4nodejs": "^5.1.0"
   },
