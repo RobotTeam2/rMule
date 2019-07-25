@@ -4,7 +4,8 @@ key_command_map = {
     b'\t':["command",["left"]],
     b'/':["command",["right"]],
     b'*':["scenario",["walk"]],
-    b'\x7f':["scenario",["back"]],
+    b'\x08':["scenario",["back"]], # Windows
+    b'\x7f':["scenario",["back"]], # Linux
 
     b'7':["motor_command",["up"]],
     b'8':["motor_id",["0"]],
