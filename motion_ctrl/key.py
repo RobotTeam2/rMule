@@ -4,7 +4,7 @@ key_command_map = {
     b'\t':["command",["left"]],
     b'/':["command",["right"]],
     b'*':["scenario",["walk"]],
-    b'\x08':["scenario",["back"]],
+    b'\x7f':["scenario",["back"]],
 
     b'7':["motor_command",["up"]],
     b'8':["motor_id",["0"]],
@@ -51,7 +51,7 @@ class _GetchUnix:
             ch = sys.stdin.read(1)
         finally:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
+        return ch.encode('utf-8')
 
 
 class _GetchWindows:
