@@ -523,7 +523,7 @@ void moveLegToPosition() {
 }
 
 
-const float fMM2VolumeFactor = 0.5;
+const float fMM2VolumeFactor = 0.98;
 int calcVolumeFromMM(int index,int mm) {
   int zeroP = iEROMZeroPosition[index];
   int moveInVolume = 0;
@@ -544,7 +544,7 @@ int const iTargetDistanceMaxDiff = 1;
 
 
 
-const int iConstVolumeDistanceWheelReportDiff = 3;
+const int iConstVolumeDistanceWheelReportDiff = 2;
 const int iConstVolumeDistanceWheelReportDiffBigRange = 10;
 
 int iVolumeDistanceWheelReported[MAX_MOTOR_CH] = {0,0};
@@ -658,7 +658,6 @@ int const aVolumeSpeedTable[] = {
 
 
 int const aVolumeSpeedTable[] = {
-
   60,60,60,60,60,
   70,70,70,70,70,
   80,80,80,80,80,
