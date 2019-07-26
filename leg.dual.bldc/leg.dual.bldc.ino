@@ -95,10 +95,11 @@ uint16_t  iEROMLegId[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMWheelMaxBack[MAX_MOTOR_CH] = {280,280}; 
 uint16_t  iEROMWheelMaxFront[MAX_MOTOR_CH] = {420,420}; 
 uint16_t  iEROMCWDirect[MAX_MOTOR_CH] = {1,0}; 
-uint16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMZeroPosition[MAX_MOTOR_CH] = {0,0};
-uint16_t  iEROMPayloadPWMOffset[MAX_MOTOR_CH] = {0,0};
 uint16_t  iEROMStartDelay[MAX_MOTOR_CH] = {0,0};
+
+int16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
+int16_t  iEROMPayloadPWMOffset[MAX_MOTOR_CH] = {0,0};
 
 bool bZeroPositionNearSmall[MAX_MOTOR_CH] = {false,false};
 
@@ -112,6 +113,12 @@ void loadEROM1Byte(int address,uint8_t *dst) {
 void loadEROM2Byte(int index,int address[],uint16_t dst[]) {
   uint16_t value1 = EEPROM.read(address[index]);
   uint16_t value2 = EEPROM.read(address[index]+1);
+  dst[index] = value1 | value2 << 8;;
+}
+
+void loadEROM2ByteSign(int index,int address[],int16_t dst[]) {
+  int16_t value1 = EEPROM.read(address[index]);
+  int16_t value2 = EEPROM.read(address[index]+1);
   dst[index] = value1 | value2 << 8;;
 }
 
@@ -130,14 +137,14 @@ void loadEROM(void) {
   loadEROM2Byte(1,iEROMCWDirectAddress,iEROMCWDirect);
  
   
-  loadEROM2Byte(0,iEROMPWMOffsetAddress,iEROMPWMOffset);
-  loadEROM2Byte(1,iEROMPWMOffsetAddress,iEROMPWMOffset);
+  loadEROM2ByteSign(0,iEROMPWMOffsetAddress,iEROMPWMOffset);
+  loadEROM2ByteSign(1,iEROMPWMOffsetAddress,iEROMPWMOffset);
 
   loadEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition);
   loadEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition);
 
-  loadEROM2Byte(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
-  loadEROM2Byte(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
+  loadEROM2ByteSign(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
+  loadEROM2ByteSign(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset);
 
   loadEROM2Byte(0,iEROMStartDelayAddress,iEROMStartDelay);
   loadEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay);
@@ -191,6 +198,15 @@ void saveEROM2Byte(int index,int address[],uint16_t valueRam[],String tag) {
 
 
 
+void saveEROM2ByteSign(int index,int address[],int16_t valueRam[],String tag) {
+  int16_t valueTag = 0;
+  if(readTagValue(tag,"",&valueTag)) {
+    uint16_t save = valueTag;
+    saveEROM(address[index],save);
+    valueRam[index] =  valueTag;
+  }
+}
+
 void runSetting(void) {
   saveEROM1Byte(iEROMPWMLogLevelAddress,&iEROMPWMLogLevel,":debug,");
   saveEROM1Byte(iEROMPWMLogLevelAddress,&iEROMPWMLogLevel,":log,");
@@ -207,14 +223,14 @@ void runSetting(void) {
   saveEROM2Byte(0,iEROMCWDirectAddress,iEROMCWDirect,":cw0,");
   saveEROM2Byte(1,iEROMCWDirectAddress,iEROMCWDirect,":cw1,");
   
-  saveEROM2Byte(0,iEROMPWMOffsetAddress,iEROMPWMOffset,":pwm0,");
-  saveEROM2Byte(1,iEROMPWMOffsetAddress,iEROMPWMOffset,":pwm1,");
+  saveEROM2ByteSign(0,iEROMPWMOffsetAddress,iEROMPWMOffset,":pwm0,");
+  saveEROM2ByteSign(1,iEROMPWMOffsetAddress,iEROMPWMOffset,":pwm1,");
 
   saveEROM2Byte(0,iEROMZeroPositionAddress,iEROMZeroPosition,":zeroP0,");
   saveEROM2Byte(1,iEROMZeroPositionAddress,iEROMZeroPosition,":zeroP1,");
 
-  saveEROM2Byte(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm0,");
-  saveEROM2Byte(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm1,");
+  saveEROM2ByteSign(0,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm0,");
+  saveEROM2ByteSign(1,iEROMPayloadPWMOffsetAddress,iEROMPayloadPWMOffset,":payloadpwm1,");
 
   saveEROM2Byte(0,iEROMStartDelayAddress,iEROMStartDelay,":startdelay0,");
   saveEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay,":startdelay1,");
@@ -766,12 +782,12 @@ void calcWheelTarget(int index) {
 
 
 
-bool readTagValue(String tag,String shortTag , int *val) {
+bool readTagValue(String tag,String shortTag , int16_t *val) {
   int firstTag = gSerialInputCommand.indexOf(tag);
   if(firstTag > 0) {
     String tagStr = gSerialInputCommand.substring(firstTag+tag.length());
     DUMP_VAR(tagStr);
-    int tagNum = tagStr.toInt();
+    int16_t tagNum = tagStr.toInt();
     DUMP_VAR(tagNum);
     *val =tagNum;
     return true;
@@ -780,7 +796,7 @@ bool readTagValue(String tag,String shortTag , int *val) {
   if(firstShortTag > 0) {
     String tagStr = gSerialInputCommand.substring(firstShortTag+shortTag.length());
     DUMP_VAR(tagStr);
-    int tagNum = tagStr.toInt();
+    int16_t tagNum = tagStr.toInt();
     DUMP_VAR(tagNum);
     *val =tagNum;
     return true;
