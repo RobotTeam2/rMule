@@ -153,22 +153,23 @@ void loadEROM(void) {
   //DUMP_VAR(iEROMZeroPosition[0]);
   //DUMP_VAR(iEROMWheelMaxBack[0]);
   
-  int16_t mfDist0 = iEROMWheelMaxFront[0] - iEROMZeroPosition[0];
-  int16_t mbDist0 = iEROMWheelMaxBack[0] - iEROMZeroPosition[0];
+  //int16_t mfDist0 = (int16_t)iEROMWheelMaxFront[0] - (int16_t)iEROMZeroPosition[0];
+  //int16_t mbDist0 = (int16_t)iEROMWheelMaxBack[0] - (int16_t)iEROMZeroPosition[0];
   //DUMP_VAR(mfDist0);
   //DUMP_VAR(mbDist0);
-  bZeroPositionNearSmall[0] = mfDist0 * mfDist0 <= mbDist0 * mbDist0;
+  bZeroPositionNearSmall[0] = (2*iEROMZeroPosition[0] <= iEROMWheelMaxFront[0] + iEROMWheelMaxBack[0]);
 
 
   //DUMP_VAR(iEROMWheelMaxFront[0]);
   //DUMP_VAR(iEROMZeroPosition[0]);
   //DUMP_VAR(iEROMWheelMaxBack[0]);
 
-  int16_t mfDist1 = iEROMWheelMaxFront[1]- iEROMZeroPosition[1];
-  int16_t mbDist1 = iEROMWheelMaxBack[1] - iEROMZeroPosition[1];
+
+  //int16_t mfDist1 = (int16_t)iEROMWheelMaxFront[1]- (int16_t)iEROMZeroPosition[1];
+  //int16_t mbDist1 = (int16_t)iEROMWheelMaxBack[1] - (int16_t)iEROMZeroPosition[1];
   //DUMP_VAR(mfDist1);
   //DUMP_VAR(mbDist1);
-  bZeroPositionNearSmall[1] = mfDist1 * mfDist1 <= mbDist1 * mbDist1;
+  bZeroPositionNearSmall[1] = (2*iEROMZeroPosition[1] <= iEROMWheelMaxFront[1] + iEROMWheelMaxBack[1]);
 
 }
 
