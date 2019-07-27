@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import time
 import sys
 import glob
@@ -77,15 +79,26 @@ linux_esc_key_command_map = {
     b'[':["escape"]
 }
 
-stm_available = True
-legs = 6
+arduino_available = False
+stm_available = False
+legs = 0
+
 scenario_repeat = 1
 motor_height = []
-for i in range(legs):
-    motor_height.append(1) # 0:float  1:ground 
+motor_id_mapping = {}
+default_motor_id_mapping_2legs = {0:"2",1:"5"}
 
-if legs == 4:
-    motor_id_mapping = {0:"2",1:"3",2:"5",3:"6"}
+#
+#  2 legs (2番目と3番目のArduinoを外した状態)
+#
+#         Front
+#        +-----+
+#  0:"2" |     | 2:"5"
+#        +-----+
+#         Back
+#
+
+default_motor_id_mapping_4legs = {0:"2",1:"3",2:"5",3:"6"}
 
 #
 #  4 legs (3番目のArduinoを外した状態)
@@ -101,8 +114,8 @@ if legs == 4:
 #  left : 3:"5",1:"3",5:"7"
 #  
 
-else:
-    motor_id_mapping = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
+default_motor_id_mapping_6legs = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
+default_id_motor_mapping_6legs = {"2":0,"3":1,"4":2,"5":3,"6":4,"7":5}
 
 #
 #  6 legs
@@ -257,7 +270,7 @@ def setup_serial_ports():
         start_time = current_time = time.time()
         search_arduino_ids = False
 
-        while current_time - start_time < 20.0:
+        while current_time - start_time < 60.0:
 
             line = ser.readline()
             if len(line) > 0:
@@ -290,16 +303,20 @@ def setup_serial_ports():
         ser.close()
           
     # motor id check and assign id to detected and sorted port
+
+   
     
     i = 0
     for port in sorted(temp_arduino_ports,key=lambda x:x[1]):
         arduino_ports.append(port[0])
-        if port[1].decode('utf-8') in motor_id_mapping.values():
+        if port[1].decode('utf-8') in default_motor_id_mapping_6legs.values():
+            motor_id_mapping.setdefault(i,port[1].decode('utf-8'))
             arduino_id_mapping.setdefault(port[1].decode('utf-8'),i)
         else:
             logger.debug("id mismatch happens !!")
             exit()
-        if port[2].decode('utf-8') in motor_id_mapping.values():
+        if port[2].decode('utf-8') in default_motor_id_mapping_6legs.values():
+            motor_id_mapping.setdefault(i+len(temp_arduino_ports),port[2].decode('utf-8'))
             arduino_id_mapping.setdefault(port[2].decode('utf-8'),i)
         else:
             logger.debug("id mismatch happens !!")
@@ -307,12 +324,13 @@ def setup_serial_ports():
         i = i + 1
 
     logger.debug("arduino_ports = %s" % arduino_ports)
+    logger.debug("motor_id_mapping = %s" % motor_id_mapping)
     logger.debug("arduino_id_mapping = %s" % arduino_id_mapping)
     logger.debug("stm_ports = %s" % stm_ports)
 
     # opening serial ports
     
-    if len(arduino_ports):
+    if len(arduino_ports) > 0:
         for i in range(len(arduino_ports)):
             for _ in range(5):
                 try:
@@ -323,17 +341,18 @@ def setup_serial_ports():
                     pass
             arduino_ser.append(s)
         
-    if stm_available:
-        if len(stm_ports):
-            for i in range(len(stm_ports)):
-                for _ in range(5):
-                    try:
-                        s = serial.Serial(stm_ports[i], 115200,timeout=2.0)
-                        break
-                    except (OSError, serial.SerialException):
-                        time.sleep(1.0)
-                        pass
-                stm_ser.append(s)
+    if len(stm_ports) > 0:
+        for i in range(len(stm_ports)):
+            for _ in range(5):
+                try:
+                    s = serial.Serial(stm_ports[i], 115200,timeout=2.0)
+                    break
+                except (OSError, serial.SerialException):
+                    time.sleep(1.0)
+                    pass
+            stm_ser.append(s)
+
+        
 
     logger.debug("************************************")
     logger.debug("         port set up end   !!       ")
@@ -342,6 +361,9 @@ def setup_serial_ports():
 
 
 def arduino_command(command,sender_queue):
+    if arduino_available == False:
+        return
+
     if command[0] == "move":
         if len(command) == 4:
             item = "legM:id,{0}:xmm,{1}:payload,{2}\r\n".format(motor_id_mapping[command[1]],command[2],command[3])
@@ -581,8 +603,7 @@ def menu(sender_queue):
             if command[1] == ["clear"]:
                 logger.debug("motor_id is cleared")
             elif command[1] == ["stop"]:
-                logger.debug("stop")
-                break
+                os.system("sudo reboot")
             else:
                 pass
             motor_id = -1
@@ -601,13 +622,20 @@ if __name__ == '__main__':
 
     setup_serial_ports()
 
-    if len(arduino_ports) != legs/2:
-        logger.debug("Error Number of legs and aruduino is mismatched !!")
+    if len(arduino_ports) > 0:
+        arduino_available = True
+        legs = len(arduino_ports) * 2
+
+    if len(stm_ports) > 0:
+        stm_available = True
+
+    if arduino_available == False and stm_available == False:
+        logger.debug("No port is available")
         exit()
+
     
-    if len(stm_ports) == 0 and stm_available == True:
-        logger.debug("Error stm is expected to be available !!")
-        exit()
+    for i in range(legs):
+        motor_height.append(1) # 0:float  1:ground 
 
     # start threads
 
