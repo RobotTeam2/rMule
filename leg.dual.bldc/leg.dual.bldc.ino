@@ -81,11 +81,11 @@ void runSerialCommand(void);
 void readStatus(void);
 void calcWheelTarget(int index);
 void loop() {
+  runSerialCommand();
   readStatus();
-  checkOverRunMax();
   calcWheelTarget(0);
   calcWheelTarget(1);
-  runSerialCommand();
+  checkOverRunMax();
 }
 
 
@@ -469,6 +469,7 @@ void whois(void) {
   responseTextTag(resTex);
 }
 
+int iOutPutPWM[MAX_MOTOR_CH] = {0,0};
 
 
 void runWheelByTag(void) {
@@ -492,6 +493,7 @@ void readStatus() {
 
 bool bIsRunWheelByVolume[MAX_MOTOR_CH] = {false,false};
 
+/*
 void checkOverRunMaxWheel(int index) {
   if(iVolumeDistanceWheel[index] > iEROMWheelMaxBack[index]) {
     bIsRunWheelByVolume[index] = false;
@@ -502,6 +504,42 @@ void checkOverRunMaxWheel(int index) {
     STOP_WHEEL(index);
   }  
 }
+*/
+
+int iPrevVolumeDistanceWheel[2] = {};
+int iConstMoveJudgeDiff = 2;
+
+void checkOverRunMaxWheel(int index) {
+    /*
+    {
+      String resTex;
+      resTex += "dummy:iOutPutPWM,";
+      resTex += String(iOutPutPWM[index]);
+      responseTextTag(resTex);
+    }
+    */
+  static int counter = 0;
+  if(counter++%5 != 0) {
+    return;
+  }
+  if(abs(iOutPutPWM[index]) > 0) {
+    int delta = abs(iVolumeDistanceWheel[index] - iPrevVolumeDistanceWheel[index]);
+    if(delta < iConstMoveJudgeDiff) {
+      bIsRunWheelByVolume[index] = false;
+      iOutPutPWM[index] = 0;
+      STOP_WHEEL(index);
+        {
+        String resTex;
+        resTex += "dummy:delta,";
+        resTex += String(delta);
+        responseTextTag(resTex);
+      }
+    }
+  }
+  iPrevVolumeDistanceWheel[index] = iVolumeDistanceWheel[index];
+}
+
+
 void checkOverRunMax(void) {
 
   // stop
@@ -681,62 +719,7 @@ void runWheelVolume(int distPostion,int index,int payload) {
 
 
 
-/*
-int const aVolumeSpeedTable[] = {
-  60,60,60,60,60,
-  70,70,70,70,70,
-  80,80,80,80,80,
-  90,90,90,90,90,
-  100,100,100,100,100,
-  160,160,160,160,160,
-  iConstStarSpeed
-};
-*/
 
-
-int const aVolumeSpeedTable[] = {
-  60,60,60,60,60,
-  70,70,70,70,70,
-  80,80,80,80,80,
-  90,90,90,90,90,
-  100,100,100,100,100,
-  100,100,100,100,100,
-  100,100,100,100,100,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  127,127,127,127,127,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  130,130,130,130,130,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  iConstStarSpeed
-};
-
-
-/*
-int const aVolumeSpeedTable[] = {
-  0,  0,130,130,130,
-  130,130,130,130,130,
-  160,160,160,160,160,
-  160,160,160,160,160,
-  iConstStarSpeed
-};
-*/
-
-long const aVolumeSpeedTableLength = sizeof(aVolumeSpeedTable)/sizeof(aVolumeSpeedTable[0]);
-
-int const iConstVolumeWheelNearTarget = 5;
-//const float fConstSpeedK = 4;
 uint32_t iConstPWMFactorDive = 100;
 int calWheelSpeedPwm(int16_t eDistance,int index) {
   uint32_t distance = abs(eDistance);
@@ -745,6 +728,7 @@ int calWheelSpeedPwm(int16_t eDistance,int index) {
     return iConstStarSpeed;
   }
   int pwm = pwmK;
+  iOutPutPWM[index] = pwm;
   return pwm;
 }
 bool calWheelCW(int16_t eDistance,int index) {
@@ -778,82 +762,8 @@ void calcWheelTarget(int index) {
     resTex += String(iEROMLegId[index]);
     responseTextTag(resTex);
   }
-}
-/*
-void calcWheelTarget(int index) {
-  if(bIsRunWheelByVolume[index] == false) {
-    return;
-  }
-  int moveDiff = iTargetVolumePostionWheel[index] - iVolumeDistanceWheel[index];
-  int distanceToMove = abs(moveDiff);
-  if(distanceToMove < iConstVolumeWheelNearTarget) {
-    bIsRunWheelByVolume[index] = false;
-    STOP_WHEEL(index);
-    return;
-  }
-  if(iTargetVolumeStartDelay[index] > 0) {
-    {
-      String resTex;
-      resTex += "dummy:delay,";
-      resTex += String(iTargetVolumeStartDelay[index]);
-      responseTextTag(resTex);
-    }
-    iTargetVolumeStartDelay[index]--;
-    return;
-  }
 
-  
-  bool bForwardRunWheel;
-  if(moveDiff > 0) {
-    bForwardRunWheel = iEROMCWDirect[index];
-  } else {
-    bForwardRunWheel = !iEROMCWDirect[index];
-  }
-  //DUMP_VAR(bForwardRunWheel);
-  DUMP_VAR(distanceToMove);
-  int speedIndex = distanceToMove;
-  DUMP_VAR(speedIndex);
-  if(distanceToMove >= aVolumeSpeedTableLength) {
-    speedIndex = aVolumeSpeedTableLength -1;
-  }
-  uint16_t speed = aVolumeSpeedTable[speedIndex];
-  DUMP_VAR(speed);
-  if(iTargetVolumePayload[index] > 0) {
-    speed += iEROMPayloadPWMOffset[index];
-    #if 0
-    {
-      String resTex;
-      resTex += "dummy:payloadpwmoffset,";
-      resTex += String(iEROMPayloadPWMOffset[index]);
-      resTex += ":leg,";
-      resTex += String(iEROMLegId[index]);
-      responseTextTag(resTex);
-    }
-    #endif
-  } else {
-    speed += iEROMPWMOffset[index];
-    #if 0
-    {
-      String resTex;
-      resTex += "dummy:pwmoffset,";
-      resTex += String(iEROMPWMOffset[index]);
-      resTex += ":leg,";
-      resTex += String(iEROMLegId[index]);
-      responseTextTag(resTex);
-    }
-    #endif
-  }
-  if(speed > iConstStarSpeed) {
-    speed = iConstStarSpeed;
-  }
-  DUMP_VAR(speed);
-  if(iTargetVolumeStartDelay[index] == 0) {
-    speed = iConstStarSpeed;
-  }
-  runWheel(speed,bForwardRunWheel,index);
-  GRAPH_VAR(speed,distanceToMove);
 }
-*/
 
 
 bool readTagValue(String tag,String shortTag , int16_t *val) {
