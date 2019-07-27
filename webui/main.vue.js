@@ -73,6 +73,7 @@ onLegInfo = (info) => {
     channelInfo.payloadpwmoffset = info.pl0;
     channelInfo.zero = info.zp0;
     channelInfo.startdelay = info.sd0;
+    channelInfo.pwmGain = info.pwmGain0;
     channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
@@ -90,6 +91,7 @@ onLegInfo = (info) => {
     channelInfo.payloadpwmoffset = info.pl1;
     channelInfo.zero = info.zp1;
     channelInfo.startdelay = info.sd1;
+    channelInfo.pwmGain = info.pwmGain1;
     channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
@@ -396,6 +398,20 @@ function onUIChangeZeroPosition(elem) {
     ws.send(zeroP);
   }
 }
+
+function onUIChangePWMGain(elem) {
+  console.log('onUIChangePWMGain elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangePWMGain limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangePWMGain channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let pwmGain = 'setting:pwmGain' + channel + ',' + limit + '\n';
+    console.log('onUIChangePWMGain pwmGain=<', pwmGain,'>');
+    ws.send(pwmGain);
+  }
+}
+
 
 function getLegIDUITool(elem) {
   let channelElem = elem.parentElement.parentElement.parentElement.parentElement.parentElement.getElementsByTagName('span')[0];

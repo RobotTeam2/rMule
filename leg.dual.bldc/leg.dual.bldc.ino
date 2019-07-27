@@ -23,6 +23,18 @@ uint8_t iEROMPWMLogLevel = 0;
 }
 
 
+#define GRAPH_VAR(x,y)  { \
+  Serial.print(__LINE__);\
+  Serial.print("@@"#x"=<");\
+  Serial.print(x);\
+  Serial.print(">");\
+  Serial.print("@@"#y"=<");\
+  Serial.print(y);\
+  Serial.print(">&$");\
+  Serial.print("\r\n");\
+}
+
+
 #define MAX_MOTOR_CH (2)
 
 // Interrupt
@@ -87,7 +99,7 @@ const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iERO
 const int  iEROMZeroPositionAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 18,iEROMLegIdAddress[1] + 20};
 const int  iEROMPayloadPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 22,iEROMLegIdAddress[1] + 24};
 const int  iEROMStartDelayAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 26,iEROMLegIdAddress[1] + 28};
-
+const int  iEROMPWMFactorAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 30,iEROMLegIdAddress[1] + 32};
 const int  iEROMPWMLogLevelAddress = iEROMLegIdAddress[1] + 256;
 
 
@@ -100,6 +112,8 @@ uint16_t  iEROMStartDelay[MAX_MOTOR_CH] = {0,0};
 
 int16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
 int16_t  iEROMPayloadPWMOffset[MAX_MOTOR_CH] = {0,0};
+
+uint16_t  iEROMPWMFactor[MAX_MOTOR_CH] = {4*100,4*100};
 
 bool bZeroPositionNearSmall[MAX_MOTOR_CH] = {false,false};
 
@@ -121,6 +135,17 @@ void loadEROM2ByteSign(int index,int address[],int16_t dst[]) {
   int16_t value2 = EEPROM.read(address[index]+1);
   dst[index] = value1 | value2 << 8;;
 }
+
+void loadEROMFloat(int index,int address[],float dst[]) {
+  uint32_t value1 = EEPROM.read(address[index]);
+  uint32_t value2 = EEPROM.read(address[index]+1);
+  uint32_t value3 = EEPROM.read(address[index]+2);
+  uint32_t value4 = EEPROM.read(address[index]+3);
+  uint32_t saveValue = value1 | value2 << 8 | value2 << 16 | value2 << 24;
+  float value = saveValue;
+  dst[index] = value;
+}
+
 
 void loadEROM(void) {
   loadEROM1Byte(iEROMPWMLogLevelAddress,&iEROMPWMLogLevel);
@@ -148,6 +173,9 @@ void loadEROM(void) {
 
   loadEROM2Byte(0,iEROMStartDelayAddress,iEROMStartDelay);
   loadEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay);
+
+  loadEROM2Byte(0,iEROMPWMFactorAddress,iEROMPWMFactor);
+  loadEROM2Byte(1,iEROMPWMFactorAddress,iEROMPWMFactor);
 
   //DUMP_VAR(iEROMWheelMaxFront[0]);
   //DUMP_VAR(iEROMZeroPosition[0]);
@@ -235,6 +263,10 @@ void runSetting(void) {
 
   saveEROM2Byte(0,iEROMStartDelayAddress,iEROMStartDelay,":startdelay0,");
   saveEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay,":startdelay1,");
+
+
+  saveEROM2Byte(0,iEROMPWMFactorAddress,iEROMPWMFactor,":pwmGain0,");
+  saveEROM2Byte(1,iEROMPWMFactorAddress,iEROMPWMFactor,":pwmGain1,");
 
 }
 
@@ -402,6 +434,8 @@ void runInfo(void) {
   resTex += String(iEROMPayloadPWMOffset[0]);
   resTex += ":sd0,";
   resTex += String(iEROMStartDelay[0]);
+  resTex += ":pwmGain0,";
+  resTex += String(iEROMPWMFactor[0]);
   responseTextContinue(resTex);
   resTex = "";
   resTex += ":mb1,";
@@ -424,6 +458,8 @@ void runInfo(void) {
   resTex += String(iEROMStartDelay[1]);
   resTex += ":lv,";
   resTex += String(iEROMPWMLogLevel);
+  resTex += ":pwmGain1,";
+  resTex += String(iEROMPWMFactor[1]);
   responseTextFinnish(resTex);
 }
 
@@ -700,7 +736,50 @@ int const aVolumeSpeedTable[] = {
 long const aVolumeSpeedTableLength = sizeof(aVolumeSpeedTable)/sizeof(aVolumeSpeedTable[0]);
 
 int const iConstVolumeWheelNearTarget = 5;
+//const float fConstSpeedK = 4;
+uint32_t iConstPWMFactorDive = 100;
+int calWheelSpeedPwm(int16_t eDistance,int index) {
+  uint32_t distance = abs(eDistance);
+  uint32_t pwmK = iEROMPWMFactor[index] * distance / iConstPWMFactorDive;
+  if(pwmK > iConstStarSpeed) {
+    return iConstStarSpeed;
+  }
+  int pwm = pwmK;
+  return pwm;
+}
+bool calWheelCW(int16_t eDistance,int index) {
+  bool bForwardRunWheel;
+  if(eDistance > 0) {
+    bForwardRunWheel = iEROMCWDirect[index];
+  } else {
+    bForwardRunWheel = !iEROMCWDirect[index];
+  }
+  return bForwardRunWheel;  
+}
 
+void calcWheelTarget(int index) {
+  if(bIsRunWheelByVolume[index] == false) {
+    return;
+  }
+  int16_t current = iVolumeDistanceWheel[index];
+  int16_t target = iTargetVolumePostionWheel[index];
+  int16_t toMoveDiff =  target - current;
+  int speedPwm = calWheelSpeedPwm(toMoveDiff,index);
+  bool bForwardRunWheel = calWheelCW(toMoveDiff,index);
+  runWheel(speedPwm,bForwardRunWheel,index);
+  
+  {
+    String resTex;
+    resTex += "dummy:bForwardRunWheelffset,";
+    resTex += String(bForwardRunWheel);
+    resTex += ":speedPwm,";
+    resTex += String(speedPwm);
+    resTex += ":leg,";
+    resTex += String(iEROMLegId[index]);
+    responseTextTag(resTex);
+  }
+}
+/*
 void calcWheelTarget(int index) {
   if(bIsRunWheelByVolume[index] == false) {
     return;
@@ -711,13 +790,7 @@ void calcWheelTarget(int index) {
     bIsRunWheelByVolume[index] = false;
     STOP_WHEEL(index);
     return;
-  }/*else {
-      MyJsonDoc doc;
-      JsonObject root = doc.to<JsonObject>();
-      root["moveDiff"] = moveDiff;
-      root["bIsRunWheelByVolume"] = bIsRunWheelByVolume;
-      repsponseJson(doc);
-  }*/
+  }
   if(iTargetVolumeStartDelay[index] > 0) {
     {
       String resTex;
@@ -778,8 +851,9 @@ void calcWheelTarget(int index) {
     speed = iConstStarSpeed;
   }
   runWheel(speed,bForwardRunWheel,index);
+  GRAPH_VAR(speed,distanceToMove);
 }
-
+*/
 
 
 bool readTagValue(String tag,String shortTag , int16_t *val) {
