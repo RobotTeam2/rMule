@@ -97,7 +97,7 @@ const onJsonResponse = (msg,portName) => {
 
 const onRunBack = () => {
   for(let leg in legList) {
-    let moveMsg = 'legM:id,' + leg + ':xmm,0:payload,1\r\n';
+    let moveMsg = 'legM:id,' + leg + ':xmm,10:payload,1\r\n';
     console.log('onRunFront moveMsg=<',moveMsg ,'>');
     let port = legList[leg];
     port.write(moveMsg, (err) => {
