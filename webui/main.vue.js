@@ -74,6 +74,7 @@ onLegInfo = (info) => {
     channelInfo.zero = info.zp0;
     channelInfo.startdelay = info.sd0;
     channelInfo.pwmGain = info.pwmGain0;
+    channelInfo.pwmGainPL = info.pwmGainPL0;
     channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
@@ -92,6 +93,7 @@ onLegInfo = (info) => {
     channelInfo.zero = info.zp1;
     channelInfo.startdelay = info.sd1;
     channelInfo.pwmGain = info.pwmGain1;
+    channelInfo.pwmGainPL = info.pwmGainPL1;
     channelInfo.log = info.lv
     //console.log('onLegInfo channelInfo=<', channelInfo,'>');
     if(typeof onVueUILegInfo === 'function') {
@@ -408,6 +410,20 @@ function onUIChangePWMGain(elem) {
   if(!isNaN(channel) && !isNaN(limit)) {
     let pwmGain = 'setting:pwmGain' + channel + ',' + limit + '\n';
     console.log('onUIChangePWMGain pwmGain=<', pwmGain,'>');
+    ws.send(pwmGain);
+  }
+}
+
+
+function onUIChangePWMGainPayload(elem) {
+  console.log('onUIChangePWMGainPayload elem=<', elem,'>');
+  let limit = getInputUITool(elem);
+  console.log('onUIChangePWMGainPayload limit=<', limit,'>');
+  let channel = getChannelUITool(elem);
+  console.log('onUIChangePWMGainPayload channel=<', channel,'>');
+  if(!isNaN(channel) && !isNaN(limit)) {
+    let pwmGain = 'setting:pwmGainPL' + channel + ',' + limit + '\n';
+    console.log('onUIChangePWMGainPayload pwmGain=<', pwmGain,'>');
     ws.send(pwmGain);
   }
 }

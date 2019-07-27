@@ -145,6 +145,21 @@ Vue.component('ui-motor-channel', {
                     <input type="text" class="form-control" placeholder="pwm gain">
                   </div>
                 </div>
+
+
+                 <div class="col-3">
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">{{ channel.pwmGainPL }}</span>
+                      <button type="button" class="btn btn-primary btn-sm" onclick="onUIChangePWMGainPayload(this)">
+                        <i class="fas fa-wave-square"></i>
+                        <i class="fas fa-check-circle"></i>
+                      </button>
+                    </div>
+                    <input type="text" class="form-control" placeholder="pl gain">
+                  </div>
+                </div>
+
              
               </div>
 

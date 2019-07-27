@@ -99,7 +99,8 @@ const int  iEROMPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 14,iERO
 const int  iEROMZeroPositionAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 18,iEROMLegIdAddress[1] + 20};
 const int  iEROMPayloadPWMOffsetAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 22,iEROMLegIdAddress[1] + 24};
 const int  iEROMStartDelayAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 26,iEROMLegIdAddress[1] + 28};
-const int  iEROMPWMFactorAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 30,iEROMLegIdAddress[1] + 32};
+const int  iEROMPWMGainEmptyAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 30,iEROMLegIdAddress[1] + 32};
+const int  iEROMPWMGainPlayLoadAddress[MAX_MOTOR_CH] = {iEROMLegIdAddress[1] + 34,iEROMLegIdAddress[1] + 36};
 const int  iEROMPWMLogLevelAddress = iEROMLegIdAddress[1] + 256;
 
 
@@ -113,7 +114,8 @@ uint16_t  iEROMStartDelay[MAX_MOTOR_CH] = {0,0};
 int16_t  iEROMPWMOffset[MAX_MOTOR_CH] = {0,0};
 int16_t  iEROMPayloadPWMOffset[MAX_MOTOR_CH] = {0,0};
 
-uint16_t  iEROMPWMFactor[MAX_MOTOR_CH] = {4*100,4*100};
+uint16_t  iEROMPWMGainEmpty[MAX_MOTOR_CH] = {4*100,4*100};
+uint16_t  iEROMPWMGainPlayLoad[MAX_MOTOR_CH] = {6*100,6*100};
 
 bool bZeroPositionNearSmall[MAX_MOTOR_CH] = {false,false};
 
@@ -174,8 +176,11 @@ void loadEROM(void) {
   loadEROM2Byte(0,iEROMStartDelayAddress,iEROMStartDelay);
   loadEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay);
 
-  loadEROM2Byte(0,iEROMPWMFactorAddress,iEROMPWMFactor);
-  loadEROM2Byte(1,iEROMPWMFactorAddress,iEROMPWMFactor);
+  loadEROM2Byte(0,iEROMPWMGainEmptyAddress,iEROMPWMGainEmpty);
+  loadEROM2Byte(1,iEROMPWMGainEmptyAddress,iEROMPWMGainEmpty);
+
+  loadEROM2Byte(0,iEROMPWMGainPlayLoadAddress,iEROMPWMGainPlayLoad);
+  loadEROM2Byte(1,iEROMPWMGainPlayLoadAddress,iEROMPWMGainPlayLoad);
 
   //DUMP_VAR(iEROMWheelMaxFront[0]);
   //DUMP_VAR(iEROMZeroPosition[0]);
@@ -265,8 +270,11 @@ void runSetting(void) {
   saveEROM2Byte(1,iEROMStartDelayAddress,iEROMStartDelay,":startdelay1,");
 
 
-  saveEROM2Byte(0,iEROMPWMFactorAddress,iEROMPWMFactor,":pwmGain0,");
-  saveEROM2Byte(1,iEROMPWMFactorAddress,iEROMPWMFactor,":pwmGain1,");
+  saveEROM2Byte(0,iEROMPWMGainEmptyAddress,iEROMPWMGainEmpty,":pwmGain0,");
+  saveEROM2Byte(1,iEROMPWMGainEmptyAddress,iEROMPWMGainEmpty,":pwmGain1,");
+
+  saveEROM2Byte(0,iEROMPWMGainPlayLoadAddress,iEROMPWMGainPlayLoad,":pwmGainPL0,");
+  saveEROM2Byte(1,iEROMPWMGainPlayLoadAddress,iEROMPWMGainPlayLoad,":pwmGainPL1,");
 
 }
 
@@ -339,8 +347,12 @@ void responseTextTag(String &res) {
   Serial.print(res);
 }
 
-void responseTextContinue(String &res) {
+void responseTextStart(String &res) {
   res = "&$" + res;
+  Serial.print(res);
+}
+void responseTextContinue(String &res) {
+  res = res;
   Serial.print(res);
 }
 
@@ -409,6 +421,7 @@ void run_comand(void) {
 }
 void runInfo(void) {
   String resTex;
+  responseTextStart(resTex);
   resTex += "info";
   resTex += ":ch,";
   resTex += String(MAX_MOTOR_CH);      
@@ -434,8 +447,12 @@ void runInfo(void) {
   resTex += String(iEROMPayloadPWMOffset[0]);
   resTex += ":sd0,";
   resTex += String(iEROMStartDelay[0]);
+  responseTextContinue(resTex);
+  resTex = "";
   resTex += ":pwmGain0,";
-  resTex += String(iEROMPWMFactor[0]);
+  resTex += String(iEROMPWMGainEmpty[0]);
+  resTex += ":pwmGainPL0,";
+  resTex += String(iEROMPWMGainPlayLoad[0]);
   responseTextContinue(resTex);
   resTex = "";
   resTex += ":mb1,";
@@ -457,9 +474,13 @@ void runInfo(void) {
   resTex += ":sd1,";
   resTex += String(iEROMStartDelay[1]);
   resTex += ":lv,";
+  responseTextContinue(resTex);
+  resTex = "";
   resTex += String(iEROMPWMLogLevel);
   resTex += ":pwmGain1,";
-  resTex += String(iEROMPWMFactor[1]);
+  resTex += String(iEROMPWMGainEmpty[1]);
+  resTex += ":pwmGainPL1,";
+  resTex += String(iEROMPWMGainPlayLoad[1]);
   responseTextFinnish(resTex);
 }
 
@@ -723,7 +744,11 @@ void runWheelVolume(int distPostion,int index,int payload) {
 uint32_t iConstPWMFactorDive = 100;
 int calWheelSpeedPwm(int16_t eDistance,int index) {
   uint32_t distance = abs(eDistance);
-  uint32_t pwmK = iEROMPWMFactor[index] * distance / iConstPWMFactorDive;
+  int gain = iEROMPWMGainEmpty[index];
+  if(iTargetVolumePayload[index] > 0) {
+    gain = iEROMPWMGainPlayLoad[index];
+  }
+  uint32_t pwmK = gain * distance / iConstPWMFactorDive;
   if(pwmK > iConstStarSpeed) {
     return iConstStarSpeed;
   }
