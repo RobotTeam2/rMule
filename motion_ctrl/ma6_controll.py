@@ -27,7 +27,8 @@ logger.addHandler(file_handler)
 logger.propagate = False
 
 stm_available = False
-legs = 4
+allarduino_available = False
+legs = 6
 scenario_repeat = 2
 
 if legs == 4:
@@ -256,13 +257,17 @@ def setup():
 def arduino_command(command,sender_queue):
     if command[0] == "move":
         item = "legM:id,{0}:xmm,{1}:payload,{2}\r\n".format(motor_id_mapping[command[1]],command[2],command[3])
-        sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
+        try:
+            sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
+        except:
+            pass
     else:
         item = "None"
+        pass    
+    try:
+        logger.debug("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]] ,item))  
+    except:
         pass
-    
-    
-    logger.debug("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]] ,item))  
     time.sleep(0.005)
 
 def stm_command(command,sender_queue):
@@ -346,7 +351,7 @@ def main():
 
     setup()
 
-    if len(arduino_ports) != legs/2:
+    if len(arduino_ports) != legs/2 and allarduino_available == True:
         logger.debug("Error Number of legs and aruduino is mismatched !!")
         exit()
     
