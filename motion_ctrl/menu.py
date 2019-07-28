@@ -245,8 +245,7 @@ def serial_ports():
         ports = ['COM%s' % (i + 1) for i in range(32)]
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         # this excludes your current terminal "/dev/tty"
-        ports = glob.glob('/dev/ttyUSB*')
-        ports.append('/dev/ttyACM0')
+        ports = ['/dev/ttyUSB0','/dev/ttyUSB1','/dev/ttyUSB2','/dev/ttyACM0']
     elif sys.platform.startswith('darwin'):
         ports = glob.glob('/dev/tty.*')
     else:
@@ -276,7 +275,13 @@ def setup_serial_ports():
     logger.debug(comlist)
     for port in comlist:
         logger.debug(port)
+
         ser = serial.Serial(port, 115200,timeout=5.0)
+
+        if port == "/dev/ttyACM0":
+            stm_ports.append(port)
+            continue
+
         line = ser.readline()
         ser.write(b"who:\r\n") 
         logger.debug("[S] who:\r\n") 
@@ -317,7 +322,7 @@ def setup_serial_ports():
           
     # motor id check and assign id to detected and sorted port
 
-   
+    
     
     i = 0
     for port in sorted(temp_arduino_ports,key=lambda x:x[1]):
