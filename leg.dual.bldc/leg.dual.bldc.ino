@@ -662,11 +662,13 @@ void readWheelVolume(int index) {
   //DUMP_VAR(volume);
   //bool iReport = true;
   if(iReport) {
-    iVolumeDistanceWheelReported[index] = volume;
-    String resTex;
-    resTex += strConstWheelReportTag[index];
-    resTex += String(volume);
-    responseTextTag(resTex);
+    if(iEROMPWMLogLevel > 0 ) {
+      iVolumeDistanceWheelReported[index] = volume;
+      String resTex;
+      resTex += strConstWheelReportTag[index];
+      resTex += String(volume);
+      responseTextTag(resTex);
+    }
   }
   iVolumeDistanceWheel[index] = volume;
   if(iDetectIndex > -1 && iDetectIndex == index) {
