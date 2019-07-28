@@ -83,7 +83,7 @@ arduino_available = False
 stm_available = False
 legs = 0
 
-scenario_repeat = 1
+scenario_repeat = 3
 motor_height = []
 motor_id_mapping = {}
 id_motor_mapping = {}
@@ -138,19 +138,19 @@ scenario_walk = [
 
     [["right"]],
 
-    [["wait",5.0]],
+    [["wait",2.0]],
 
     [["move",0,0,1], 
      ["move",4,0,1],
      ["move",2,0,1]],
 
-    [["wait",5.0]],
+    [["wait",2.0]],
 
     [["move",3,100,1],
      ["move",1,100,1],
      ["move",5,100,1]],
      
-    [["wait",5.0]],
+    [["wait",2.0]],
 
     [["left"]],
 
@@ -160,13 +160,13 @@ scenario_walk = [
      ["move",1,0,1],
      ["move",5,0,1]],
 
-    [["wait",5.0]],
+    [["wait",2.0]],
 
     [["move",0,100,1],
      ["move",4,100,1],
      ["move",2,100,1]],
 
-    [["wait",5.0]]
+    [["wait",2.0]]
 ]
 
 scenario_back = [
@@ -386,12 +386,16 @@ def arduino_command(command,sender_queue):
         elif len(command) == 3:
             item = "legM:id,{0}:xmm,{1}:payload,{2}\r\n".format(motor_id_mapping[command[1]],command[2],motor_height[command[1]])
         sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
+        time.sleep(0.005)
+        sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
+        time.sleep(0.005)
+        sender_queue[arduino_id_mapping[motor_id_mapping[command[1]]]].put(item)
     else:
         item = "None"
         pass
     
     logger.debug("[S] arduino[%1d]: %s" %(arduino_id_mapping[motor_id_mapping[command[1]]] ,item))  
-    time.sleep(0.005)
+    time.sleep(0.010)
 
 def stm_command(command,sender_queue):
     if stm_available == False:
