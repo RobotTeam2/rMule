@@ -83,7 +83,7 @@ arduino_available = False
 stm_available = False
 legs = 0
 
-scenario_repeat = 3
+scenario_repeat = 1
 motor_height = []
 motor_id_mapping = {}
 id_motor_mapping = {}
