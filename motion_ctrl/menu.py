@@ -86,6 +86,7 @@ legs = 0
 scenario_repeat = 1
 motor_height = []
 motor_id_mapping = {}
+id_motor_mapping = {}
 default_motor_id_mapping_2legs = {0:"2",1:"5"}
 
 #
@@ -115,7 +116,6 @@ default_motor_id_mapping_4legs = {0:"2",1:"3",2:"5",3:"6"}
 #  
 
 default_motor_id_mapping_6legs = {0:"2",1:"3",2:"4",3:"5",4:"6",5:"7"}
-default_id_motor_mapping_6legs = {"2":0,"3":1,"4":2,"5":3,"6":4,"7":5}
 
 #
 #  6 legs
@@ -311,12 +311,14 @@ def setup_serial_ports():
         arduino_ports.append(port[0])
         if port[1].decode('utf-8') in default_motor_id_mapping_6legs.values():
             motor_id_mapping.setdefault(i,port[1].decode('utf-8'))
+            id_motor_mapping.setdefault(port[1].decode('utf-8'),i)
             arduino_id_mapping.setdefault(port[1].decode('utf-8'),i)
         else:
             logger.debug("id mismatch happens !!")
             exit()
         if port[2].decode('utf-8') in default_motor_id_mapping_6legs.values():
             motor_id_mapping.setdefault(i+len(temp_arduino_ports),port[2].decode('utf-8'))
+            id_motor_mapping.setdefault(port[2].decode('utf-8'),i+len(temp_arduino_ports))
             arduino_id_mapping.setdefault(port[2].decode('utf-8'),i)
         else:
             logger.debug("id mismatch happens !!")
@@ -325,6 +327,7 @@ def setup_serial_ports():
 
     logger.debug("arduino_ports = %s" % arduino_ports)
     logger.debug("motor_id_mapping = %s" % motor_id_mapping)
+    logger.debug("id_motor_mapping = %s" % id_motor_mapping)
     logger.debug("arduino_id_mapping = %s" % arduino_id_mapping)
     logger.debug("stm_ports = %s" % stm_ports)
 
@@ -636,6 +639,39 @@ if __name__ == '__main__':
     
     for i in range(legs):
         motor_height.append(1) # 0:float  1:ground 
+
+    if legs < 6 and legs > 0:
+
+        try:
+            key_command_map[b'8'] = ["motor_id",id_motor_mapping['2']]
+        except:
+            key_command_map[b'8'] = ["motor_id",6]
+
+        try:
+            key_command_map[b'9'] = ["motor_id",id_motor_mapping['5']]
+        except:
+            key_command_map[b'9'] = ["motor_id",6]
+
+        try:
+            key_command_map[b'5'] = ["motor_id",id_motor_mapping['3']]
+        except:
+            key_command_map[b'5'] = ["motor_id",6]
+
+        try:
+            key_command_map[b'6'] = ["motor_id",id_motor_mapping['6']]
+        except:
+            key_command_map[b'6'] = ["motor_id",6]
+
+        try:
+            key_command_map[b'2'] = ["motor_id",id_motor_mapping['4']]
+        except:
+            key_command_map[b'2'] = ["motor_id",6]
+
+        try:
+            key_command_map[b'3'] = ["motor_id",id_motor_mapping['7']]
+        except:
+            key_command_map[b'3'] = ["motor_id",6]
+
 
     # start threads
 
