@@ -390,15 +390,22 @@ def stm_command(command,sender_queue):
             motor_height[i] = 1
         sender_queue[len(arduino_ports)].put(item)
     elif command[0] == "right":
-        item = "right\r\n"
-        for i in range(legs):
-            motor_height[i] = i % 2
-        sender_queue[len(arduino_ports)].put(item)
+        if legs == 6:
+            item = "right\r\n"
+            for i in range(legs):
+                motor_height[i] = i % 2
+            sender_queue[len(arduino_ports)].put(item)
+        else:
+            item = "None"
     elif command[0] == "left":
-        item = "left\r\n"
-        for i in range(legs):
-            motor_height[i] = (i + 1) % 2
-        sender_queue[len(arduino_ports)].put(item)
+        if legs == 6:
+            item = "left\r\n"
+            for i in range(legs):
+                motor_height[i] = (i + 1) % 2
+            sender_queue[len(arduino_ports)].put(item)
+        else:
+            item = "None"
+
     elif command[0] == "up":
         item = "up {}\r\n".format(command[1])
         motor_height[command[1]] = 0
@@ -409,11 +416,13 @@ def stm_command(command,sender_queue):
         sender_queue[len(arduino_ports)].put(item)
     else:
         item = "None"
-        pass
     
-    logger.debug("[S] stm: %s" % item)
-    logger.debug("motor_height: %s" % motor_height)
-    time.sleep(0.002)
+    if item != "None":
+        logger.debug("[S] stm: %s" % item)
+        logger.debug("motor_height: %s" % motor_height)
+        time.sleep(0.002)
+    
+    
 
 def sender(queue,ser):
     while True:
@@ -622,6 +631,8 @@ def menu(sender_queue):
 
 
 if __name__ == '__main__':
+
+    time.sleep(10.0)
 
     setup_serial_ports()
 
