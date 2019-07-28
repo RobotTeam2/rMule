@@ -279,9 +279,9 @@ def setup_serial_ports():
 
         ser = serial.Serial(port, 115200,timeout=5.0)
 
-        if port == "/dev/ttyACM0":
-            stm_ports.append(port)
-            continue
+        #if port == "/dev/ttyACM0":
+        #    stm_ports.append(port)
+        #    continue
 
         line = ser.readline()
         ser.write(b"who:\r\n") 
