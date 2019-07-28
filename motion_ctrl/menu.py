@@ -140,19 +140,31 @@ scenario_walk = [
 
     [["wait",5.0]],
 
-    [["move",0,0,0],  ["move",3,0,1],
-     ["move",1,0,1],  ["move",4,0,0],
-     ["move",2,0,0],  ["move",5,0,1]],
+    [["move",0,0,1], 
+     ["move",4,0,1],
+     ["move",2,0,1]],
 
+    [["wait",5.0]],
+
+    [["move",3,100,1],
+     ["move",1,100,1],
+     ["move",2,100,1]],
+     
     [["wait",5.0]],
 
     [["left"]],
 
     [["wait",5.0]],
 
-    [["move",0,100,1],  ["move",3,100,0],
-     ["move",1,100,0],  ["move",4,100,1],
-     ["move",2,100,1],  ["move",5,100,0]],
+    [["move",3,0,1],
+     ["move",1,0,1],
+     ["move",5,0,1]],
+
+    [["wait",5.0]],
+
+    [["move",0,100,1],
+     ["move",4,100,1],
+     ["move",2,100,1]],
 
     [["wait",5.0]]
 ]
@@ -234,6 +246,7 @@ def serial_ports():
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
         # this excludes your current terminal "/dev/tty"
         ports = glob.glob('/dev/ttyUSB*')
+        ports.append('/dev/ttyACM0')
     elif sys.platform.startswith('darwin'):
         ports = glob.glob('/dev/tty.*')
     else:
@@ -391,7 +404,8 @@ def stm_command(command,sender_queue):
         sender_queue[len(arduino_ports)].put(item)
     elif command[0] == "right":
         if legs == 6:
-            item = "right\r\n"
+            #item = "right\r\n"
+            item = "aa\r\n"
             for i in range(legs):
                 motor_height[i] = i % 2
             sender_queue[len(arduino_ports)].put(item)
@@ -399,7 +413,8 @@ def stm_command(command,sender_queue):
             item = "None"
     elif command[0] == "left":
         if legs == 6:
-            item = "left\r\n"
+            #item = "left\r\n"
+            item = "bb\r\n"
             for i in range(legs):
                 motor_height[i] = (i + 1) % 2
             sender_queue[len(arduino_ports)].put(item)
