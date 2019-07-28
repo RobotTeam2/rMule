@@ -615,6 +615,7 @@ def menu(sender_queue):
             if command[1] == ["clear"]:
                 logger.debug("motor_id is cleared")
             elif command[1] == ["stop"]:
+                logger.debug("reboot !!")
                 os.system("sudo reboot")
             else:
                 pass
@@ -632,6 +633,7 @@ def menu(sender_queue):
 
 if __name__ == '__main__':
 
+    logger.debug("waiting for 10 sec")
     time.sleep(10.0)
 
     setup_serial_ports()
