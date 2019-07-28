@@ -549,12 +549,14 @@ void checkOverRunMaxWheel(int index) {
       bIsRunWheelByVolume[index] = false;
       iOutPutPWM[index] = 0;
       STOP_WHEEL(index);
+      /*
         {
         String resTex;
         resTex += "dummy:delta,";
         resTex += String(delta);
         responseTextTag(resTex);
       }
+      */
     }
   }
   iPrevVolumeDistanceWheel[index] = iVolumeDistanceWheel[index];
@@ -688,6 +690,7 @@ int iTargetVolumePostionWheel[MAX_MOTOR_CH] = {0,0};
 int iTargetVolumePayload[MAX_MOTOR_CH] = {0,0};
 int iTargetVolumeStartDelay[MAX_MOTOR_CH] = {0,0};
 void runWheelVolume(int distPostion,int index,int payload) {
+  /*
   {
     String resTex;
     resTex += "dummy:distPostion,";
@@ -700,6 +703,7 @@ void runWheelVolume(int distPostion,int index,int payload) {
     resTex += String(iEROMWheelMaxFront[index]);
     responseTextTag(resTex);
   }
+  */
   if(distPostion > iEROMWheelMaxBack[index] || distPostion < iEROMWheelMaxFront[index]) {
     //DUMP_VAR(distPostion);
     //DUMP_VAR(iEROMWheelMaxBack[index]);
@@ -725,6 +729,7 @@ void runWheelVolume(int distPostion,int index,int payload) {
   }
   iTargetVolumePayload[index] = payload;
 
+/*
   {
     String resTex;
     resTex += "dummy:bIsRunWheelByVolume,";
@@ -735,6 +740,7 @@ void runWheelVolume(int distPostion,int index,int payload) {
     resTex += String(iTargetVolumePayload[index]);
     responseTextTag(resTex);
   }
+*/
 
 }
 
@@ -776,7 +782,7 @@ void calcWheelTarget(int index) {
   int speedPwm = calWheelSpeedPwm(toMoveDiff,index);
   bool bForwardRunWheel = calWheelCW(toMoveDiff,index);
   runWheel(speedPwm,bForwardRunWheel,index);
-  
+ /* 
   {
     String resTex;
     resTex += "dummy:bForwardRunWheelffset,";
@@ -787,7 +793,7 @@ void calcWheelTarget(int index) {
     resTex += String(iEROMLegId[index]);
     responseTextTag(resTex);
   }
-
+*/
 }
 
 
