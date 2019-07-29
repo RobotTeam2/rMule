@@ -279,10 +279,12 @@ void runSetting(void) {
 }
 
 
-
+int iMotorTurnCounter[MAX_MOTOR_CH] = {0,0};
 void A_Motor_FGS_By_Interrupt(void) {
+  iMotorTurnCounter[0]++;
 }
 void B_Motor_FGS_By_Interrupt(void) {
+  iMotorTurnCounter[1]++;
 }
 
 
@@ -531,32 +533,50 @@ int iPrevVolumeDistanceWheel[2] = {};
 int iConstMoveJudgeDiff = 2;
 
 void checkOverRunMaxWheel(int index) {
+  static int counter = 0;
+  if(counter++%5) {
+    return;
+  }
+  /*
+  if(iEROMPWMLogLevel > 0 ){
+    String resTex;
+    resTex += "dummy:iOutPutPWM,";
+    resTex += String(iOutPutPWM[index]);
+    resTex += ":counter,";
+    resTex += String(counter);
+    responseTextTag(resTex);
+  }
+  */
+  if(abs(iOutPutPWM[index]) > 0) {
+    int delta = abs(iVolumeDistanceWheel[index] - iPrevVolumeDistanceWheel[index]);
     /*
-    {
+    if(iEROMPWMLogLevel > 0 ){
       String resTex;
       resTex += "dummy:iOutPutPWM,";
       resTex += String(iOutPutPWM[index]);
+      resTex += ":delta,";
+      resTex += String(delta);
       responseTextTag(resTex);
     }
     */
-  static int counter = 0;
-  if(counter++%5 != 0) {
-    return;
-  }
-  if(abs(iOutPutPWM[index]) > 0) {
-    int delta = abs(iVolumeDistanceWheel[index] - iPrevVolumeDistanceWheel[index]);
     if(delta < iConstMoveJudgeDiff) {
       bIsRunWheelByVolume[index] = false;
-      iOutPutPWM[index] = 0;
       STOP_WHEEL(index);
-      /*
-        {
+      int stopAtPWM = iOutPutPWM[index];
+      iOutPutPWM[index] = 0;
+      
+      {
         String resTex;
         resTex += "dummy:delta,";
         resTex += String(delta);
+        resTex += ":stopAtPWM,";
+        resTex += String(stopAtPWM);
+        resTex += ":bIsRunWheelByVolume,";
+        resTex += String(bIsRunWheelByVolume[index]);
+        resTex += ":iMotorTurnCounter,";
+        resTex += String(iMotorTurnCounter[index]);
         responseTextTag(resTex);
       }
-      */
     }
   }
   iPrevVolumeDistanceWheel[index] = iVolumeDistanceWheel[index];
@@ -649,8 +669,6 @@ int iVolumeDistanceWheelReported[MAX_MOTOR_CH] = {0,0};
 
 const String strConstWheelReportTag[MAX_MOTOR_CH] = {"wheel:vol0,","wheel:vol1,"};
 
-int iDetectDistanceStartMemo[MAX_MOTOR_CH] = {0,0};
-int iDetectIndex = -1;
 
 void readWheelVolume(int index) {
   int volume = analogRead(MOTER_VOLUME_WHEEL[index]);  
@@ -671,18 +689,6 @@ void readWheelVolume(int index) {
     }
   }
   iVolumeDistanceWheel[index] = volume;
-  if(iDetectIndex > -1 && iDetectIndex == index) {
-    int detectDiff = volume - iDetectDistanceStartMemo[iDetectIndex];
-    if(abs(detectDiff) > 5) {
-      DUMP_VAR(detectDiff);
-      iDetectIndex = -1;
-      if(detectDiff > 0) {
-        saveEROM(iEROMCWDirectAddress[index],1);
-      } else {
-        saveEROM(iEROMCWDirectAddress[index],0);
-      }
-    }
-  }
 }
 
 
@@ -730,19 +736,22 @@ void runWheelVolume(int distPostion,int index,int payload) {
     runWheel(iConstStarSpeed,bForwardRunWheel,index);
   }
   iTargetVolumePayload[index] = payload;
+  iMotorTurnCounter[index] = 0;
 
-/*
+  //if(iEROMPWMLogLevel > 0 )
   {
     String resTex;
     resTex += "dummy:bIsRunWheelByVolume,";
     resTex += String(bIsRunWheelByVolume[index]);
     resTex += ":iTargetVolumePostionWheel,";
     resTex += String(iTargetVolumePostionWheel[index]);
+    resTex += ":iVolumeDistanceWheel,";
+    resTex += String(iVolumeDistanceWheel[index]);
     resTex += ":iTargetVolumePayload,";
     resTex += String(iTargetVolumePayload[index]);
     responseTextTag(resTex);
   }
-*/
+
 
 }
 
@@ -758,7 +767,8 @@ int calWheelSpeedPwm(int16_t eDistance,int index) {
   }
   uint32_t pwmK = gain * distance / iConstPWMFactorDive;
   if(pwmK > iConstStarSpeed) {
-    return iConstStarSpeed;
+   iOutPutPWM[index] = iConstStarSpeed;
+   return iConstStarSpeed;
   }
   int pwm = pwmK;
   iOutPutPWM[index] = pwm;
@@ -784,10 +794,11 @@ void calcWheelTarget(int index) {
   int speedPwm = calWheelSpeedPwm(toMoveDiff,index);
   bool bForwardRunWheel = calWheelCW(toMoveDiff,index);
   runWheel(speedPwm,bForwardRunWheel,index);
- /* 
-  {
+
+  /*
+  if(iEROMPWMLogLevel > 0 ) {
     String resTex;
-    resTex += "dummy:bForwardRunWheelffset,";
+    resTex += "dummy:bForwardRunWheel,";
     resTex += String(bForwardRunWheel);
     resTex += ":speedPwm,";
     resTex += String(speedPwm);
@@ -795,7 +806,7 @@ void calcWheelTarget(int index) {
     resTex += String(iEROMLegId[index]);
     responseTextTag(resTex);
   }
-*/
+  */
 }
 
 
