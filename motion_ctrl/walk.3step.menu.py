@@ -238,7 +238,7 @@ scenario_walk = [
     [["wait",wait_space]],
 #   move short down all legs.
     [["home"]],
-    [["wait",wait_space]],
+    [["wait",1.0]],
 #   move short down all legs.
     left_back_earth,
     right_back_earth,

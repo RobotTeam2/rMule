@@ -1,2 +1,8 @@
+import redis
 class Serial:
-    __init__(self):
+    def __init__(self,port):
+        pass
+    def close(self):
+        pass
+    def Serial(self,port,boudrate,timeout):
+        pass

@@ -10,7 +10,7 @@ import queue
 import os
 from logging import getLogger, StreamHandler, FileHandler, Formatter, DEBUG
 
-import redis
+#import redis_serial as serial
 
 
 logger = getLogger(__name__)
@@ -773,14 +773,19 @@ def menu(sender_queue):
 if __name__ == '__main__':
 
     logger.debug("waiting for 10 sec")
-    time.sleep(10.0)
+    #time.sleep(10.0)
 
-    setup_serial_ports()
+    #setup_serial_ports()
+    arduino_ports.append('hex-horse-uart-arduino-0')
+    arduino_ports.append('hex-horse-uart-arduino-1')
+    arduino_ports.append('hex-horse-uart-arduino-2')
 
     if len(arduino_ports) > 0:
         arduino_available = True
         legs = len(arduino_ports) * 2
 
+    stm_ports.append('hex-horse-uart-stm-2')
+    
     if len(stm_ports) > 0:
         stm_available = True
 
@@ -833,10 +838,10 @@ if __name__ == '__main__':
 
     for i in range(len(arduino_ports)):
         sender_queue.append(queue.Queue())
-        ser = arduino_ser[i]
-        ser.flush()
-        t = threading.Thread(target=sender,args=(sender_queue[i],ser,))
-        r = threading.Thread(target=reader,args=(ser,i,))
+        #ser = arduino_ser[i]
+        #ser.flush()
+        t = threading.Thread(target=sender,args=(sender_queue[i],))
+        r = threading.Thread(target=reader,args=(i))
         t.setDaemon(True)
         r.setDaemon(True)
         ts.append(t)
@@ -847,10 +852,10 @@ if __name__ == '__main__':
     if stm_available:
         for i in range(len(stm_ports)):
             sender_queue.append(queue.Queue())
-            ser = stm_ser[i]
-            ser.flush()
-            t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)],ser,))
-            r = threading.Thread(target=reader,args=(ser,i + len(arduino_ports),))
+            #ser = stm_ser[i]
+            #ser.flush()
+            t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)]))
+            r = threading.Thread(target=reader,args=(i + len(arduino_ports),))
             t.setDaemon(True)
             r.setDaemon(True)
             ts.append(t)
