@@ -83,7 +83,7 @@ arduino_available = False
 stm_available = False
 legs = 0
 
-scenario_repeat = 1
+scenario_repeat = 3
 motor_height = []
 motor_id_mapping = {}
 id_motor_mapping = {}
@@ -174,73 +174,76 @@ scenario_walk = [
 '''
 
 left_front_earth = [
-  ["move",0,100,1],
-  ["move",2,100,1]
-  ["move",4,100,1],
+  ["move",1,100,1],
+  ["move",3,100,1],
+  ["move",5,100,1],
 ]
 
 left_back_earth = [
-  ["move",0,0,1],
-  ["move",2,0,1]
-  ["move",4,0,1],
+  ["move",1,0,1],
+  ["move",3,0,1],
+  ["move",5,0,1],
 ]
 
 left_front_air = [
-  ["move",0,100,1],
-  ["move",2,100,1]
-  ["move",4,100,1],
+  ["move",1,100,1],
+  ["move",3,100,1],
+  ["move",5,100,1],
 ]
 
 left_back_air = [
-  ["move",0,0,1],
-  ["move",2,0,1]
-  ["move",4,0,1],
+  ["move",1,0,1],
+  ["move",3,0,1],
+  ["move",5,0,1],
 ]
 
 
 right_front_earth = [
-  ["move",1,100,1],
-  ["move",3,100,1],
-  ["move",5,100,1]
+  ["move",0,100,1],
+  ["move",2,100,1],
+  ["move",4,100,1],
 ]
 
 right_back_earth = [
-  ["move",1,0,1],
-  ["move",3,0,1],
-  ["move",5,0,1]
+  ["move",0,0,1],
+  ["move",2,0,1],
+  ["move",4,0,1],
 ]
 
 right_front_air = [
-  ["move",1,100,1],
-  ["move",3,100,1],
-  ["move",5,100,1]
+  ["move",0,100,1],
+  ["move",2,100,1],
+  ["move",4,100,1],
 ]
 
 right_back_air = [
-  ["move",1,0,1],
-  ["move",3,0,1],
-  ["move",5,0,1]
+  ["move",0,0,1],
+  ["move",2,0,1],
+  ["move",4,0,1],
 ]
 
+
+wait_space = 2.0
 
 # walk in 3 step.
 scenario_walk = [
 #   move all leg to front by air.
     [["right"]],
-    [["wait",1.0]],
+    [["wait",wait_space]],
     left_front_air,
-    [["wait",1.0]],
+    [["wait",wait_space]],
     [["left"]],
-    [["wait",1.0]],
+    [["wait",wait_space]],
     right_front_air,
-    [["wait",1.0]],
+    [["wait",wait_space]],
 #   move short down all legs.
-    [["alldown"]],
-    [["wait",1.0]],
+    [["home"]],
+    [["wait",wait_space]],
 #   move short down all legs.
     left_back_earth,
     right_back_earth,
-    [["wait",1.0]]
+    [["home"]],    
+    [["wait",1.0]],
 ]
 
 
@@ -501,7 +504,8 @@ def arduino_command(command,sender_queue):
 def stm_command(command,sender_queue):
     if stm_available == False:
         return
-
+        
+    print(command)
     if command[0] == "stm_init":
         item = "init\r\n"
         for i in range(legs):
@@ -520,6 +524,16 @@ def stm_command(command,sender_queue):
         if legs == 6:
             #item = "left\r\n"
             item = "bb\r\n"
+            for i in range(legs):
+                motor_height[i] = (i + 1) % 2
+            sender_queue[len(arduino_ports)].put(item)
+        else:
+            item = "None"
+    elif command[0] == "home":
+        print(command[0])
+        if legs == 6:
+            #item = "cc\r\n"
+            item = "cc\r\n"
             for i in range(legs):
                 motor_height[i] = (i + 1) % 2
             sender_queue[len(arduino_ports)].put(item)
@@ -592,6 +606,8 @@ def motion_player(motion,sender_queue):
         elif  command[0] == "up":
             stm_command(command,sender_queue)
         elif  command[0] == "down":
+            stm_command(command,sender_queue)
+        elif  command[0] == "home":
             stm_command(command,sender_queue)
         elif  command[0] == "move":
             arduino_command(command,sender_queue)
@@ -841,7 +857,9 @@ if __name__ == '__main__':
 
     time.sleep(2)
 
-    menu(sender_queue)
+    #menu(sender_queue)
+    
+    scenario_player(scenario_walk,sender_queue)
 
     logger.debug("closing ports")
 
