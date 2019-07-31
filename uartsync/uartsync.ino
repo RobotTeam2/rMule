@@ -34,7 +34,7 @@ void setup() {
 void loop() {
   if (Serial.available()) {      // If anything comes in Serial (USB),
     byte broadcast = Serial.read();
-    Serial.write(broadcast);
+    //Serial.write(broadcast);
     Serial1.write(broadcast);   // read it and send it out Serial1 (pins 0 & 1)
     Serial2.write(broadcast);   // read it and send it out Serial1 (pins 0 & 1)
     Serial3.write(broadcast);   // read it and send it out Serial1 (pins 0 & 1)
