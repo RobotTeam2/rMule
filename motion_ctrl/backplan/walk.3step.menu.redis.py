@@ -9,8 +9,11 @@ import threading
 import queue
 import os
 from logging import getLogger, StreamHandler, FileHandler, Formatter, DEBUG
+import redis
 
 #import redis_serial as serial
+
+client = redis.StrictRedis(host='node2.ceph.wator.xyz', port=6379, db=0)
 
 
 logger = getLogger(__name__)
@@ -561,41 +564,24 @@ def stm_command(command,sender_queue):
     
     
 
-def sender(queue,ser):
+def sender(queue,channel):
+    print('sender channel=<',channel,'>')
+    toChannel = channel+'->uart'
     while True:
         item = queue.get()
+        print('sender item=<',item,'>')
         if item is None:
             queue.task_done()
             break
-        ser.write(item.encode('utf-8')) 
-        while ser.out_waiting > 0:
+        client.publish(toChannel,item.encode('utf-8'));
 
-            time.sleep(0.002)
+def reader(channel):
+    print('reader channel=<',channel,'>')
+    p = client.pubsub()
+    p.subscribe(channel+'<-uart')
+    for message in p.listen():
+        print(message)
 
-    
-def reader(ser,number):
-    while ser.isOpen():
-        try:
-            line = ser.readline()
-            time.sleep(0.001)
-        except:
-            if number < len(arduino_ports):                
-                logger.debug("arduino[%d] exception" %number)                
-            else:
-                logger.debug("stm port exception")                
-            break
-        else:
-            if len(line) > 0:
-                if number < len(arduino_ports):
-                    logger.debug("[R] arduino[%d]: %s" %(number,line))
-                else:                    
-                    logger.debug("[R] stm: %s" % line)
-                time.sleep(0.001)
-
-    if number < len(arduino_ports):        
-        logger.debug("arduino[%d] port closed" %number)        
-    else:
-        logger.debug("stm port closed")        
 
 def motion_player(motion,sender_queue):
     logger.debug("motion :: %s" % motion)        
@@ -776,15 +762,25 @@ if __name__ == '__main__':
     #time.sleep(10.0)
 
     #setup_serial_ports()
-    arduino_ports.append('hex-horse-uart-arduino-0')
-    arduino_ports.append('hex-horse-uart-arduino-1')
-    arduino_ports.append('hex-horse-uart-arduino-2')
+    arduino_ports.append('hexa-horse-uart-arduino-2')
+    arduino_ports.append('hexa-horse-uart-arduino-3')
+    arduino_ports.append('hexa-horse-uart-arduino-4')
+    arduino_ports.append('hexa-horse-uart-arduino-5')
+    arduino_ports.append('hexa-horse-uart-arduino-6')
+    arduino_ports.append('hexa-horse-uart-arduino-7')
+    
+    motor_id_mapping[0] = '2';
+    motor_id_mapping[1] = '3';
+    motor_id_mapping[2] = '4';
+    motor_id_mapping[3] = '5';
+    motor_id_mapping[4] = '6';
+    motor_id_mapping[5] = '7';
 
     if len(arduino_ports) > 0:
         arduino_available = True
-        legs = len(arduino_ports) * 2
+        legs = len(arduino_ports)
 
-    stm_ports.append('hex-horse-uart-stm-2')
+    stm_ports.append('hexa-horse-uart-stm')
     
     if len(stm_ports) > 0:
         stm_available = True
@@ -840,8 +836,8 @@ if __name__ == '__main__':
         sender_queue.append(queue.Queue())
         #ser = arduino_ser[i]
         #ser.flush()
-        t = threading.Thread(target=sender,args=(sender_queue[i],))
-        r = threading.Thread(target=reader,args=(i))
+        t = threading.Thread(target=sender,args=(sender_queue[i],arduino_ports[i],))
+        r = threading.Thread(target=reader,args=(arduino_ports[i],))
         t.setDaemon(True)
         r.setDaemon(True)
         ts.append(t)
@@ -854,8 +850,8 @@ if __name__ == '__main__':
             sender_queue.append(queue.Queue())
             #ser = stm_ser[i]
             #ser.flush()
-            t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)]))
-            r = threading.Thread(target=reader,args=(i + len(arduino_ports),))
+            t = threading.Thread(target=sender,args=(sender_queue[i+ len(arduino_ports)],stm_ports[i],))
+            r = threading.Thread(target=reader,args=(stm_ports[i],))
             t.setDaemon(True)
             r.setDaemon(True)
             ts.append(t)
@@ -868,7 +864,10 @@ if __name__ == '__main__':
     #menu(sender_queue)
     
     scenario_player(scenario_walk,sender_queue)
-
+    
+    while True:
+        time.sleep(1)
+    
     logger.debug("closing ports")
 
     # stop sender queue

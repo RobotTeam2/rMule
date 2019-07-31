@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "redis": "^2.8.0",
+    "serial": "0.0.9",
+    "serialport": "^7.1.5"
+  }
+}

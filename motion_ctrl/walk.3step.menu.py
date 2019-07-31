@@ -274,20 +274,21 @@ scenario_back = [
 scenario_back = [
 #   move all leg to front by air.
     [["right"]],
-    [["wait",1.0]],
+    [["wait",wait_space]],
     left_back_air,
-    [["wait",1.0]],
+    [["wait",wait_space]],
     [["left"]],
-    [["wait",1.0]],
+    [["wait",wait_space]],
     right_back_air,
-    [["wait",1.0]],
+    [["wait",wait_space]],
 #   move short down all legs.
-    [["alldown"]],
+    [["home"]],
     [["wait",1.0]],
 #   move short down all legs.
     left_front_earth,
     right_front_earth,
-    [["wait",1.0]]
+    [["home"]],    
+    [["wait",1.0]],
 ]
 
 
